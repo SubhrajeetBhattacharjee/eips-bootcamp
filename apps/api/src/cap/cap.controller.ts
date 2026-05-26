@@ -22,6 +22,11 @@ export class CapController {
     return this.capService.getAllApplications();
   }
 
+  @Get('analytics/admin')
+  getAnalytics() {
+    return this.capService.getAnalytics();
+  }
+
   @Patch(':id')
   updateStatus(
     @Param('id') id: string,

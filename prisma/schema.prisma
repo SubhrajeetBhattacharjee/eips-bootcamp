@@ -19,6 +19,10 @@ model User {
 
   profile        Profile?
   capApplication CAPApplication?
+
+  sentReferrals    Referral[]      @relation("Referrer")
+  receivedReferral Referral?       @relation("Referred")
+  xpTransactions   XPTransaction[]
 }
 
 model Profile {
@@ -48,6 +52,27 @@ model CAPApplication {
   status              ApplicationStatus @default(PENDING)
   createdAt           DateTime          @default(now())
   updatedAt           DateTime          @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Referral {
+  id             String   @id @default(cuid())
+  referralCode   String   @unique
+  referrerId     String
+  referredUserId String?  @unique
+  createdAt      DateTime @default(now())
+
+  referrer User  @relation("Referrer", fields: [referrerId], references: [id], onDelete: Cascade)
+  referred User? @relation("Referred", fields: [referredUserId], references: [id], onDelete: Cascade)
+}
+
+model XPTransaction {
+  id        String   @id @default(cuid())
+  userId    String
+  amount    Int
+  reason    String
+  createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
