@@ -6,7 +6,7 @@ import { UsersModule } from './users/users.module';
 import { ProfilesModule } from './profiles/profiles.module';
 import { CapModule } from './cap/cap.module';
 import { ReferralsModule } from './referrals/referrals.module';
-
+import { AuthModule } from './auth/auth.module';
 @Module({
 imports: [
   PrismaModule,
@@ -14,6 +14,7 @@ imports: [
   ProfilesModule,
   CapModule,
   ReferralsModule,
+  AuthModule,
 ],
   controllers: [AppController],
   providers: [AppService],
