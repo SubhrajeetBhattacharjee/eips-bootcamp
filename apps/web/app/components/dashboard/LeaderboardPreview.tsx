@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { mockLeaderboard } from '../../lib/dashboard-data';
 
 const medalColors: Record<string, string> = {
@@ -31,9 +32,11 @@ export function LeaderboardPreview() {
         <h3 className="text-white font-bold text-base">
           Leaderboard <span className="text-zinc-500 font-normal text-sm">(Top 5)</span>
         </h3>
-        <button className="text-emerald-400 text-xs font-semibold hover:text-emerald-300 transition-colors">
-          View All
-        </button>
+        <Link href="/dashboard/leaderboard">
+          <button className="text-emerald-400 text-xs font-semibold hover:text-emerald-300 transition-colors">
+            View All
+          </button>
+        </Link>
       </div>
 
       <ul className="space-y-2.5">
