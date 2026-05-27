@@ -1,5 +1,6 @@
 import { mockLearningModule } from '../../lib/dashboard-data';
 import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 export function LearningProgress() {
   const { title, progress } = mockLearningModule;
@@ -8,9 +9,11 @@ export function LearningProgress() {
     <div className="bg-[#0d0d0d] border border-white/8 rounded-2xl p-5 flex flex-col h-full">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-white font-bold text-base">Continue Your Learning</h3>
-        <button className="text-emerald-400 text-xs font-semibold hover:text-emerald-300 transition-colors flex items-center gap-1">
+        <Link href="/dashboard/bootcamp">  
+          <button className="text-emerald-400 text-xs font-semibold hover:text-emerald-300 transition-colors flex items-center gap-1">
           View All Modules <ArrowRight size={12} />
         </button>
+        </Link>
       </div>
 
       {/* Module card */}
