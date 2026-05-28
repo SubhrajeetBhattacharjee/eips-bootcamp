@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { ChevronLeft, Search } from 'lucide-react';
-import { AssignmentSidebar } from '@/app/components/assignments/AssignmentSidebar';
+import { DashboardShell } from '@/app/components/dashboard/DashboardShell';
 import { AssignmentStats } from '@/app/components/assignments/AssignmentStats';
 import { AssignmentFilters } from '@/app/components/assignments/AssignmentFilters';
 import { AssignmentCard } from '@/app/components/assignments/AssignmentCard';
@@ -10,7 +10,6 @@ import { DeadlineWidget } from '@/app/components/assignments/DeadlineWidget';
 import { FeedbackWidget } from '@/app/components/assignments/FeedbackWidget';
 import { XPProgressWidget } from '@/app/components/assignments/XPProgressWidget';
 import { mockAssignments, mockStats } from '@/app/lib/assignments-data';
-import { Topbar } from '@/app/components/dashboard/Topbar';
 import Link from 'next/link';
 
 export default function AssignmentsPage() {
@@ -55,14 +54,10 @@ export default function AssignmentsPage() {
   });
 
   return (
-    <div className="flex h-screen bg-black text-white overflow-hidden">
-      {/* Sidebar */}
-      <AssignmentSidebar />
+    <DashboardShell>     
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Topbar */}
-        <Topbar onMobileMenuOpen={() => {}} />
 
         {/* Page Content */}
         <div className="flex-1 overflow-auto">
@@ -145,6 +140,7 @@ export default function AssignmentsPage() {
           </div>
         </div>
       </div>
-    </div>
+    
+    </DashboardShell>
   );
 }

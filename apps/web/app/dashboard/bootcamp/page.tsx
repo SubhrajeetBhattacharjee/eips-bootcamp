@@ -2,8 +2,7 @@
 
 import React, { useState } from 'react';
 import { ChevronRight, ChevronLeft, BookOpen, CheckCircle2, Clock } from 'lucide-react';
-import { BootcampSidebar } from '@/app/components/bootcamp/BootcampSidebar';
-import { Topbar } from '@/app/components/dashboard/Topbar';
+import { DashboardShell } from '@/app/components/dashboard/DashboardShell';
 import { ModuleCard } from '@/app/components/bootcamp/ModuleCard';
 import { ModuleDetail } from '@/app/components/bootcamp/ModuleDetail';
 import Link from 'next/link';
@@ -86,14 +85,10 @@ export default function BootcampPage() {
   
 
   return (
-    <div className="flex h-screen bg-black text-white overflow-hidden">
-      {/* Sidebar */}
-      <BootcampSidebar />
+    <DashboardShell>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Topbar */}
-        <Topbar onMobileMenuOpen={() => {}} />
 
         {/* Content */}
         <div className="flex-1 overflow-auto">
@@ -158,7 +153,8 @@ export default function BootcampPage() {
           )}
         </div>
       </div>
-    </div>
+    {/*</div>*/}
+    </DashboardShell>
   );
 }
 
