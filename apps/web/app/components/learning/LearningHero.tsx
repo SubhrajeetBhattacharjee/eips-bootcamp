@@ -1,7 +1,7 @@
 // apps/web/components/learning/LearningHero.tsx
 
 import React from 'react';
-import { Flame, TrendingUp, Award } from 'lucide-react';
+import { Flame, TrendingUp } from 'lucide-react';
 
 interface LearningHeroProps {
   userName?: string;
@@ -10,115 +10,104 @@ interface LearningHeroProps {
 export const LearningHero: React.FC<LearningHeroProps> = ({ userName = 'User' }) => {
   const bootcampCompletion = 72;
   const currentStreak = 5;
-  const currentLevel = 4;
-  const totalXP = 2450;
 
   return (
-    <div className="mb-8 relative">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-        {/* Left: Welcome Text */}
-        <div>
-          <div className="mb-6">
-            <h1 className="text-5xl md:text-6xl font-bold mb-3">
-              <span className="bg-gradient-to-r from-emerald-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
-                Welcome back, {userName}!
-              </span>
-              <span className="ml-3">🚀</span>
-            </h1>
-            <p className="text-gray-400 text-lg leading-relaxed">
-              You're <span className="font-bold text-emerald-400">{bootcampCompletion}%</span> through the bootcamp.
-              Keep your <span className="font-bold text-orange-400">{currentStreak}-day streak</span> alive and unlock your potential.
-            </p>
+    <div className="relative overflow-hidden rounded-2xl border border-white/8 bg-gradient-to-br from-[#0d1a12] via-[#0a0f0d] to-[#080808] min-h-[160px]">
+      {/* Background glow effects */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-20 right-20 w-80 h-80 bg-emerald-500/8 rounded-full blur-3xl" />
+        <div className="absolute top-10 right-10 w-40 h-40 bg-emerald-400/5 rounded-full blur-2xl" />
+        {/* Subtle grid pattern */}
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `radial-gradient(circle at 1px 1px, #10b981 1px, transparent 0)`,
+            backgroundSize: '32px 32px',
+          }}
+        />
+      </div>
+
+      {/* Ethereum crystal placeholder — right side */}
+      <div className="absolute right-0 top-0 bottom-0 w-[320px] lg:w-[400px] flex items-center justify-center pointer-events-none">
+        {/* Glow base */}
+        <div className="absolute bottom-0 right-16 w-48 h-8 bg-emerald-500/20 blur-2xl rounded-full" />
+        {/* Crystal placeholder box */}
+        <div className="relative flex flex-col items-center">
+          {/* Ethereum diamond SVG (placeholder for real image) */}
+          <div className="relative">
+            {/* Outer glow rings */}
+            <div className="absolute inset-0 -m-8 rounded-full bg-emerald-500/5 blur-xl" />
+            <div className="absolute inset-0 -m-4 rounded-full bg-emerald-500/10 blur-md" />
+            {/* Diamond */}
+            <svg viewBox="0 0 120 160" className="w-28 h-36 drop-shadow-[0_0_30px_rgba(16,185,129,0.6)]" fill="none">
+              <defs>
+                <linearGradient id="ethTop" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#6ee7b7" stopOpacity="0.9" />
+                  <stop offset="100%" stopColor="#059669" stopOpacity="0.7" />
+                </linearGradient>
+                <linearGradient id="ethLeft" x1="100%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#34d399" stopOpacity="0.8" />
+                  <stop offset="100%" stopColor="#065f46" stopOpacity="0.9" />
+                </linearGradient>
+                <linearGradient id="ethRight" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#10b981" stopOpacity="0.6" />
+                  <stop offset="100%" stopColor="#047857" stopOpacity="0.9" />
+                </linearGradient>
+                <linearGradient id="ethBottomL" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#059669" stopOpacity="0.7" />
+                  <stop offset="100%" stopColor="#022c22" stopOpacity="0.95" />
+                </linearGradient>
+                <linearGradient id="ethBottomR" x1="100%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#047857" stopOpacity="0.6" />
+                  <stop offset="100%" stopColor="#022c22" stopOpacity="0.95" />
+                </linearGradient>
+              </defs>
+              {/* Top pyramid */}
+              <polygon points="60,5 100,65 60,80 20,65" fill="url(#ethTop)" />
+              <polygon points="60,5 20,65 60,80" fill="url(#ethLeft)" />
+              <polygon points="60,5 100,65 60,80" fill="url(#ethRight)" opacity="0.8" />
+              {/* Bottom pyramid */}
+              <polygon points="60,80 100,65 60,155" fill="url(#ethBottomR)" />
+              <polygon points="60,80 20,65 60,155" fill="url(#ethBottomL)" />
+              {/* Center line */}
+              <line x1="20" y1="65" x2="100" y2="65" stroke="#34d399" strokeWidth="0.5" opacity="0.5" />
+            </svg>
+            {/* Glowing platform circle */}
+            <div className="mt-1 w-28 h-3 bg-emerald-500/30 rounded-full blur-md mx-auto" />
           </div>
-
-          {/* Stats Row */}
-          <div className="grid grid-cols-3 gap-4">
-            {/* Level Badge */}
-            <div className="relative group">
-              <div className="rounded-xl border border-purple-500/30 bg-gradient-to-br from-purple-500/10 to-purple-500/5 backdrop-blur p-4 group-hover:border-purple-500/60 transition-all duration-200">
-                <p className="text-xs text-purple-400 uppercase font-semibold mb-2">Level</p>
-                <p className="text-3xl font-bold text-white">{currentLevel}</p>
-              </div>
-            </div>
-
-            {/* XP Badge */}
-            <div className="relative group">
-              <div className="rounded-xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 backdrop-blur p-4 group-hover:border-emerald-500/60 transition-all duration-200">
-                <p className="text-xs text-emerald-400 uppercase font-semibold mb-2">XP</p>
-                <p className="text-3xl font-bold text-emerald-400">{totalXP}</p>
-              </div>
-            </div>
-
-            {/* Streak Badge */}
-            <div className="relative group">
-              <div className="rounded-xl border border-orange-500/30 bg-gradient-to-br from-orange-500/10 to-orange-500/5 backdrop-blur p-4 group-hover:border-orange-500/60 transition-all duration-200">
-                <p className="text-xs text-orange-400 uppercase font-semibold mb-2">Streak</p>
-                <div className="flex items-center gap-1">
-                  <Flame size={20} className="text-orange-400" />
-                  <p className="text-3xl font-bold text-white">{currentStreak}</p>
-                </div>
-              </div>
-            </div>
-          </div>
+          {/* Particle dots */}
+          <div className="absolute -top-4 -left-8 w-1.5 h-1.5 rounded-full bg-emerald-400 opacity-60 animate-pulse" />
+          <div className="absolute top-8 -right-10 w-1 h-1 rounded-full bg-emerald-300 opacity-40 animate-pulse delay-300" />
+          <div className="absolute -bottom-4 -left-6 w-1 h-1 rounded-full bg-emerald-500 opacity-50 animate-pulse delay-700" />
         </div>
+      </div>
 
-        {/* Right: Ethereum Illustration Placeholder */}
-        <div className="relative h-96 hidden lg:flex items-center justify-center">
-          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-cyan-500/5 rounded-2xl border border-emerald-500/20 backdrop-blur-xl overflow-hidden">
-            {/* Animated Ethereum-like shapes */}
-            <div className="absolute top-10 left-10 w-32 h-32 bg-emerald-400/10 rounded-full blur-3xl animate-pulse" />
-            <div className="absolute bottom-10 right-10 w-40 h-40 bg-cyan-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-            
-            {/* Ethereum Symbol Placeholder */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-7xl font-bold text-emerald-400/20">Ξ</div>
+      {/* Content */}
+      <div className="relative z-10 px-6 py-8 sm:px-8 flex items-start justify-between">
+        <div className="max-w-2xl">
+          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-3">Welcome back, {userName}!</h1>
+          <p className="text-zinc-400 text-sm sm:text-base mb-5">
+            You're <span className="font-semibold text-emerald-400">{bootcampCompletion}%</span> through the bootcamp. Keep your{' '}
+            <span className="font-semibold text-orange-400">{currentStreak}-day streak</span> alive and unlock your potential.
+          </p>
+
+          {/* Quick Stats */}
+          <div className="flex flex-wrap gap-6">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-emerald-400" />
+              <span className="text-xs sm:text-sm text-zinc-400">
+                <span className="text-emerald-400 font-semibold">{bootcampCompletion}%</span> Progress
+              </span>
             </div>
-          </div>
-
-          {/* Progress Circle */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="relative w-40 h-40">
-              <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                {/* Background circle */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="45"
-                  fill="none"
-                  stroke="rgba(16, 185, 129, 0.1)"
-                  strokeWidth="3"
-                />
-                {/* Progress circle */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="45"
-                  fill="none"
-                  stroke="url(#gradient)"
-                  strokeWidth="3"
-                  strokeDasharray={`${(bootcampCompletion / 100) * 283} 283`}
-                  strokeLinecap="round"
-                  className="transition-all duration-500"
-                />
-                <defs>
-                  <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#10b981" />
-                    <stop offset="100%" stopColor="#06b6d4" />
-                  </linearGradient>
-                </defs>
-              </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <p className="text-4xl font-bold text-emerald-400">{bootcampCompletion}%</p>
-                <p className="text-xs text-gray-400 mt-1">Complete</p>
-              </div>
+            <div className="flex items-center gap-2">
+              <Flame size={14} className="text-orange-400" />
+              <span className="text-xs sm:text-sm text-zinc-400">
+                <span className="text-orange-400 font-semibold">{currentStreak}</span> Day Streak
+              </span>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Decorative backgrounds */}
-      <div className="absolute -top-40 -right-40 w-80 h-80 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
     </div>
   );
 };

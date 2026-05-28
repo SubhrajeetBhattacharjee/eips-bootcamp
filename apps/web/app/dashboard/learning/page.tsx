@@ -35,51 +35,39 @@ export default function LearningPage() {
   const displayName = user?.firstName || 'User';
 
   return (
-    <DashboardShell >
-      {/* Hero Section */}
-      <section className="mb-10">
+    <DashboardShell>
+      <div className="space-y-5">
+        {/* Hero Section */}
         <LearningHero userName={displayName} />
-      </section>
 
-      {/* Learning Stats Grid */}
-      <section className="mb-10">
+        {/* Learning Stats Grid */}
         <LearningStatsGrid />
-      </section>
 
-      {/* Continue Learning Featured Card */}
-      <section className="mb-10">
+        {/* Continue Learning Featured Card */}
         <ContinueLearningCard />
-      </section>
 
-      {/* Progress + Timeline + Next Step */}
-      <section className="mb-10">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Progress + Timeline + Next Step */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <LearningProgressWidget />
           <LearningTimeline />
           <RecommendedNextStep />
         </div>
-      </section>
 
-      {/* Activity + Deadlines */}
-      <section className="mb-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Activity + Deadlines */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <LearningActivityFeed />
           <UpcomingDeadlines />
         </div>
-      </section>
 
-      {/* Achievements + Skills */}
-      <section className="mb-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Achievements + Skills */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <AchievementBadges />
           <SkillAnalytics />
         </div>
-      </section>
 
-      {/* Learning Streak */}
-      <section>
+        {/* Learning Streak */}
         <LearningStreak />
-      </section>
+      </div>
     </DashboardShell>
   );
 }
