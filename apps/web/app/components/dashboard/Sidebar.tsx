@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
 import {
   LayoutDashboard,
   BookOpen,
@@ -23,7 +25,6 @@ interface NavItem {
   label: string;
   href: string;
   icon: React.ReactNode;
-  active?: boolean;
 }
 
 interface SidebarProps {
@@ -32,7 +33,7 @@ interface SidebarProps {
 }
 
 const mainNav: NavItem[] = [
-  { label: 'Dashboard', href: '/dashboard', icon: <LayoutDashboard size={18} />, active: true },
+  { label: 'Dashboard', href: '/dashboard', icon: <LayoutDashboard size={18} />, },
   { label: 'My Learning', href: '/dashboard/learning', icon: <BookOpen size={18} /> },
   { label: 'Bootcamp Modules', href: '/dashboard/bootcamp', icon: <Layers size={18} /> },
   { label: 'Assignments', href: '/dashboard/assignments', icon: <FileText size={18} /> },
@@ -51,39 +52,48 @@ const adminNav: NavItem[] = [
   { label: 'Applications', href: '/dashboard/admin/applications', icon: <ClipboardList size={18} /> },
 ];
 
-function NavSection({ title, items }: { title: string; items: NavItem[] }) {
+function NavSection({ title, items, pathname, }: { title: string; items: NavItem[], pathname: string; }) {
   return (
     <div className="mb-6">
       <p className="px-3 mb-2 text-[10px] font-semibold tracking-widest text-zinc-500 uppercase">
         {title}
       </p>
+
       <ul className="space-y-0.5">
-        {items.map((item) => (
+        {items.map((item) => {
+          const active = pathname === item.href;
+          
+          return (
           <li key={item.href}>
             <Link
-              href={item.href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group
-                ${item.active
-                  ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20'
-                  : 'text-zinc-400 hover:text-white hover:bg-white/5'
-                }`}
-            >
-              <span className={`transition-colors ${item.active ? 'text-emerald-400' : 'text-zinc-500 group-hover:text-emerald-400'}`}>
+                href={item.href}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group
+                  ${
+                    active
+                      ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20'
+                      : 'text-zinc-400 hover:text-white hover:bg-white/5'
+                  }`}
+              >
+              <span className={`transition-colors ${active ? 'text-emerald-400' : 'text-zinc-500 group-hover:text-emerald-400'}`}>
                 {item.icon}
               </span>
               <span>{item.label}</span>
-              {item.active && (
+              {active && (
                 <ChevronRight size={14} className="ml-auto text-emerald-500/60" />
               )}
             </Link>
           </li>
-        ))}
+          )
+      })}
       </ul>
+
     </div>
   );
 }
 
 export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
+  const pathname = usePathname() || '';
+
   return (
     <>
       {/* Mobile overlay */}
@@ -126,9 +136,9 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
 
         {/* Nav */}
         <nav className="flex-1 overflow-y-auto px-3 py-5 scrollbar-hide">
-          <NavSection title="Main" items={mainNav} />
-          <NavSection title="CAP Program" items={capNav} />
-          <NavSection title="Admin" items={adminNav} />
+          <NavSection title="Main" items={mainNav} pathname={pathname}/>
+          <NavSection title="CAP Program" items={capNav} pathname={pathname}/>
+          <NavSection title="Admin" items={adminNav} pathname={pathname}/>
         </nav>
 
         {/* Upgrade CTA */}
