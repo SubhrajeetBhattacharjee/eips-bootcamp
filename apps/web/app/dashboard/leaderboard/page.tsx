@@ -1,299 +1,203 @@
-// apps/web/app/leaderboard/page.tsx
+"use client";
+// apps/web/app/dashboard/leaderboard/page.tsx
 
-'use client';
+import React, { useEffect, useState, useCallback } from "react";
+import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { ChevronLeft, Filter, Search, TrendingUp, Award, Flame, Crown } from 'lucide-react';
+import {
+  fetchLeaderboard,
+  fetchDBUser,
+  fetchImpactStats,
+  getFeaturedContributor,
+  FilterPeriod,
+  LeaderboardUser,
+  FeaturedContributor as FC,
+  ImpactStats,
+  DBUser,
+} from "@/app/lib/leaderboard";
+
+import LeaderboardHero from "@/app/components/leaderboard/Leaderboardhero";
+import FeaturedContributor from "@/app/components/leaderboard/FeaturedContributor";
+import LeaderboardTable from "@/app/components/leaderboard/Leaderboardtable";
+import XPInfoCard from "@/app/components/leaderboard/Xpinfocard";
+import ImpactCard from "@/app/components/leaderboard/Impactcard";
+import RankProgressCard from "@/app/components/leaderboard/Rankprogresscard";
 import { DashboardShell } from '@/app/components/dashboard/DashboardShell';
-import { mockLeaderboard } from '../../lib/dashboard-data';
-import { useUser } from '@clerk/nextjs';
 
-type SortType = 'xp' | 'rank';
+// ─── Sidebar nav ──────────────────────────────────────────────────────────────
 
-// Generate extended mock data for leaderboard
-const generateExtendedLeaderboard = () => {
-  const extended = [...mockLeaderboard];
-  const names = [
-    'Sophia Williams',
-    'Noah Brown',
-    'Olivia Davis',
-    'Liam Miller',
-    'Emma Wilson',
-    'Benjamin Moore',
-    'Ava Taylor',
-    'Lucas Anderson',
-    'Isabella Jackson',
-    'Mason White',
-    'Harper Harris',
-    'James Martin',
-    'Amelia Lee',
-    'Benjamin Johnson',
-    'Charlotte Brown',
-  ];
+const NAV_MAIN = [
+  { label: "Dashboard", href: "/dashboard", icon: "🏠" },
+  { label: "My Learning", href: "/dashboard/learning", icon: "📖" },
+  { label: "Bootcamp Modules", href: "/dashboard/bootcamp", icon: "⚡" },
+  { label: "Assignments", href: "/dashboard/assignments", icon: "📋" },
+  { label: "Leaderboard", href: "/dashboard/leaderboard", icon: "🏆", active: true },
+];
+const NAV_CAP = [
+  { label: "CAP Status", href: "/dashboard/cap", icon: "🛡️" },
+  { label: "Referrals", href: "/dashboard/referrals", icon: "👥" },
+  { label: "Rewards", href: "/dashboard/rewards", icon: "🎁" },
+  { label: "Wallet", href: "/dashboard/wallet", icon: "💼" },
+];
+const NAV_ADMIN = [{ label: "Admin Analytics", href: "/dashboard/admin", icon: "📊" }];
 
-  for (let i = 6; i <= 20; i++) {
-    extended.push({
-      rank: i,
-      username: names[i - 6],
-      xp: Math.floor(Math.random() * 30000) + 5000,
-    });
-  }
-
-  return extended.sort((a, b) => b.xp - a.xp).map((user, index) => ({
-    ...user,
-    rank: index + 1,
-  }));
-};
-
-const allLeaderboardUsers = generateExtendedLeaderboard();
+// ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function LeaderboardPage() {
-  const { user } = useUser();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortType, setSortType] = useState<SortType>('xp');
+  const { user: clerkUser, isLoaded } = useUser();
 
-  // Filter and sort
-  const filteredUsers = allLeaderboardUsers
-    .filter((user) =>
-      user.username.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-    .sort((a, b) => {
-      if (sortType === 'xp') return b.xp - a.xp;
-      if (sortType === 'rank') return a.rank - b.rank;
-      return 0;
-    });
+  const [filter, setFilter] = useState<FilterPeriod>("all");
+  const [leaderboard, setLeaderboard] = useState<LeaderboardUser[]>([]);
+  const [featured, setFeatured] = useState<FC | null>(null);
+  const [impact, setImpact] = useState<ImpactStats | null>(null);
+  const [dbUser, setDbUser] = useState<DBUser | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Find current user's rank
-  const currentUserRank = allLeaderboardUsers.find(
-    (u) => u.username === user?.firstName
+  // ── Fetch all data ──────────────────────────────────────────────────────────
+  const loadData = useCallback(async () => {
+    setLoading(true);
+    const [lb, imp] = await Promise.all([
+      fetchLeaderboard(filter),
+      fetchImpactStats(),
+    ]);
+    setLeaderboard(lb);
+    setFeatured(getFeaturedContributor(lb));
+    setImpact(imp);
+    setLoading(false);
+  }, [filter]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  // ── Resolve DB user from Clerk ──────────────────────────────────────────────
+  useEffect(() => {
+    if (!isLoaded || !clerkUser) return;
+    fetchDBUser(clerkUser.id).then(setDbUser);
+  }, [isLoaded, clerkUser]);
+
+  // ── Mark current user row ───────────────────────────────────────────────────
+  const currentUserId = dbUser?.id;
+  const rowsWithCurrent = leaderboard.map((r) =>
+    r.userId === currentUserId ? { ...r, isCurrentUser: true } : r
   );
+
+  // ── Rank progress ───────────────────────────────────────────────────────────
+  const currentUserRow = rowsWithCurrent.find((r) => r.isCurrentUser);
+  const percentile = currentUserRow
+    ? Math.round((currentUserRow.rank / leaderboard.length) * 100)
+    : 12;
 
   return (
     <DashboardShell>
-      {/* Header */}
-      <div className="mb-8">
-        <Link href="/dashboard">
-          <button className="flex items-center gap-2 text-emerald-400 hover:text-emerald-300 mb-6 transition-colors">
-            <ChevronLeft size={20} />
-            Back to Dashboard
-          </button>
-        </Link>
+      <LeaderboardHero filter={filter} onFilterChange={setFilter} />
 
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-          <div>
-            <h1 className="text-5xl font-bold mb-2">
-              <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-                Leaderboard
-              </span>
-            </h1>
-            <p className="text-gray-400">
-              Compete globally. Earn XP. Build your reputation.
-            </p>
-          </div>
+      <div className="px-6 py-6">
+        <div className="max-w-[1200px] mx-auto">
+          {loading ? (
+            <LoadingSkeleton />
+          ) : (
+            <div className="flex gap-6 items-start">
+              {/* ── Center column ─────────────────────────────── */}
+              <div className="flex-1 min-w-0 space-y-5">
+                {/* Featured */}
+                {featured && <FeaturedContributor contributor={featured} />}
 
-          {currentUserRank && (
-            <div className="relative group">
-              <div
-                className={`
-                  rounded-xl border border-emerald-500/30
-                  bg-gradient-to-br from-emerald-500/10 to-emerald-500/5
-                  backdrop-blur p-6 min-w-max
-                `}
-              >
-                <p className="text-xs text-emerald-400 uppercase font-semibold mb-2">
-                  Your Rank
-                </p>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-4xl font-bold text-white">
-                    #{currentUserRank.rank}
-                  </span>
-                  <span className="text-emerald-400 text-lg">
-                    {currentUserRank.xp.toLocaleString()} XP
-                  </span>
-                </div>
+                {/* Table */}
+                <LeaderboardTable users={rowsWithCurrent} />
               </div>
+
+              {/* ── Right sidebar ─────────────────────────────── */}
+              <aside className="w-72 xl:w-80 shrink-0 space-y-4 hidden lg:block">
+                <XPInfoCard />
+                {impact && <ImpactCard impact={impact} />}
+                <RankProgressCard
+                  rank={currentUserRow?.rank ?? 0}
+                  nextRankXp={5000}
+                  currentXp={dbUser?.xp ?? 0}
+                  percentile={percentile}
+                  totalUsers={leaderboard.length}
+                />
+              </aside>
+            </div>
+          )}
+
+          {/* Mobile sidebar widgets */}
+          {!loading && (
+            <div className="lg:hidden mt-6 space-y-4">
+              <XPInfoCard />
+              {impact && <ImpactCard impact={impact} />}
+              <RankProgressCard
+                rank={currentUserRow?.rank ?? 0}
+                nextRankXp={5000}
+                currentXp={dbUser?.xp ?? 0}
+                percentile={percentile}
+                totalUsers={leaderboard.length}
+              />
             </div>
           )}
         </div>
       </div>
-
-      {/* Controls */}
-      <div className="mb-8 flex flex-col sm:flex-row gap-4">
-        {/* Search */}
-        <div className="flex-1">
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" size={18} />
-            <input
-              type="text"
-              placeholder="Search users..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className={`
-                w-full pl-10 pr-4 py-3 rounded-lg
-                border border-gray-700 bg-gray-900/50
-                text-white placeholder-gray-500
-                focus:outline-none focus:border-emerald-500/50 focus:bg-gray-900
-                transition-all duration-200
-              `}
-            />
-          </div>
-        </div>
-
-        {/* Sort Filter */}
-        <div className="flex gap-2">
-          {(['xp', 'rank'] as const).map((type) => (
-            <button
-              key={type}
-              onClick={() => setSortType(type)}
-              className={`
-                px-4 py-3 rounded-lg font-medium text-sm
-                transition-all duration-200
-                ${sortType === type
-                  ? 'border-emerald-500/50 bg-emerald-500/20 text-emerald-300'
-                  : 'border-gray-700 bg-gray-900/50 text-gray-400 hover:border-gray-600'
-                }
-              `}
-            >
-              {type === 'xp' ? 'XP' : 'Rank'}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Leaderboard Table */}
-      <div className="relative group">
-        <div
-          className={`
-            rounded-2xl border border-gray-700/50
-            bg-gradient-to-br from-gray-900/50 to-gray-900/20
-            backdrop-blur-xl
-            overflow-hidden
-          `}
-        >
-          {/* Desktop Table */}
-          <div className="hidden md:block overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-700/50 bg-gray-900/50">
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                    Rank
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                    User
-                  </th>
-                  <th className="px-6 py-4 text-right text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                    XP
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-700/30">
-                {filteredUsers.map((user, index) => (
-                  <tr
-                    key={user.rank}
-                    className={`
-                      transition-all duration-200
-                      hover:bg-gray-800/30
-                      ${user.rank <= 3 ? 'bg-gray-800/10' : ''}
-                    `}
-                  >
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={`
-                            w-10 h-10 rounded-lg font-bold
-                            flex items-center justify-center
-                            ${user.rank === 1
-                              ? 'bg-yellow-500/20 text-yellow-400'
-                              : user.rank === 2
-                              ? 'bg-gray-400/20 text-gray-300'
-                              : user.rank === 3
-                              ? 'bg-orange-500/20 text-orange-400'
-                              : 'bg-purple-500/20 text-purple-400'
-                            }
-                          `}
-                        >
-                          {user.rank === 1 ? <Crown size={20} /> : user.rank}
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-400 flex items-center justify-center font-bold text-gray-950 text-sm">
-                          {user.username.charAt(0)}
-                        </div>
-                        <p className="font-semibold text-white">{user.username}</p>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <p className="font-bold text-emerald-400">
-                        {user.xp.toLocaleString()}
-                      </p>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Mobile Cards */}
-          <div className="md:hidden divide-y divide-gray-700/30">
-            {filteredUsers.map((user) => (
-              <div
-                key={user.rank}
-                className={`
-                  p-4 transition-all duration-200
-                  hover:bg-gray-800/30
-                  ${user.rank <= 3 ? 'bg-gray-800/10' : ''}
-                `}
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-3 flex-1">
-                    <div
-                      className={`
-                        w-10 h-10 rounded-lg font-bold
-                        flex items-center justify-center flex-shrink-0
-                        ${user.rank === 1
-                          ? 'bg-yellow-500/20 text-yellow-400'
-                          : user.rank === 2
-                          ? 'bg-gray-400/20 text-gray-300'
-                          : user.rank === 3
-                          ? 'bg-orange-500/20 text-orange-400'
-                          : 'bg-purple-500/20 text-purple-400'
-                        }
-                      `}
-                    >
-                      {user.rank === 1 ? <Crown size={20} /> : user.rank}
-                    </div>
-                    <p className="font-semibold text-white truncate">
-                      {user.username}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <p className="text-sm text-gray-400">XP</p>
-                  <p className="font-bold text-emerald-400">
-                    {user.xp.toLocaleString()}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Empty State */}
-      {filteredUsers.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-gray-400 mb-4">No users found matching "{searchQuery}"</p>
-          <button
-            onClick={() => setSearchQuery('')}
-            className="text-emerald-400 hover:text-emerald-300 font-medium"
-          >
-            Clear search
-          </button>
-        </div>
-      )}
     </DashboardShell>
+  );
+}
+
+// ─── Nav section ─────────────────────────────────────────────────────────────
+
+function NavSection({
+  label,
+  items,
+}: {
+  label: string;
+  items: { label: string; href: string; icon: string; active?: boolean }[];
+}) {
+  return (
+    <div>
+      <p className="text-[10px] font-semibold tracking-widest text-white/20 px-3 mb-2">
+        {label}
+      </p>
+      <ul className="space-y-0.5">
+        {items.map((item) => (
+          <li key={item.href}>
+            <Link
+              href={item.href}
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-150"
+              style={
+                item.active
+                  ? {
+                      background: "rgba(52,211,153,0.12)",
+                      color: "#34d399",
+                      border: "1px solid rgba(52,211,153,0.2)",
+                    }
+                  : { color: "rgba(255,255,255,0.45)" }
+              }
+            >
+              <span className="text-base w-5 text-center">{item.icon}</span>
+              {item.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+// ─── Loading skeleton ─────────────────────────────────────────────────────────
+
+function LoadingSkeleton() {
+  return (
+    <div className="flex gap-6">
+      <div className="flex-1 space-y-4 animate-pulse">
+        <div className="h-44 rounded-2xl" style={{ background: "rgba(255,255,255,0.04)" }} />
+        <div className="h-96 rounded-2xl" style={{ background: "rgba(255,255,255,0.03)" }} />
+      </div>
+      <div className="w-72 space-y-4 animate-pulse hidden lg:block">
+        <div className="h-52 rounded-2xl" style={{ background: "rgba(255,255,255,0.04)" }} />
+        <div className="h-40 rounded-2xl" style={{ background: "rgba(255,255,255,0.03)" }} />
+        <div className="h-24 rounded-2xl" style={{ background: "rgba(255,255,255,0.03)" }} />
+      </div>
+    </div>
   );
 }

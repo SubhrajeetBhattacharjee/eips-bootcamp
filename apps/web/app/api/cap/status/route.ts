@@ -32,16 +32,21 @@ function normalizeApplication(application: BackendCAPApplication) {
 }
 
 async function resolveInternalUserId(clerkId: string) {
-  const res = await fetch(`${API_BASE}/users/clerk/${encodeURIComponent(clerkId)}`, {
-    cache: 'no-store',
-  });
+  try {
+    const res = await fetch(`${API_BASE}/users/clerk/${encodeURIComponent(clerkId)}`, {
+      cache: 'no-store',
+    });
 
-  if (!res.ok) return null;
+    if (!res.ok) return null;
 
-  const text = await res.text();
-  if (!text.trim()) return null;
+    const text = await res.text();
+    if (!text.trim()) return null;
 
-  return JSON.parse(text) as { id: string } | null;
+    return JSON.parse(text) as { id: string } | null;
+  } catch (err) {
+    // Backend unreachable — return null so callers can fallback
+    return null;
+  }
 }
 
 export async function GET(request: Request) {
@@ -57,18 +62,28 @@ export async function GET(request: Request) {
     return NextResponse.json(null, { status: 200 });
   }
 
-  const res = await fetch(`${API_BASE}/cap/status/${user.id}`, {
-    cache: 'no-store',
-  });
+  try {
+    const res = await fetch(`${API_BASE}/cap/status/${user.id}`, {
+      cache: 'no-store',
+    });
 
-  if (!res.ok) {
-    return NextResponse.json({ message: 'Failed to fetch CAP status' }, { status: res.status });
-  }
+    if (!res.ok) {
+      return NextResponse.json({ message: 'Failed to fetch CAP status' }, { status: res.status });
+    }
 
-  const text = await res.text();
-  if (!text.trim()) {
+    const text = await res.text();
+    if (!text.trim()) {
+      return NextResponse.json(null, { status: 200 });
+    }
+
+    try {
+      const parsed = JSON.parse(text);
+      return NextResponse.json(normalizeApplication(parsed));
+    } catch {
+      return NextResponse.json(null, { status: 200 });
+    }
+  } catch (err) {
+    // Network error (backend down) — return null so frontend can show fallback
     return NextResponse.json(null, { status: 200 });
   }
-
-  return NextResponse.json(normalizeApplication(JSON.parse(text)));
 }

@@ -1,26 +1,8 @@
-"use client";
+import SignInClientPage from './client';
 
-import { SignIn, useUser } from '@clerk/nextjs';
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default function Page() {
-  const router = useRouter();
-  const { isLoaded, isSignedIn } = useUser();
-
-  useEffect(() => {
-    if (isLoaded && isSignedIn) {
-      router.replace('/dashboard');
-    }
-  }, [isLoaded, isSignedIn, router]);
-
-  if (!isLoaded || isSignedIn) {
-    return null;
-  }
-
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-black">
-      <SignIn forceRedirectUrl="/dashboard" />
-    </div>
-  );
+  return <SignInClientPage />;
 }
