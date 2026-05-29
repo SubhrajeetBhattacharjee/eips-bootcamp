@@ -44,7 +44,7 @@ const capNav: NavItem[] = [
   { label: 'CAP Status', href: '/dashboard/cap', icon: <BadgeCheck size={18} /> },
   { label: 'Referrals', href: '/dashboard/referrals', icon: <Users size={18} /> },
   { label: 'Rewards', href: '/dashboard/rewards', icon: <Gift size={18} /> },
-  { label: 'Wallet', href: '/dashboard/wallet', icon: <Wallet size={18} /> },
+  // { label: 'Wallet', href: '/dashboard/wallet', icon: <Wallet size={18} /> },
 ];
 
 const adminNav: NavItem[] = [
