@@ -59,7 +59,7 @@ export const ProgressCard: React.FC<ProgressCardProps> = ({ percentage }) => {
                   y2="100%"
                 >
                   <stop offset="0%" stopColor="#10b981" />
-                  <stop offset="100%" stopColor="#06b6d4" />
+                  <stop offset="100%" stopColor="#34d399" />
                 </linearGradient>
               </defs>
             </svg>
@@ -76,12 +76,13 @@ export const ProgressCard: React.FC<ProgressCardProps> = ({ percentage }) => {
 
         {/* Message */}
         <p className="text-center text-gray-300 text-sm mb-6">
-          You're close to your next reward.
+          You're doing great!
         </p>
 
         {/* Button */}
-        <button className="w-full py-3 rounded-lg bg-gradient-to-r from-emerald-600/20 to-emerald-500/10 border border-emerald-500/40 text-emerald-400 font-bold text-sm uppercase tracking-wider hover:from-emerald-600/40 hover:to-emerald-500/20 hover:border-emerald-500/60 transition-all duration-300">
-          View Progress
+        <button className="w-full py-3 rounded-lg border border-emerald-500/50 text-emerald-400 font-bold text-sm uppercase tracking-wider hover:bg-emerald-500/10 hover:border-emerald-500/70 transition-all duration-300 flex items-center justify-center gap-2">
+          <span>View My Progress</span>
+          <span>→</span>
         </button>
       </div>
     </div>

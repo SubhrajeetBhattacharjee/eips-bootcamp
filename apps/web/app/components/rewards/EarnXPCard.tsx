@@ -3,17 +3,22 @@
 'use client';
 
 import React from 'react';
-import { XP_ACTIVITIES } from '@/app/lib/rewards';
+
+interface XPActivity {
+  activity: string;
+  xpValue: number;
+  emoji: string;
+}
+
+const XP_ACTIVITIES: XPActivity[] = [
+  { activity: 'Refer a friend', xpValue: 50, emoji: '👥' },
+  { activity: 'Complete a module', xpValue: 100, emoji: '📚' },
+  { activity: 'Submit an assignment', xpValue: 150, emoji: '📝' },
+  { activity: 'Attend a live session', xpValue: 100, emoji: '🎤' },
+  { activity: 'Community contribution', xpValue: 200, emoji: '🤝' },
+];
 
 export const EarnXPCard: React.FC = () => {
-  const activityEmojis: Record<string, string> = {
-    'Refer a friend': '👥',
-    'Complete a module': '📚',
-    'Submit an assignment': '📝',
-    'Attend a live session': '🎤',
-    'Community contribution': '🤝',
-  };
-
   return (
     <div className="relative">
       {/* Background Glow */}
@@ -28,7 +33,7 @@ export const EarnXPCard: React.FC = () => {
         <h3 className="text-lg font-bold text-white mb-6">How to Earn More XP</h3>
 
         {/* Activities List */}
-        <div className="space-y-4 mb-6">
+        <div className="space-y-3 mb-6">
           {XP_ACTIVITIES.map((activity, index) => (
             <div
               key={index}
@@ -36,21 +41,21 @@ export const EarnXPCard: React.FC = () => {
             >
               <div className="flex items-center gap-3">
                 <span className="text-lg">
-                  {activityEmojis[activity.activity] || '⭐'}
+                  {activity.emoji}
                 </span>
                 <span className="text-sm text-gray-300">
                   {activity.activity}
                 </span>
               </div>
               <span className="text-emerald-400 font-bold text-sm">
-                +{activity.xpValue}
+                +{activity.xpValue} XP
               </span>
             </div>
           ))}
         </div>
 
         {/* View All Button */}
-        <button className="w-full py-3 rounded-lg bg-gradient-to-r from-emerald-600/20 to-emerald-500/10 border border-emerald-500/40 text-emerald-400 font-bold text-sm uppercase tracking-wider hover:from-emerald-600/40 hover:to-emerald-500/20 hover:border-emerald-500/60 transition-all duration-300 flex items-center justify-center gap-2">
+        <button className="w-full py-2.5 rounded-lg text-emerald-400 font-bold text-xs uppercase tracking-wider hover:text-emerald-300 transition-colors duration-200 flex items-center justify-center gap-2">
           <span>View all ways to earn XP</span>
           <span>→</span>
         </button>

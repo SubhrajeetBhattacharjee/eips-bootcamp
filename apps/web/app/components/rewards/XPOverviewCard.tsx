@@ -21,10 +21,10 @@ export const XPOverviewCard: React.FC<XPOverviewCardProps> = ({ data }) => {
       <div className="relative bg-gradient-to-br from-slate-800/80 via-slate-900/60 to-slate-900/40 backdrop-blur-xl border border-emerald-500/20 rounded-2xl p-8 shadow-xl">
         {/* Grid of Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {/* Current XP */}
+          {/* Your Balance */}
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <span className="text-emerald-400 font-bold text-lg">XP</span>
+              <span className="text-emerald-500 font-bold text-lg">XP</span>
               <span className="text-gray-500 text-sm">Current</span>
             </div>
             <div className="text-3xl lg:text-4xl font-bold text-white">
@@ -36,7 +36,7 @@ export const XPOverviewCard: React.FC<XPOverviewCardProps> = ({ data }) => {
           {/* Rewards Redeemed */}
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <span className="text-purple-400 text-lg">🎁</span>
+              <span className="text-xl">🎁</span>
               <span className="text-gray-500 text-sm">Redeemed</span>
             </div>
             <div className="text-3xl lg:text-4xl font-bold text-white">
@@ -48,7 +48,7 @@ export const XPOverviewCard: React.FC<XPOverviewCardProps> = ({ data }) => {
           {/* Total Value Unlocked */}
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <span className="text-blue-400 text-lg">💰</span>
+              <span className="text-xl">💰</span>
               <span className="text-gray-500 text-sm">Value</span>
             </div>
             <div className="text-3xl lg:text-4xl font-bold text-white">
@@ -60,7 +60,7 @@ export const XPOverviewCard: React.FC<XPOverviewCardProps> = ({ data }) => {
           {/* Next Reward */}
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <span className="text-emerald-500 text-lg">🔓</span>
+              <span className="text-xl">🔓</span>
               <span className="text-gray-500 text-sm">Next Unlock</span>
             </div>
             <div className="text-3xl lg:text-4xl font-bold text-white">
