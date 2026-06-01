@@ -22,15 +22,22 @@ export class UsersService {
     });
   }
   findByClerkId(clerkId: string) {
-  return this.prisma.user.findUnique({
-    where: {
-      clerkId,
-    },
-    include: {
-      profile: true,
-    },
-  });
-}
+    return this.prisma.user.findUnique({
+      where: {
+        clerkId,
+      },
+      include: {
+        profile: true,
+        capApplication: true,
+        referralCode: {
+          include: {
+            referrals: true,
+          },
+        },
+        xpTransactions: true,
+      },
+    });
+  }
 
   findOne(id: string) {
     return this.prisma.user.findUnique({

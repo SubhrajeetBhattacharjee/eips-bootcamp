@@ -3,10 +3,15 @@
 'use client';
 
 import React from 'react';
-import { MOCK_REWARDS_HISTORY } from '@/app/lib/rewards';
+import { UserReward } from '@/app/lib/rewards';
 
-export const RewardsHistoryCard: React.FC = () => {
-  const formatDate = (date: Date): string => {
+interface RewardsHistoryCardProps {
+  history: UserReward[];
+}
+
+export const RewardsHistoryCard: React.FC<RewardsHistoryCardProps> = ({ history }) => {
+  const formatDate = (dateStr: string | Date): string => {
+    const date = new Date(dateStr);
     const now = new Date();
     const diffTime = Math.abs(now.getTime() - date.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -33,7 +38,8 @@ export const RewardsHistoryCard: React.FC = () => {
 
         {/* History Items */}
         <div className="space-y-4 mb-6">
-          {MOCK_REWARDS_HISTORY.map((item, index) => (
+          {history.length > 0 ? (
+            history.map((item, index) => (
             <div
               key={index}
               className="p-4 rounded-lg bg-slate-800/40 border border-emerald-500/10 hover:border-emerald-500/30 hover:bg-slate-800/60 transition-all duration-200"
@@ -50,7 +56,10 @@ export const RewardsHistoryCard: React.FC = () => {
                 {formatDate(item.redeemedAt)}
               </span>
             </div>
-          ))}
+            ))
+          ) : (
+            <div className="text-gray-400 text-sm text-center py-4">No rewards redeemed yet.</div>
+          )}
         </div>
 
         {/* View All Button */}

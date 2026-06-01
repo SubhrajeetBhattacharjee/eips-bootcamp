@@ -38,11 +38,16 @@ export interface LeaderboardEntry {
   rank: number;
 }
 
-const BASE_URL = "http://localhost:4000";
+const BASE_URL = "http://127.0.0.1:4000";
 
 async function fetchApi<T>(path: string): Promise<T | null> {
   try {
-    const res = await fetch(`${BASE_URL}${path}`, { cache: "no-store" });
+    const res = await fetch(`${BASE_URL}${path}`, { 
+      cache: "no-store",
+      headers: {
+        'x-api-key': 'dev-secret-key'
+      }
+    });
     if (!res.ok) return null;
     return res.json() as Promise<T>;
   } catch {
@@ -62,11 +67,19 @@ export async function fetchLeaderboard(): Promise<LeaderboardEntry[] | null> {
   return fetchApi<LeaderboardEntry[]>("/referrals/leaderboard/all");
 }
 
+export async function fetchReferralActivity(userId: string): Promise<ReferralActivity[]> {
+  const data = await fetchApi<ReferralActivity[]>(`/referrals/activity/${userId}`);
+  return data || [];
+}
+
 export async function generateReferralCode(userId: string): Promise<{ code: string } | null> {
   try {
     const res = await fetch(`${BASE_URL}/referrals/generate`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        'x-api-key': 'dev-secret-key'
+      },
       body: JSON.stringify({ userId }),
     });
     if (!res.ok) return null;
@@ -76,68 +89,27 @@ export async function generateReferralCode(userId: string): Promise<{ code: stri
   }
 }
 
-export const MOCK_REFERRAL_STATS: ReferralStats = {
-  referralCode: "EIPS2024SJ",
-  referralLink: "https://eipsinsight.xyz/ref/EIPS2024SJ",
-  totalClicks: 128,
-  totalReferrals: 42,
-  pendingJoins: 7,
-  successfulSignups: 35,
-  xpEarned: 2450,
-  leaderboardRank: 8,
-  leaderboardPercentile: "Top 12%",
-  monthlyGrowth: {
-    totalReferrals: 18,
-    pendingJoins: 12,
-    successfulSignups: 16,
-    xpEarned: 22,
-  },
-  peopleInspired: 42,
-  communitiesReached: 8,
-};
-
-export const MOCK_ACTIVITY: ReferralActivity[] = [
-  {
-    id: "1",
-    name: "Aarav Mehta",
-    action: "joined",
-    timestamp: "2 hours ago",
-    xpEarned: 50,
-    status: "Joined",
-  },
-  {
-    id: "2",
-    name: "Priya Sharma",
-    action: "joined",
-    timestamp: "1 day ago",
-    xpEarned: 50,
-    status: "Joined",
-  },
-  {
-    id: "3",
-    name: "Rohit Verma",
-    action: "completed_onboarding",
-    timestamp: "2 days ago",
-    xpEarned: 100,
-    status: "Completed",
-  },
-  {
-    id: "4",
-    name: "Sneha Reddy",
-    action: "joined",
-    timestamp: "3 days ago",
-    xpEarned: 50,
-    status: "Joined",
-  },
-  {
-    id: "5",
-    name: "Divyansh",
-    action: "completed_onboarding",
-    timestamp: "5 days ago",
-    xpEarned: 100,
-    status: "Completed",
-  },
-];
+export function createEmptyReferralStats(): ReferralStats {
+  return {
+    referralCode: "",
+    referralLink: "",
+    totalClicks: 0,
+    totalReferrals: 0,
+    pendingJoins: 0,
+    successfulSignups: 0,
+    xpEarned: 0,
+    leaderboardRank: 0,
+    leaderboardPercentile: "",
+    monthlyGrowth: {
+      totalReferrals: 0,
+      pendingJoins: 0,
+      successfulSignups: 0,
+      xpEarned: 0,
+    },
+    peopleInspired: 0,
+    communitiesReached: 0,
+  };
+}
 
 export const XP_REWARDS = [
   { label: "Friend joins using your code", xp: 50 },

@@ -22,14 +22,59 @@ export class CapService {
     });
   }
 
-  getAllApplications() {
-    return this.prisma.cAPApplication.findMany({
+  async getAllApplications() {
+    const applications = await this.prisma.cAPApplication.findMany({
       include: {
-        user: true,
+        user: {
+          include: {
+            profile: true,
+            referralCode: {
+              include: { referrals: true }
+            },
+            xpTransactions: true,
+          }
+        },
       },
       orderBy: {
         createdAt: 'desc',
       },
+    });
+
+    return applications.map(app => {
+      const user = app.user;
+      const xp = user.xpTransactions.reduce((acc, tx) => acc + tx.amount, 0);
+      const referralCount = user.referralCode?.referrals.length || 0;
+      
+      let linkedin = '';
+      let twitter = '';
+      let github = '';
+      if (app.socialLinks) {
+        if (app.socialLinks.includes('linkedin')) linkedin = app.socialLinks;
+        else if (app.socialLinks.includes('twitter') || app.socialLinks.includes('x.com')) twitter = app.socialLinks;
+        else if (app.socialLinks.includes('github')) github = app.socialLinks;
+        else linkedin = app.socialLinks;
+      }
+
+      return {
+        id: app.id,
+        name: app.fullName,
+        email: user.email,
+        college: app.college,
+        city: app.city,
+        track: 'Smart Contract',
+        batch: `Batch ${app.graduationYear}`,
+        status: app.status.toLowerCase(),
+        appliedDate: app.createdAt.toISOString().split('T')[0],
+        avatar: user.profile?.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${app.fullName}`,
+        referralCount,
+        xp,
+        leaderboardRank: 0,
+        linkedin,
+        twitter,
+        github,
+        whyJoinCAP: app.whyJoin,
+        communityExperience: app.communityExperience || '',
+      };
     });
   }
 
@@ -49,6 +94,14 @@ async updateStatus(id: string, updateCapStatusDto: UpdateCapStatusDto) {
       data: {
         role: 'AMBASSADOR',
       },
+    });
+
+    await this.prisma.xPTransaction.create({
+      data: {
+        userId: application.userId,
+        amount: 500,
+        reason: 'CAP Application Approved',
+      }
     });
   }
 

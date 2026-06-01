@@ -10,9 +10,10 @@ import type { Application } from '@/app/lib/applications';
 interface ApplicationsTableProps {
   applications: Application[];
   loading: boolean;
+  onStatusChange: () => void;
 }
 
-export function ApplicationsTable({ applications, loading }: ApplicationsTableProps) {
+export function ApplicationsTable({ applications, loading, onStatusChange }: ApplicationsTableProps) {
   const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
 
@@ -77,6 +78,7 @@ export function ApplicationsTable({ applications, loading }: ApplicationsTablePr
                     key={application.id}
                     application={application}
                     onViewDetails={handleViewDetails}
+                    onStatusChange={onStatusChange}
                   />
                 ))
               )}

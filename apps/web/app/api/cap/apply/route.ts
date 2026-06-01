@@ -1,6 +1,7 @@
+import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
-const API_BASE = 'http://localhost:4000';
+const API_BASE = 'http://127.0.0.1:4000';
 
 function formatDate(dateInput: string | Date) {
   return new Intl.DateTimeFormat('en-US', {
@@ -28,6 +29,7 @@ function normalizeApplication(application: { createdAt?: string; [key: string]: 
 async function resolveInternalUserId(clerkId: string) {
   const res = await fetch(`${API_BASE}/users/clerk/${encodeURIComponent(clerkId)}`, {
     cache: 'no-store',
+      headers: { 'x-api-key': 'dev-secret-key' },
   });
 
   if (!res.ok) return null;
@@ -45,7 +47,7 @@ async function syncClerkUser(clerkId: string, email?: string, username?: string 
 
   const res = await fetch(`${API_BASE}/auth/sync`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'x-api-key': 'dev-secret-key' },
     body: JSON.stringify({ clerkId, email, username: username ?? undefined }),
   });
 
@@ -73,6 +75,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'Missing clerkId' }, { status: 400 });
   }
 
+  const { userId } = await auth();
+  if (!userId || userId !== clerkId) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  }
+
   const user = await resolveInternalUserId(clerkId);
   const resolvedUser = user ?? (await syncClerkUser(clerkId, email, username));
 
@@ -82,6 +89,7 @@ export async function POST(request: Request) {
 
   const existing = await fetch(`${API_BASE}/cap/status/${resolvedUser.id}`, {
     cache: 'no-store',
+      headers: { 'x-api-key': 'dev-secret-key' },
   });
 
   if (existing.ok) {
@@ -93,7 +101,7 @@ export async function POST(request: Request) {
 
   const res = await fetch(`${API_BASE}/cap/apply`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'x-api-key': 'dev-secret-key' },
     body: JSON.stringify({
       userId: resolvedUser.id,
       graduationYear: Number(graduationYear),

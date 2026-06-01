@@ -11,27 +11,65 @@ import { RewardsGrid } from '@/app/components/rewards/RewardsGrid';
 import { ProgressCard } from '@/app/components/rewards/ProgressCard';
 import { EarnXPCard } from '@/app/components/rewards/EarnXPCard';
 import { RewardsHistoryCard } from '@/app/components/rewards/RewardsHistoryCard';
-import { MOCK_USER_XP, RewardCategory } from '@/app/lib/rewards';
+import { RewardCategory, Reward, UserReward } from '@/app/lib/rewards';
+import { useUser } from '@clerk/nextjs';
 
 export default function RewardsPage() {
+  const { user } = useUser();
   const [activeCategory, setActiveCategory] = useState<RewardCategory>('All Rewards');
   const [sortBy, setSortBy] = useState<'popular' | 'cost' | 'new'>('popular');
-  const [userData, setUserData] = useState(MOCK_USER_XP);
+  const [userData, setUserData] = useState({
+    currentXP: 0,
+    totalXPEarned: 0,
+    rewardsRedeemed: 0,
+    totalValueUnlocked: 0,
+    nextRewardUnlock: 500,
+    progressPercentage: 0,
+  });
+  const [rewards, setRewards] = useState<Reward[]>([]);
+  const [history, setHistory] = useState<UserReward[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // TODO: Fetch real user data from API
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-  //     try {
-  //       const clerkId = await getUserId(); // From Clerk
-  //       const response = await fetch(`http://localhost:4000/users/clerk/${clerkId}`);
-  //       const data = await response.json();
-  //       setUserData(data);
-  //     } catch (error) {
-  //       console.error('Failed to fetch user data:', error);
-  //     }
-  //   };
-  //   fetchUserData();
-  // }, []);
+  const fetchRewardsData = async () => {
+    if (!user?.id) return;
+    try {
+      const response = await fetch(`/api/rewards?clerkId=${user.id}`);
+      if (response.ok) {
+        const data = await response.json();
+        setUserData(data.userData);
+        setRewards(data.rewards);
+        setHistory(data.history);
+      }
+    } catch (error) {
+      console.error('Failed to fetch rewards data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchRewardsData();
+  }, [user?.id]);
+
+  const handleRedeem = async (rewardId: string) => {
+    if (!user?.id) return;
+    try {
+      const response = await fetch('/api/rewards/redeem', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clerkId: user.id, rewardId }),
+      });
+      if (response.ok) {
+        await fetchRewardsData(); // Refresh everything
+      } else {
+        const err = await response.json();
+        alert(err.message || 'Failed to redeem reward');
+      }
+    } catch (error) {
+      console.error('Failed to redeem reward:', error);
+      alert('Failed to redeem reward');
+    }
+  };
 
   return (
     <DashboardShell>
@@ -65,6 +103,8 @@ export default function RewardsPage() {
               activeCategory={activeCategory}
               sortBy={sortBy}
               userXP={userData.currentXP}
+              rewards={rewards}
+              onRedeem={handleRedeem}
             />
           </div>
 
@@ -77,7 +117,7 @@ export default function RewardsPage() {
             <EarnXPCard />
 
             {/* Rewards History Card */}
-            <RewardsHistoryCard />
+            <RewardsHistoryCard history={history} />
           </div>
         </div>
       </div>

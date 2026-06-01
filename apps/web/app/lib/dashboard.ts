@@ -6,33 +6,48 @@ export type User = {
   clerkId: string;
   username: string;
   role: string;
+  profile?: {
+    fullName: string;
+  } | null;
+  capApplication?: {
+    status: string;
+  } | null;
+  referralCode?: {
+    code: string;
+    referrals: any[];
+  } | null;
+  xpTransactions?: { amount: number; reason: string; createdAt: string }[];
 };
 
-type ReferralResponse = {
-  referrals: {
-    id: string;
-  }[];
-  totalXP: number;
-};
-
-type CapResponse = {
-  status: string;
+export type ActivityItem = {
+  id: string;
+  title: string;
+  description: string;
+  time: string;
+  icon: 'xp' | 'cap' | 'referral' | 'profile';
 };
 
 export type LeaderboardEntry = {
+  rank: number;
   userId: string;
-  _sum: {
-    amount: number;
-  };
+  name: string;
+  handle: string;
+  avatarUrl?: string;
+  xp: number;
+  referrals: number;
+  capStatus: string;
+  streak: number;
 };
 
 export type DashboardData = {
   user: User;
   xp: number;
   referralsCount: number;
+  referralCode: string;
   capStatus: string;
   rank: number | null;
   leaderboard: LeaderboardEntry[];
+  recentActivity: ActivityItem[];
 };
 
 function createFallbackDashboardData(clerkId: string): DashboardData {
@@ -46,9 +61,11 @@ function createFallbackDashboardData(clerkId: string): DashboardData {
     },
     xp: 0,
     referralsCount: 0,
+    referralCode: clerkId.slice(-6).toUpperCase(),
     capStatus: 'NOT APPLIED',
     rank: null,
     leaderboard: [],
+    recentActivity: [],
   };
 }
 
@@ -60,23 +77,54 @@ export async function getDashboardData(clerkId: string) {
       return createFallbackDashboardData(clerkId);
     }
 
-    const [referrals, cap, leaderboard] = await Promise.all([
-      apiFetch<ReferralResponse>(`/referrals/${user.id}`),
-      apiFetch<CapResponse>(`/cap/status/${user.id}`),
-      apiFetch<LeaderboardEntry[]>(`/referrals/leaderboard/all`),
-    ]);
+    const leaderboard = await apiFetch<LeaderboardEntry[]>(`/referrals/leaderboard/all`);
 
     const rank = leaderboard.findIndex(
       (entry) => entry.userId === user.id
     ) + 1;
 
+    const xp = user.xpTransactions?.reduce((acc, curr) => acc + curr.amount, 0) || 0;
+    const referralsCount = user.referralCode?.referrals?.length || 0;
+    const capStatus = user.capApplication?.status || 'NOT APPLIED';
+    
+    // Determine display name
+    const displayName = user.profile?.fullName || user.username || user.email.split('@')[0] || 'Explorer';
+    user.username = displayName;
+
+    // Generate recent activity
+    let recentActivity: ActivityItem[] = [];
+    if (user.xpTransactions) {
+      recentActivity = user.xpTransactions.map((tx, idx) => ({
+        id: `xp-${idx}`,
+        title: `Earned ${tx.amount} XP`,
+        description: tx.reason,
+        time: new Date(tx.createdAt).toLocaleDateString(),
+        icon: 'xp',
+      }));
+    }
+    
+    if (user.capApplication) {
+      recentActivity.push({
+        id: 'cap-status',
+        title: 'CAP Application',
+        description: `Status: ${capStatus}`,
+        time: 'Recent',
+        icon: 'cap',
+      });
+    }
+    
+    // Sort and slice top 4 activities
+    recentActivity = recentActivity.slice(0, 4);
+
     return {
       user,
-      xp: referrals.totalXP,
-      referralsCount: referrals.referrals.length,
-      capStatus: cap?.status || 'NOT APPLIED',
+      xp,
+      referralsCount,
+      referralCode: user.referralCode?.code || user.id.slice(-6).toUpperCase(),
+      capStatus,
       rank: rank || null,
       leaderboard,
+      recentActivity,
     };
   } catch {
     return createFallbackDashboardData(clerkId);

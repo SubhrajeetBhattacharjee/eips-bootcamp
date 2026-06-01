@@ -1,10 +1,12 @@
 import Link from 'next/link';
 import { mockLeaderboard } from '../../lib/dashboard-data';
 type LeaderboardEntry = {
+  rank: number;
   userId: string;
-  _sum: {
-    amount: number;
-  };
+  name: string;
+  handle: string;
+  avatarUrl?: string;
+  xp: number;
 };
 
 type LeaderboardPreviewProps = {
@@ -17,11 +19,13 @@ const medalEmoji: Record<number, string> = {
   2: '🥉',
 };
 
-// Avatar placeholder with initials
-function Avatar({ username }: { username: string }) {
-  const initials = username.replace(/[^a-zA-Z]/g, '').slice(0, 2).toUpperCase();
+function Avatar({ name, avatarUrl }: { name: string; avatarUrl?: string }) {
+  if (avatarUrl) {
+    return <img src={avatarUrl} alt={name} className="w-8 h-8 rounded-full border border-white/10" />;
+  }
+  const initials = name.replace(/[^a-zA-Z]/g, '').slice(0, 2).toUpperCase() || 'U';
   const colors = ['bg-emerald-800', 'bg-blue-800', 'bg-purple-800', 'bg-pink-800', 'bg-orange-800'];
-  const idx = username.charCodeAt(0) % colors.length;
+  const idx = name.charCodeAt(0) % colors.length;
   return (
     <div className={`w-8 h-8 rounded-full ${colors[idx]} flex items-center justify-center text-xs font-bold text-white flex-shrink-0`}>
       {initials}
@@ -59,16 +63,16 @@ export function LeaderboardPreview({ leaderboard }: LeaderboardPreviewProps) {
             </div>
 
             {/* Avatar */}
-            <Avatar username={`User ${index + 1}`} />
+            <Avatar name={entry.name} avatarUrl={entry.avatarUrl} />
 
             {/* Username */}
             <span className="text-zinc-200 text-sm font-medium flex-1 truncate">
-              User {index + 1}
+              {entry.name}
             </span>
 
             {/* XP */}
             <span className="text-emerald-400 text-sm font-bold flex-shrink-0">
-              {entry._sum.amount.toLocaleString()} XP
+              {entry.xp.toLocaleString()} XP
             </span>
           </li>
         ))}

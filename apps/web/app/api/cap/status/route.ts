@@ -1,6 +1,7 @@
+import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
-const API_BASE = 'http://localhost:4000';
+const API_BASE = 'http://127.0.0.1:4000';
 
 type BackendCAPApplication = {
   createdAt?: string;
@@ -35,6 +36,7 @@ async function resolveInternalUserId(clerkId: string) {
   try {
     const res = await fetch(`${API_BASE}/users/clerk/${encodeURIComponent(clerkId)}`, {
       cache: 'no-store',
+      headers: { 'x-api-key': 'dev-secret-key' },
     });
 
     if (!res.ok) return null;
@@ -57,6 +59,11 @@ export async function GET(request: Request) {
     return NextResponse.json({ message: 'Missing clerkId' }, { status: 400 });
   }
 
+  const { userId } = await auth();
+  if (!userId || userId !== clerkId) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  }
+
   const user = await resolveInternalUserId(clerkId);
   if (!user?.id) {
     return NextResponse.json(null, { status: 200 });
@@ -65,6 +72,7 @@ export async function GET(request: Request) {
   try {
     const res = await fetch(`${API_BASE}/cap/status/${user.id}`, {
       cache: 'no-store',
+      headers: { 'x-api-key': 'dev-secret-key' },
     });
 
     if (!res.ok) {

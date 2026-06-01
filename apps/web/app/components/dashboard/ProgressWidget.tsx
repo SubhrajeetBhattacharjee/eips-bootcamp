@@ -1,7 +1,5 @@
-import { mockOverallProgress } from '../../lib/dashboard-data';
-
 export function ProgressWidget() {
-  const progress = mockOverallProgress;
+  const progress = 0;
   const radius = 54;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (progress / 100) * circumference;

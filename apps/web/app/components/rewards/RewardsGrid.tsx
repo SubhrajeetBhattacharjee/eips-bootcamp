@@ -10,15 +10,19 @@ interface RewardsGridProps {
   activeCategory: RewardCategory;
   sortBy: 'popular' | 'cost' | 'new';
   userXP: number;
+  rewards: Reward[];
+  onRedeem: (rewardId: string) => void;
 }
 
 export const RewardsGrid: React.FC<RewardsGridProps> = ({
   activeCategory,
   sortBy,
   userXP,
+  rewards,
+  onRedeem,
 }) => {
   const filteredAndSorted = useMemo(() => {
-    let filtered = REWARDS_DATA;
+    let filtered = rewards;
 
     // Filter by category
     if (activeCategory !== 'All Rewards') {
@@ -45,11 +49,10 @@ export const RewardsGrid: React.FC<RewardsGridProps> = ({
     // 'popular' is default order from REWARDS_DATA
 
     return sorted;
-  }, [activeCategory, sortBy]);
+  }, [activeCategory, sortBy, rewards]);
 
   const handleRedeem = (rewardId: string) => {
-    console.log(`Redeeming reward: ${rewardId}`);
-    // TODO: Implement actual redemption logic
+    onRedeem(rewardId);
   };
 
   return (

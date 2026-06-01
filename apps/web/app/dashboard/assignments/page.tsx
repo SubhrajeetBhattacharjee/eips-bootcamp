@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronLeft, Search } from 'lucide-react';
 import { DashboardShell } from '@/app/components/dashboard/DashboardShell';
 import { AssignmentStats } from '@/app/components/assignments/AssignmentStats';
@@ -9,18 +9,61 @@ import { AssignmentCard } from '@/app/components/assignments/AssignmentCard';
 import { DeadlineWidget } from '@/app/components/assignments/DeadlineWidget';
 import { FeedbackWidget } from '@/app/components/assignments/FeedbackWidget';
 import { XPProgressWidget } from '@/app/components/assignments/XPProgressWidget';
-import { mockAssignments, mockStats } from '@/app/lib/assignments-data';
+import { mockStats } from '@/app/lib/assignments-data';
+import { Assignment } from '@/app/lib/assignments.types';
 import Link from 'next/link';
+import { useUser } from '@clerk/nextjs';
 
 export default function AssignmentsPage() {
+  const { user } = useUser();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [difficultyFilter, setDifficultyFilter] = useState('all');
   const [moduleFilter, setModuleFilter] = useState('all');
   const [sortBy, setSortBy] = useState('deadline');
+  
+  const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [stats, setStats] = useState(mockStats);
+  const [loading, setLoading] = useState(true);
+
+  const fetchAssignments = async () => {
+    if (!user?.id) return;
+    try {
+      const res = await fetch(`/api/assignments?clerkId=${user.id}`);
+      if (res.ok) {
+        const data = await res.json();
+        setAssignments(data.assignments || []);
+        if (data.stats) setStats(data.stats);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (user?.id) fetchAssignments();
+  }, [user?.id]);
+
+  const handleSubmit = async (assignmentId: string) => {
+    if (!user?.id) return;
+    try {
+      const res = await fetch('/api/assignments/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clerkId: user.id, assignmentId, content: 'Placeholder content for submission' }),
+      });
+      if (res.ok) {
+        await fetchAssignments(); // refresh data
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   // Filter assignments
-  const filteredAssignments = mockAssignments.filter((assignment) => {
+  const filteredAssignments = assignments.filter((assignment) => {
     const matchesSearch =
       assignment.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       assignment.description.toLowerCase().includes(searchQuery.toLowerCase());
@@ -85,7 +128,7 @@ export default function AssignmentsPage() {
             </div>
 
             {/* Stats Grid */}
-            <AssignmentStats stats={mockStats} />
+            <AssignmentStats stats={stats} />
 
             {/* Filters Section */}
             <AssignmentFilters
@@ -117,7 +160,7 @@ export default function AssignmentsPage() {
                 <div className="space-y-4">
                   {sortedAssignments.length > 0 ? (
                     sortedAssignments.map((assignment) => (
-                      <AssignmentCard key={assignment.id} assignment={assignment} />
+                      <AssignmentCard key={assignment.id} assignment={assignment} onSubmit={handleSubmit} />
                     ))
                   ) : (
                     <div className="bg-gradient-to-br from-gray-900/50 to-gray-800/20 border border-gray-700/50 rounded-2xl p-12 text-center">
@@ -133,7 +176,7 @@ export default function AssignmentsPage() {
               {/* Right Sidebar Widgets */}
               <div className="lg:col-span-1 space-y-6">
                 <DeadlineWidget assignments={sortedAssignments} />
-                <XPProgressWidget stats={mockStats} />
+                <XPProgressWidget stats={stats} />
                 <FeedbackWidget />
               </div>
             </div>

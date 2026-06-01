@@ -17,13 +17,23 @@ export class ReferralsController {
     return this.referralsService.useReferral(useReferralDto);
   }
 
+  @Post('click/:code')
+  trackClick(@Param('code') code: string) {
+    return this.referralsService.trackClick(code);
+  }
+
   @Get('leaderboard/all')
   getLeaderboard() {
     return this.referralsService.getLeaderboard();
   }
 
   @Get(':userId')
-  getReferrals(@Param('userId') userId: string) {
-    return this.referralsService.getReferrals(userId);
+  getReferralStats(@Param('userId') userId: string) {
+    return this.referralsService.getReferralStats(userId);
+  }
+
+  @Get('activity/:userId')
+  getActivity(@Param('userId') userId: string) {
+    return this.referralsService.getActivity(userId);
   }
 }

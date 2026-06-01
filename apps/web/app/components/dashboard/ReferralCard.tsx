@@ -6,17 +6,27 @@ import { Copy, Check, Share2 } from 'lucide-react';
 type ReferralCardProps = {
   referralsCount: number;
   xp: number;
+  referralCode: string;
 };
 
-const referralCode = 'EIPS24-SUBHRA';
-
-export function ReferralCard({ referralsCount, xp }: ReferralCardProps) {
+export function ReferralCard({ referralsCount, xp, referralCode }: ReferralCardProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(referralCode);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleShare = () => {
+    const link = `${window.location.origin}/apply?ref=${referralCode}`;
+    if (navigator.share) {
+      navigator.share({ title: 'Join EIPsInsight', url: link }).catch(() => handleCopy());
+    } else {
+      navigator.clipboard.writeText(link);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   return (
@@ -66,9 +76,12 @@ export function ReferralCard({ referralsCount, xp }: ReferralCardProps) {
       </div>
 
       {/* Share CTA */}
-      <button className="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-sm py-3 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 group mt-auto shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:shadow-[0_0_30px_rgba(16,185,129,0.35)]">
+      <button 
+        onClick={handleShare}
+        className="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-sm py-3 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 group mt-auto shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:shadow-[0_0_30px_rgba(16,185,129,0.35)]"
+      >
         <Share2 size={15} className="group-hover:rotate-12 transition-transform" />
-        Share Referral Link
+        {copied ? "Link Copied!" : "Share Referral Link"}
       </button>
     </div>
   );

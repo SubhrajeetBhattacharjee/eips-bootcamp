@@ -8,9 +8,10 @@ import type { Application } from '@/app/lib/applications';
 interface ApplicationRowProps {
   application: Application;
   onViewDetails: (application: Application) => void;
+  onStatusChange: () => void;
 }
 
-export function ApplicationRow({ application, onViewDetails }: ApplicationRowProps) {
+export function ApplicationRow({ application, onViewDetails, onStatusChange }: ApplicationRowProps) {
   const [showMenu, setShowMenu] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -27,14 +28,34 @@ export function ApplicationRow({ application, onViewDetails }: ApplicationRowPro
 
   const handleApprove = async () => {
     setIsUpdating(true);
-    // API call would go here
-    setTimeout(() => setIsUpdating(false), 500);
+    try {
+      await fetch(`/api/admin/applications/${application.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'APPROVED' }),
+      });
+      onStatusChange();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   const handleReject = async () => {
     setIsUpdating(true);
-    // API call would go here
-    setTimeout(() => setIsUpdating(false), 500);
+    try {
+      await fetch(`/api/admin/applications/${application.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'REJECTED' }),
+      });
+      onStatusChange();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   return (

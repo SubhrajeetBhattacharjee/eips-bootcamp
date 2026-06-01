@@ -27,6 +27,7 @@ interface Assignment {
 
 interface AssignmentCardProps {
   assignment: Assignment;
+  onSubmit?: (id: string) => void;
 }
 
 const statusConfig = {
@@ -68,7 +69,7 @@ const difficultyConfig = {
   Advanced: 'bg-red-500/20 text-red-300 border border-red-500/30',
 };
 
-export function AssignmentCard({ assignment }: AssignmentCardProps) {
+export function AssignmentCard({ assignment, onSubmit }: AssignmentCardProps) {
   const isOverdue = new Date(assignment.deadline) < new Date() && assignment.status !== 'Completed';
   const daysUntilDeadline = Math.ceil(
     (new Date(assignment.deadline).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
@@ -177,7 +178,14 @@ export function AssignmentCard({ assignment }: AssignmentCardProps) {
           ))}
         </div>
 
-        <button className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all ${statusConfig_.text} hover:bg-white/10`}>
+        <button 
+          onClick={() => {
+            if (assignment.status === 'Not Started' || assignment.status === 'In Progress' || assignment.status === 'Overdue') {
+              onSubmit?.(assignment.id);
+            }
+          }}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all ${statusConfig_.text} hover:bg-white/10`}
+        >
           <span className="text-sm">{actionButton.label}</span>
           <actionButton.icon size={16} />
         </button>

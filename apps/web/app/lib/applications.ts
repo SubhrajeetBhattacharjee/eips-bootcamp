@@ -55,7 +55,7 @@ export interface CountryStats {
 // API Integration
 export async function fetchApplications(): Promise<Application[]> {
   try {
-    const response = await fetch('http://localhost:4000/cap/applications', {
+    const response = await fetch('http://127.0.0.1:4000/cap/applications', {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     });
@@ -73,10 +73,10 @@ export async function updateApplicationStatus(
   status: 'approved' | 'rejected'
 ): Promise<boolean> {
   try {
-    const response = await fetch(`http://localhost:4000/cap/applications/${applicationId}`, {
+    const response = await fetch(`http://127.0.0.1:4000/cap/${applicationId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status }),
+      body: JSON.stringify({ status: status.toUpperCase() }),
     });
 
     return response.ok;

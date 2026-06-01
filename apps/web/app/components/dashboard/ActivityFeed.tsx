@@ -1,4 +1,4 @@
-import { mockActivity, ActivityItem } from '../../lib/dashboard-data';
+import { ActivityItem } from '../../lib/dashboard';
 import { User, Users, Star, ShieldCheck } from 'lucide-react';
 
 const iconConfig: Record<ActivityItem['icon'], { icon: React.ReactNode; bg: string }> = {
@@ -20,7 +20,7 @@ const iconConfig: Record<ActivityItem['icon'], { icon: React.ReactNode; bg: stri
   },
 };
 
-export function ActivityFeed() {
+export function ActivityFeed({ activities }: { activities: ActivityItem[] }) {
   return (
     <div className="bg-[#0d0d0d] border border-white/8 rounded-2xl p-5 flex flex-col h-full">
       <div className="flex items-center justify-between mb-4">
@@ -31,7 +31,8 @@ export function ActivityFeed() {
       </div>
 
       <ul className="space-y-3.5">
-        {mockActivity.map((item) => {
+        {activities.length > 0 ? (
+          activities.map((item) => {
           const { icon, bg } = iconConfig[item.icon];
           return (
             <li key={item.id} className="flex items-start gap-3">
@@ -47,7 +48,10 @@ export function ActivityFeed() {
               </div>
             </li>
           );
-        })}
+        })
+        ) : (
+          <li className="text-center text-zinc-500 text-xs py-4">No recent activity</li>
+        )}
       </ul>
     </div>
   );

@@ -82,7 +82,7 @@ export default function DashboardPage() {
     return null;
   }
 
-  const displayName = dashboard.user.username;
+  const displayName = dashboard.user.username !== 'Explorer' ? dashboard.user.username : (user?.fullName || user?.firstName || 'Explorer');
 
   return (
     <DashboardShell>
@@ -105,11 +105,12 @@ export default function DashboardPage() {
           <ReferralCard
             referralsCount={dashboard.referralsCount}
             xp={dashboard.xp}
+            referralCode={dashboard.referralCode}
           />
 
           <LeaderboardPreview leaderboard={dashboard.leaderboard} />
 
-          <ActivityFeed />
+          <ActivityFeed activities={dashboard.recentActivity} />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">

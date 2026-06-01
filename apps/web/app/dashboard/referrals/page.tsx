@@ -4,9 +4,10 @@ import {
   fetchReferralStats,
   fetchLeaderboard,
   generateReferralCode,
-  MOCK_REFERRAL_STATS,
-  MOCK_ACTIVITY,
+  fetchReferralActivity,
+  createEmptyReferralStats,
   type ReferralStats,
+  type ReferralActivity as ReferralActivityType,
 } from "../../lib/referrals";
 
 import DashboardShell from "../../components/dashboard/DashboardShell";
@@ -23,13 +24,14 @@ export const metadata = {
   description: "Invite builders and grow the Ethereum ecosystem.",
 };
 
-async function getReferralData(): Promise<ReferralStats> {
+async function getReferralData(): Promise<{ stats: ReferralStats; activity: ReferralActivityType[] }> {
+  const empty = { stats: createEmptyReferralStats(), activity: [] };
   try {
     const { userId: clerkId } = await auth();
-    if (!clerkId) return MOCK_REFERRAL_STATS;
+    if (!clerkId) return empty;
 
     const dbUser = await resolveDbUser(clerkId);
-    if (!dbUser) return MOCK_REFERRAL_STATS;
+    if (!dbUser) return empty;
 
     let stats = await fetchReferralStats(dbUser.id);
 
@@ -38,6 +40,8 @@ async function getReferralData(): Promise<ReferralStats> {
       await generateReferralCode(dbUser.id);
       stats = await fetchReferralStats(dbUser.id);
     }
+
+    const activity = await fetchReferralActivity(dbUser.id);
 
     // Merge leaderboard rank
     if (stats) {
@@ -50,16 +54,16 @@ async function getReferralData(): Promise<ReferralStats> {
           stats.leaderboardPercentile = `Top ${percentile}%`;
         }
       }
-      return stats;
+      return { stats, activity };
     }
   } catch {
-    // Backend unavailable — use mock
+    // Backend unavailable — return empty
   }
-  return MOCK_REFERRAL_STATS;
+  return empty;
 }
 
 export default async function ReferralsPage() {
-  const stats = await getReferralData();
+  const { stats, activity } = await getReferralData();
 
   return (
     <DashboardShell>
@@ -78,7 +82,7 @@ export default async function ReferralsPage() {
             <ReferralStatsGrid stats={stats} />
 
             {/* Activity Section */}
-            <ReferralActivity activities={MOCK_ACTIVITY} />
+            <ReferralActivity activities={activity} />
           </div>
 
           {/* RIGHT: Sidebar widgets */}

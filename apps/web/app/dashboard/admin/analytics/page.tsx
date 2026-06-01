@@ -13,10 +13,10 @@ import { CapAnalyticsCard } from '@/app/components/admin/CapAnalyticsCard';
 import { ReferralAnalyticsCard } from '@/app/components/admin/ReferralAnalyticsCard';
 import {
   verifyAdminRole,
-  generateMockAnalyticsData,
-  generateMockGrowthData,
-  generateMockActivityFeed,
-  generateMockTopUsers,
+  fetchAdminAnalytics,
+  fetchGrowthData,
+  fetchActivityFeed,
+  fetchTopUsers,
   generateMockSystemMetrics,
   generateMockPlatformHealth,
   generateMockCAPAnalytics,
@@ -32,11 +32,11 @@ export default async function AdminDashboardPage() {
     
   // Verify admin role
   // Comment the below snippet and visit /dashboard/admin/analytics
-  {/*const isAdmin = await verifyAdminRole();
+  // const isAdmin = await verifyAdminRole();
   
-   if (!isAdmin) {
-     redirect('/dashboard');
-   }*/}
+  //  if (!isAdmin) {
+  //    redirect('/dashboard');
+  //  }
 
   // Fetch all data (with fallback to mock data)
   const [
@@ -49,10 +49,10 @@ export default async function AdminDashboardPage() {
     capAnalytics,
     referralPerformance
   ] = await Promise.all([
-    generateMockAnalyticsData(),
-    generateMockGrowthData(),
-    generateMockActivityFeed(),
-    generateMockTopUsers(),
+    fetchAdminAnalytics(),
+    fetchGrowthData(),
+    fetchActivityFeed(),
+    fetchTopUsers(),
     generateMockSystemMetrics(),
     generateMockPlatformHealth(),
     generateMockCAPAnalytics(),

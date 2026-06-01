@@ -46,40 +46,7 @@ export interface UpcomingEvent {
   day: string;
 }
 
-export const mockStats: StatCard[] = [
-  {
-    id: 'xp',
-    label: 'XP Earned',
-    value: '2,450',
-    change: '+120 this week',
-    changePositive: true,
-    color: 'emerald',
-  },
-  {
-    id: 'referrals',
-    label: 'Referrals',
-    value: 23,
-    change: '+5 this week',
-    changePositive: true,
-    color: 'emerald',
-  },
-  {
-    id: 'cap',
-    label: 'CAP Status',
-    value: 'Approved',
-    change: 'Active Ambassador',
-    changePositive: true,
-    color: 'emerald',
-  },
-  {
-    id: 'rank',
-    label: 'Leaderboard Rank',
-    value: '#12',
-    change: 'Top 5% of ambassadors',
-    changePositive: true,
-    color: 'purple',
-  },
-];
+
 
 export const mockLeaderboard: LeaderboardEntry[] = [
   { rank: 1, username: '0xArjun.eth', xp: 3450, medal: 'gold' },

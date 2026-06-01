@@ -1,6 +1,6 @@
 // apps/web/app/lib/leaderboard.ts
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:4000";
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "http://127.0.0.1:4000";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -56,32 +56,6 @@ export interface DBUser {
   rank: number;
 }
 
-// ─── Mock fallbacks ───────────────────────────────────────────────────────────
-
-const MOCK_LEADERBOARD: LeaderboardUser[] = [
-  { rank: 1, userId: "u1", name: "Arjun.eth", handle: "@arjun_eth", xp: 12450, referrals: 42, capStatus: "Approved", streak: 18 },
-  { rank: 2, userId: "u2", name: "Priya Sharma", handle: "@priya_web3", xp: 9850, referrals: 38, capStatus: "Approved", streak: 15 },
-  { rank: 3, userId: "u3", name: "0xKartik", handle: "@kartik_builds", xp: 8230, referrals: 32, capStatus: "Approved", streak: 14 },
-  { rank: 4, userId: "u4", name: "Harsh Patel", handle: "@harsh_eth", xp: 7420, referrals: 28, capStatus: "Approved", streak: 13 },
-  { rank: 5, userId: "u5", name: "Sneha Reddy", handle: "@sneha_web3", xp: 6890, referrals: 21, capStatus: "Approved", streak: 11 },
-  { rank: 6, userId: "u6", name: "Divyansh", handle: "@divy_eth", xp: 6120, referrals: 17, capStatus: "Applied", streak: 9 },
-  { rank: 7, userId: "u7", name: "Ananya Singh", handle: "@ananya_codes", xp: 5780, referrals: 15, capStatus: "Approved", streak: 9 },
-  { rank: 8, userId: "u8", name: "Subhrajeet", handle: "@subhrajeet", xp: 2450, referrals: 10, capStatus: "Applied", streak: 7 },
-];
-
-const MOCK_FEATURED: FeaturedContributor = {
-  userId: "u1",
-  name: "Arjun.eth",
-  handle: "@arjun_eth",
-  badges: ["CAP Ambassador", "Researcher", "Educator", "Community Builder"],
-  description: "Leading the way in Ethereum education and ecosystem growth.",
-  xp: 12450,
-  streak: 18,
-  rank: 1,
-  weeklyGrowth: 24,
-  sparkline: [0.3, 0.4, 0.35, 0.5, 0.45, 0.6, 0.55, 0.7, 0.65, 0.8, 0.75, 0.9, 0.85, 1.0],
-};
-
 const MOCK_IMPACT: ImpactStats = {
   activeLearners: 12450,
   activeLearnersDelta: 18,
@@ -96,6 +70,7 @@ const MOCK_IMPACT: ImpactStats = {
 async function apiFetch<T>(path: string, fallback: T): Promise<T> {
   try {
     const res = await fetch(`${API_BASE}${path}`, {
+      headers: { 'x-api-key': 'dev-secret-key' },
       next: { revalidate: 60 },
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -110,19 +85,7 @@ async function apiFetch<T>(path: string, fallback: T): Promise<T> {
 export async function fetchLeaderboard(
   _period: FilterPeriod = "all"
 ): Promise<LeaderboardUser[]> {
-  const raw = await apiFetch<
-    Array<{
-      rank: number;
-      userId: string;
-      name: string;
-      handle: string;
-      avatarUrl?: string;
-      xp: number;
-      referrals: number;
-      capStatus: CAPStatusValue;
-      streak: number;
-    }>
-  >("/referrals/leaderboard/all", MOCK_LEADERBOARD);
+  const raw = await apiFetch<LeaderboardUser[]>("/referrals/leaderboard/all", []);
 
   return raw.map((r, i) => ({
     rank: r.rank ?? i + 1,
@@ -157,18 +120,21 @@ export async function fetchImpactStats(): Promise<ImpactStats> {
 
 export function getFeaturedContributor(
   leaderboard: LeaderboardUser[]
-): FeaturedContributor {
+): FeaturedContributor | null {
   const top = leaderboard[0];
-  if (!top) return MOCK_FEATURED;
+  if (!top) return null;
   return {
-    ...MOCK_FEATURED,
     userId: top.userId,
     name: top.name,
     handle: top.handle,
     avatarUrl: top.avatarUrl,
+    badges: ["Top Contributor"],
+    description: "Leading the way in Ethereum education and ecosystem growth.",
     xp: top.xp,
     streak: top.streak,
     rank: top.rank,
+    weeklyGrowth: 24,
+    sparkline: [0.3, 0.4, 0.35, 0.5, 0.45, 0.6, 0.55, 0.7, 0.65, 0.8, 0.75, 0.9, 0.85, 1.0],
   };
 }
 

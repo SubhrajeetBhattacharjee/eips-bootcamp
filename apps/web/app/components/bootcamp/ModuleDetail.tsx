@@ -37,9 +37,10 @@ interface ModuleDetailProps {
   module: Module;
   onBack: () => void;
   lessons: Lesson[];
+  onLessonComplete?: (lessonId: string) => void;
 }
 
-export function ModuleDetail({ module, onBack, lessons }: ModuleDetailProps) {
+export function ModuleDetail({ module, onBack, lessons, onLessonComplete }: ModuleDetailProps) {
   const [selectedLesson, setSelectedLesson] = useState<string | null>(null);
   const selectedLessonData = lessons.find(l => l.id === selectedLesson);
 
@@ -147,7 +148,11 @@ export function ModuleDetail({ module, onBack, lessons }: ModuleDetailProps) {
       {/* Main Content Area */}
       <div className="flex-1 overflow-y-auto bg-black">
         {selectedLessonData ? (
-          <LessonContent lesson={selectedLessonData} moduleTitle={module.title} />
+          <LessonContent 
+            lesson={selectedLessonData} 
+            moduleTitle={module.title} 
+            onLessonComplete={onLessonComplete}
+          />
         ) : (
           <ModuleOverview module={module} lessons={lessons} />
         )}
@@ -200,7 +205,7 @@ function ModuleOverview({ module, lessons }: { module: Module; lessons: Lesson[]
   );
 }
 
-function LessonContent({ lesson, moduleTitle }: { lesson: Lesson; moduleTitle: string }) {
+function LessonContent({ lesson, moduleTitle, onLessonComplete }: { lesson: Lesson; moduleTitle: string; onLessonComplete?: (id: string) => void }) {
   return (
     <div className="max-w-4xl mx-auto p-8">
       {/* Breadcrumb */}
@@ -285,7 +290,10 @@ function LessonContent({ lesson, moduleTitle }: { lesson: Lesson; moduleTitle: s
         {/* Actions */}
         {!lesson.completed && (
           <div className="flex gap-4 pt-8 border-t border-gray-800">
-            <button className="flex-1 px-6 py-4 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-black font-bold rounded-xl transition-all">
+            <button 
+              onClick={() => onLessonComplete?.(lesson.id)}
+              className="flex-1 px-6 py-4 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-black font-bold rounded-xl transition-all"
+            >
               Mark as Complete
             </button>
             <button className="px-6 py-4 bg-gray-800/50 hover:bg-gray-800 border border-gray-700 text-white font-semibold rounded-xl transition-all">
