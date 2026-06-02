@@ -1,4 +1,4 @@
-// Referrals lib — types, API helpers, mock fallbacks
+import { prisma } from '@/app/lib/prisma';
 
 export interface ReferralStats {
   referralCode: string;
@@ -38,53 +38,115 @@ export interface LeaderboardEntry {
   rank: number;
 }
 
-const BASE_URL = "http://127.0.0.1:4000";
+export async function resolveDbUser(clerkId: string): Promise<{ id: string } | null> {
+  const user = await prisma.user.findFirst({
+    where: { id: clerkId }
+  });
+  return user ? { id: user.id } : null;
+}
 
-async function fetchApi<T>(path: string): Promise<T | null> {
+export async function fetchReferralStats(userId: string): Promise<ReferralStats | null> {
+  const code = await prisma.referralCode.findUnique({
+    where: { userId },
+    include: { referrals: true }
+  });
+
+  if (!code) return null;
+
+  const totalReferrals = code.referrals.length;
+  const successfulSignups = code.referrals.filter(r => r.status === 'ONBOARDED').length;
+  const pendingJoins = totalReferrals - successfulSignups;
+  
+  // Calculate XP earned from these referrals (500 per ONBOARDED as defined in admin.ts)
+  const xpEarned = successfulSignups * 500;
+
+  return {
+    referralCode: code.code,
+    referralLink: `https://eips-bootcamp.com/join?ref=${code.code}`,
+    totalClicks: code.clicks,
+    totalReferrals,
+    pendingJoins,
+    successfulSignups,
+    xpEarned,
+    leaderboardRank: 0, // Calculated later
+    leaderboardPercentile: "",
+    monthlyGrowth: {
+      totalReferrals, // Simplify for now
+      pendingJoins,
+      successfulSignups,
+      xpEarned,
+    },
+    peopleInspired: totalReferrals,
+    communitiesReached: 1,
+  };
+}
+
+export async function fetchLeaderboard(): Promise<LeaderboardEntry[] | null> {
   try {
-    const res = await fetch(`${BASE_URL}${path}`, { 
-      cache: "no-store",
-      headers: {
-        'x-api-key': 'dev-secret-key'
-      }
+    const xpGroups = await prisma.xPTransaction.groupBy({
+      by: ['userId'],
+      _sum: { amount: true },
+      orderBy: { _sum: { amount: 'desc' } },
+      take: 50
     });
-    if (!res.ok) return null;
-    return res.json() as Promise<T>;
-  } catch {
+    
+    const users = await prisma.user.findMany({
+      where: { id: { in: xpGroups.map(g => g.userId) } }
+    });
+    
+    return xpGroups.map((group, i) => {
+      const u = users.find(u => u.id === group.userId)!;
+      return {
+        userId: u.id,
+        name: u.name || 'Unknown User',
+        referrals: 0, // Requires complex grouping to get exact referral count per user on leaderboard
+        xp: group._sum.amount || 0,
+        rank: i + 1
+      };
+    });
+  } catch (e) {
     return null;
   }
 }
 
-export async function resolveDbUser(clerkId: string): Promise<{ id: string } | null> {
-  return fetchApi<{ id: string }>(`/users/clerk/${clerkId}`);
-}
-
-export async function fetchReferralStats(userId: string): Promise<ReferralStats | null> {
-  return fetchApi<ReferralStats>(`/referrals/${userId}`);
-}
-
-export async function fetchLeaderboard(): Promise<LeaderboardEntry[] | null> {
-  return fetchApi<LeaderboardEntry[]>("/referrals/leaderboard/all");
-}
-
 export async function fetchReferralActivity(userId: string): Promise<ReferralActivity[]> {
-  const data = await fetchApi<ReferralActivity[]>(`/referrals/activity/${userId}`);
-  return data || [];
+  const code = await prisma.referralCode.findUnique({
+    where: { userId },
+    include: {
+      referrals: {
+        include: { referredUser: true },
+        orderBy: { createdAt: 'desc' },
+        take: 10
+      }
+    }
+  });
+
+  if (!code) return [];
+
+  return code.referrals.map(r => ({
+    id: r.id,
+    avatarUrl: r.referredUser.image || undefined,
+    name: r.referredUser.name || 'New User',
+    action: r.status === 'ONBOARDED' ? 'completed_onboarding' : 'joined',
+    timestamp: r.createdAt.toISOString(),
+    xpEarned: r.status === 'ONBOARDED' ? 500 : 0,
+    status: r.status === 'ONBOARDED' ? 'Completed' : 'Joined'
+  }));
 }
 
 export async function generateReferralCode(userId: string): Promise<{ code: string } | null> {
   try {
-    const res = await fetch(`${BASE_URL}/referrals/generate`, {
-      method: "POST",
-      headers: { 
-        "Content-Type": "application/json",
-        'x-api-key': 'dev-secret-key'
-      },
-      body: JSON.stringify({ userId }),
+    const randomCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+    const newCode = await prisma.referralCode.create({
+      data: {
+        code: randomCode,
+        userId: userId,
+        clicks: 0
+      }
     });
-    if (!res.ok) return null;
-    return res.json();
-  } catch {
+    return { code: newCode.code };
+  } catch (e) {
+    console.error("Failed to generate code:", e);
     return null;
   }
 }

@@ -3,6 +3,7 @@
 import { useSession } from '@/app/lib/auth-client';
 import { useEffect, useState } from 'react';
 import { DashboardShell } from '@/app/components/dashboard/DashboardShell';
+import LoadingScreen from '@/app/components/ui/LoadingScreen';
 import { ApplicationsHero } from '@/app/components/applications/ApplicationsHero';
 import { ApplicationsStats } from '@/app/components/applications/ApplicationsStats';
 import { ApplicationsFilters } from '@/app/components/applications/ApplicationsFilters';
@@ -170,12 +171,8 @@ export default function ApplicationsPage() {
     a.click();
   };
 
-  if (isPending) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-black">
-        <div className="text-white">Loading...</div>
-      </div>
-    );
+  if (loading) {
+    return <LoadingScreen text="LOADING APPLICATIONS..." />;
   }
 
   // Bypassed Login Admin for Testing

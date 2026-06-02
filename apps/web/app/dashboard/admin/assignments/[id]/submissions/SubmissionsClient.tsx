@@ -10,9 +10,9 @@ export default function SubmissionsClient({ submissions, assignmentId }: { submi
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  async function handleGrade(submissionId: string, score: number, status: string) {
+  async function handleGrade(submissionId: string, score: number, status: string, feedback?: string) {
     setLoading(true);
-    await gradeSubmission(submissionId, score, status, assignmentId);
+    await gradeSubmission(submissionId, score, status, assignmentId, feedback);
     setLoading(false);
     router.refresh();
   }
@@ -73,7 +73,8 @@ export default function SubmissionsClient({ submissions, assignmentId }: { submi
                           onClick={() => {
                             const score = prompt("Enter XP score for this submission (e.g. 500):", "500");
                             if (score && !isNaN(Number(score))) {
-                              handleGrade(sub.id, Number(score), 'COMPLETED');
+                              const feedback = prompt("Enter remarks/feedback for the student (optional):", "Great job!");
+                              handleGrade(sub.id, Number(score), 'COMPLETED', feedback || undefined);
                             }
                           }}
                           disabled={loading}
@@ -83,7 +84,12 @@ export default function SubmissionsClient({ submissions, assignmentId }: { submi
                           <CheckCircle size={20} />
                         </button>
                         <button
-                          onClick={() => handleGrade(sub.id, 0, 'REJECTED')}
+                          onClick={() => {
+                            const feedback = prompt("Enter reason for rejection:", "Please revise your submission.");
+                            if (feedback) {
+                              handleGrade(sub.id, 0, 'REJECTED', feedback);
+                            }
+                          }}
                           disabled={loading}
                           className="p-1.5 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors disabled:opacity-50"
                           title="Reject"

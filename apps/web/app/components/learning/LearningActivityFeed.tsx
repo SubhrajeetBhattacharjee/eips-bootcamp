@@ -1,142 +1,67 @@
-// apps/web/components/learning/LearningActivityFeed.tsx
-
 import React from 'react';
-import * as Icons from 'lucide-react';
+import { Award, BookOpen, Star, MessageSquare, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
-interface Activity {
-  id: string;
-  type: 'completed' | 'submitted' | 'earned' | 'rank';
-  title: string;
-  description: string;
-  timestamp: string;
-  icon: string;
-}
+export const LearningActivityFeed = ({ activity }: { activity?: any[] }) => {
+  const events = activity || [];
 
-const activities: Activity[] = [
-  {
-    id: '1',
-    type: 'completed',
-    title: 'Module Completed',
-    description: 'Solidity Basics - 100%',
-    timestamp: '2 hours ago',
-    icon: 'CheckCircle',
-  },
-  {
-    id: '2',
-    type: 'submitted',
-    title: 'Assignment Submitted',
-    description: 'Smart Contract Implementation #5',
-    timestamp: '5 hours ago',
-    icon: 'Send',
-  },
-  {
-    id: '3',
-    type: 'earned',
-    title: 'XP Earned',
-    description: '+250 XP for completing Security module',
-    timestamp: '1 day ago',
-    icon: 'Zap',
-  },
-  {
-    id: '4',
-    type: 'rank',
-    title: 'Rank Up',
-    description: 'Moved to Rank #12 on the leaderboard',
-    timestamp: '2 days ago',
-    icon: 'TrendingUp',
-  },
-  {
-    id: '5',
-    type: 'completed',
-    title: 'Lesson Completed',
-    description: 'Web3 Fundamentals - Lesson 3',
-    timestamp: '3 days ago',
-    icon: 'BookOpen',
-  },
-];
+  const getIcon = (type: string) => {
+    switch (type) {
+      case 'assignment':
+        return <BookOpen size={16} className="text-blue-400" />;
+      case 'achievement':
+        return <Award size={16} className="text-amber-400" />;
+      default:
+        return <Star size={16} className="text-emerald-400" />;
+    }
+  };
 
-const iconMap: Record<string, React.ComponentType<any>> = {
-  CheckCircle: Icons.CheckCircle,
-  Send: Icons.Send,
-  Zap: Icons.Zap,
-  TrendingUp: Icons.TrendingUp,
-  BookOpen: Icons.BookOpen,
-};
+  const getIconBg = (type: string) => {
+    switch (type) {
+      case 'assignment':
+        return 'bg-blue-500/10 border-blue-500/20';
+      case 'achievement':
+        return 'bg-amber-400/10 border-amber-400/20';
+      default:
+        return 'bg-emerald-500/10 border-emerald-500/20';
+    }
+  };
 
-export const LearningActivityFeed: React.FC = () => {
   return (
-    <div className="group relative bg-[#0d0d0d] border border-white/8 rounded-2xl p-6 hover:border-emerald-500/20 hover:-translate-y-0.5 transition-all duration-300 overflow-hidden h-full flex flex-col">
-      {/* Hover glow */}
-      <div className="absolute inset-0 bg-emerald-500/0 group-hover:bg-emerald-500/3 transition-all duration-300 rounded-2xl" />
+    <div className="bg-[#0d0d0d] border border-white/8 rounded-2xl p-6 flex flex-col h-full hover:border-emerald-500/20 transition-all duration-300">
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-white font-bold text-base">Recent Activity</h3>
+      </div>
 
-      <div className="relative z-10 flex-1 flex flex-col">
-        <div className="mb-6">
-          <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">
-            Activity Feed
-          </p>
-          <h3 className="text-xl font-bold text-white mt-1">
-            Recent Activity
-          </h3>
-        </div>
-
-        {/* Activity Items */}
-        <div className="space-y-3 flex-1">
-            {activities.map((activity, index) => {
-              const IconComponent = iconMap[activity.icon] || Icons.Activity;
-              const isLast = index === activities.length - 1;
-
-              return (
-                <div
-                  key={activity.id}
-                  className={`
-                    flex gap-3 pb-3
-                    ${!isLast ? 'border-b border-white/8' : ''}
-                  `}
-                >
-                  {/* Icon */}
-                  <div className="flex-shrink-0">
-                    <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-                      <IconComponent size={16} className="text-emerald-400" />
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-semibold text-white">
-                      {activity.title}
-                    </p>
-                    <p className="text-xs text-zinc-400 mt-0.5">
-                      {activity.description}
-                    </p>
-                    <p className="text-xs text-zinc-600 mt-1">
-                      {activity.timestamp}
-                    </p>
+      <div className="flex-1">
+        {events.length === 0 ? (
+          <div className="flex items-center justify-center h-full text-zinc-500 text-sm">
+            No recent activity.
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {events.map((event) => (
+              <div key={event.id} className="flex gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/5">
+                <div className={`w-10 h-10 rounded-xl border flex items-center justify-center shrink-0 ${getIconBg(event.type)}`}>
+                  {getIcon(event.type)}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-white truncate">{event.title}</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="text-xs text-zinc-500">{event.time}</span>
+                    {event.xp > 0 && (
+                      <>
+                        <span className="text-zinc-700 text-[10px]">•</span>
+                        <span className="text-xs font-bold text-emerald-400">+{event.xp} XP</span>
+                      </>
+                    )}
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
-
-          {/* View All Button */}
-          <div className="mt-6 pt-4 border-t border-gray-700/50">
-            <button
-              className={`
-                w-full rounded-lg font-medium py-3 px-4
-                transition-all duration-200
-                border border-orange-500/50 hover:border-orange-500/80
-                bg-orange-500/10 hover:bg-orange-500/20
-                text-orange-300 hover:text-orange-200
-                text-sm
-              `}
-            >
-              View All Activity →
-            </button>
-          </div>
-        </div>
-
-        {/* Bottom accent line */}
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        )}
       </div>
-    
+    </div>
   );
 };

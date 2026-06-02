@@ -1,9 +1,8 @@
-// apps/web/app/learning/page.tsx
-
 'use client';
 
 import { useSession } from '@/app/lib/auth-client';
 import { DashboardShell } from '@/app/components/dashboard/DashboardShell';
+import LoadingScreen from '@/app/components/ui/LoadingScreen';
 import { LearningHero } from '@/app/components/learning/LearningHero';
 import { LearningStatsGrid } from '@/app/components/learning/LearningStatsGrid';
 import { ContinueLearningCard } from '@/app/components/learning/ContinueLearningCard';
@@ -15,17 +14,31 @@ import { UpcomingDeadlines } from '@/app/components/learning/UpcomingDeadlines';
 import { AchievementBadges } from '@/app/components/learning/AchievementBadges';
 import { SkillAnalytics } from '@/app/components/learning/SkillAnalytics';
 import { LearningStreak } from '@/app/components/learning/LearningStreak';
+import { useEffect, useState } from 'react';
+import { getLearningData, type LearningData } from '@/app/actions/learning';
 
 export default function LearningPage() {
   const { data: session, isPending } = useSession();
+  const [learningData, setLearningData] = useState<LearningData | null>(null);
+  const [dataLoading, setDataLoading] = useState(true);
 
-  if (isPending) {
+  useEffect(() => {
+    if (!isPending && session?.user) {
+      getLearningData().then(data => {
+        setLearningData(data);
+        setDataLoading(false);
+      });
+    } else if (!isPending) {
+      setDataLoading(false);
+    }
+  }, [isPending, session]);
+
+  if (isPending || dataLoading) {
     return (
       <DashboardShell>
         <div className="flex items-center justify-center h-96">
-          <div className="text-center">
-            <div className="w-12 h-12 rounded-full border-2 border-emerald-500/30 border-t-emerald-400 animate-spin mx-auto mb-4" />
-            <p className="text-gray-400">Loading learning page...</p>
+          <div className="w-full flex items-center justify-center py-20">
+            <LoadingScreen text="LOADING LEARNING MODULE..." fullScreen={false} />
           </div>
         </div>
       </DashboardShell>
@@ -38,35 +51,35 @@ export default function LearningPage() {
     <DashboardShell>
       <div className="space-y-5">
         {/* Hero Section */}
-        <LearningHero userName={displayName} />
+        <LearningHero userName={displayName} stats={learningData?.stats} streakData={learningData?.streak} />
 
         {/* Learning Stats Grid */}
-        <LearningStatsGrid />
+        <LearningStatsGrid stats={learningData?.stats} />
 
         {/* Continue Learning Featured Card */}
-        <ContinueLearningCard />
+        <ContinueLearningCard inProgress={learningData?.inProgress} />
 
         {/* Progress + Timeline + Next Step */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <LearningProgressWidget />
-          <LearningTimeline />
-          <RecommendedNextStep />
+          <LearningProgressWidget stats={learningData?.stats} />
+          <LearningTimeline timeline={learningData?.timeline} />
+          <RecommendedNextStep nextStep={learningData?.nextStep} />
         </div>
 
         {/* Activity + Deadlines */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <LearningActivityFeed />
-          <UpcomingDeadlines />
+          <LearningActivityFeed activity={learningData?.activity} />
+          <UpcomingDeadlines deadlines={learningData?.deadlines} />
         </div>
 
         {/* Achievements + Skills */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <AchievementBadges />
-          <SkillAnalytics />
+          <AchievementBadges stats={learningData?.stats} />
+          <SkillAnalytics skills={learningData?.skills} />
         </div>
 
         {/* Learning Streak */}
-        <LearningStreak />
+        <LearningStreak streakData={learningData?.streak} />
       </div>
     </DashboardShell>
   );

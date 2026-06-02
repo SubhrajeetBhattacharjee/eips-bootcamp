@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Eye, MoreVertical } from 'lucide-react';
+import { Eye, CheckCircle2, XCircle, Clock } from 'lucide-react';
 import { getStatusColor, getTrackColor, getStatusIcon } from '@/app/lib/applications';
 import type { Application } from '@/app/lib/applications';
 
@@ -12,13 +12,11 @@ interface ApplicationRowProps {
 }
 
 export function ApplicationRow({ application, onViewDetails, onStatusChange }: ApplicationRowProps) {
-  const [showMenu, setShowMenu] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
 
   const formattedDate = new Date(application.appliedDate).toLocaleDateString('en-US', {
-    year: 'numeric',
     month: 'short',
-    day: '2-digit',
+    day: 'numeric',
   });
 
   const time = new Date(application.appliedDate).toLocaleTimeString('en-US', {
@@ -26,7 +24,8 @@ export function ApplicationRow({ application, onViewDetails, onStatusChange }: A
     minute: '2-digit',
   });
 
-  const handleApprove = async () => {
+  const handleApprove = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     setIsUpdating(true);
     try {
       await fetch(`/api/admin/applications/${application.id}`, {
@@ -42,7 +41,8 @@ export function ApplicationRow({ application, onViewDetails, onStatusChange }: A
     }
   };
 
-  const handleReject = async () => {
+  const handleReject = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     setIsUpdating(true);
     try {
       await fetch(`/api/admin/applications/${application.id}`, {
@@ -59,105 +59,84 @@ export function ApplicationRow({ application, onViewDetails, onStatusChange }: A
   };
 
   return (
-    <tr className="hover:bg-white/5 transition-colors duration-200 group">
-      {/* Applicant */}
-      <td className="px-6 py-4">
+    <div 
+      onClick={() => onViewDetails(application)}
+      className="group relative flex flex-col p-5 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 hover:border-emerald-500/50 transition-all duration-300 cursor-pointer overflow-hidden backdrop-blur-sm"
+    >
+      {/* Background Glow on Hover */}
+      <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/0 via-emerald-500/0 to-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+      {/* Header: Avatar, Info, Status */}
+      <div className="flex items-start justify-between mb-4 z-10">
         <div className="flex items-center gap-3">
           <img
             src={application.avatar}
             alt={application.name}
-            className="w-10 h-10 rounded-full border border-emerald-500/30 object-cover"
+            className="w-12 h-12 rounded-full border-2 border-emerald-500/30 object-cover shadow-[0_0_15px_rgba(16,185,129,0.2)]"
           />
-          <div className="min-w-0">
-            <p className="font-medium text-white text-sm truncate">{application.name}</p>
-            <p className="text-xs text-gray-500 truncate">{application.city}, India</p>
+          <div>
+            <h3 className="font-semibold text-white text-base leading-tight truncate">{application.name}</h3>
+            <p className="text-xs text-emerald-400 mt-0.5">{application.email}</p>
           </div>
         </div>
-      </td>
+        <div className="flex flex-col items-end gap-2">
+          <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border shadow-sm ${getStatusColor(application.status)}`}>
+            {getStatusIcon(application.status)}
+            {application.status}
+          </span>
+          <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-medium border ${getTrackColor(application.track)}`}>
+            {application.track}
+          </span>
+        </div>
+      </div>
 
-      {/* Email */}
-      <td className="px-6 py-4">
-        <p className="text-sm text-gray-300 truncate max-w-xs">{application.email}</p>
-      </td>
+      {/* Body: Location & Batch & Time */}
+      <div className="grid grid-cols-2 gap-y-3 mb-5 text-sm text-gray-400 z-10">
+        <div className="flex flex-col">
+          <span className="text-xs text-gray-500 mb-0.5">Location</span>
+          <span className="text-gray-300 truncate">{application.city}, IN</span>
+        </div>
+        <div className="flex flex-col">
+          <span className="text-xs text-gray-500 mb-0.5">Batch</span>
+          <span className="text-gray-300">{application.batch}</span>
+        </div>
+        <div className="flex flex-col col-span-2">
+          <span className="text-xs text-gray-500 mb-0.5">Applied</span>
+          <div className="flex items-center gap-1.5 text-gray-300">
+            <Clock className="w-3.5 h-3.5" />
+            <span>{formattedDate} at {time}</span>
+          </div>
+        </div>
+      </div>
 
-      {/* Track */}
-      <td className="px-6 py-4">
-        <span
-          className={`inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium border ${getTrackColor(application.track)}`}
+      {/* Footer Actions */}
+      <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between gap-2 z-10">
+        <button
+          onClick={(e) => { e.stopPropagation(); onViewDetails(application); }}
+          className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 text-xs font-medium text-white bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-colors"
         >
-          {application.track}
-        </span>
-      </td>
-
-      {/* Batch */}
-      <td className="px-6 py-4">
-        <p className="text-sm text-gray-300">{application.batch}</p>
-      </td>
-
-      {/* Status */}
-      <td className="px-6 py-4">
-        <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold border ${getStatusColor(application.status)}`}>
-          <span>{getStatusIcon(application.status)}</span>
-          {application.status.charAt(0).toUpperCase() + application.status.slice(1)}
-        </span>
-      </td>
-
-      {/* Applied Date */}
-      <td className="px-6 py-4">
-        <div className="text-sm text-gray-300">
-          <p>{formattedDate}</p>
-          <p className="text-xs text-gray-500">{time}</p>
-        </div>
-      </td>
-
-      {/* Actions */}
-      <td className="px-6 py-4">
-        <div className="flex items-center gap-2">
-          {/* View Details */}
-          <button
-            onClick={() => onViewDetails(application)}
-            className="p-2 hover:bg-white/10 rounded-lg transition-colors duration-200 group/btn"
-            title="View details"
-          >
-            <Eye className="w-4 h-4 text-gray-400 group-hover/btn:text-emerald-400" />
-          </button>
-
-          {/* More Menu */}
-          <div className="relative">
+          <Eye className="w-3.5 h-3.5" /> View
+        </button>
+        
+        {application.status === 'PENDING' || application.status === 'UNDER_REVIEW' ? (
+          <>
             <button
-              onClick={() => setShowMenu(!showMenu)}
-              className="p-2 hover:bg-white/10 rounded-lg transition-colors duration-200 group/btn"
+              onClick={handleApprove}
+              disabled={isUpdating}
+              className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 text-xs font-medium text-emerald-100 bg-emerald-500/20 border border-emerald-500/30 rounded-lg hover:bg-emerald-500/40 hover:border-emerald-500/50 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all disabled:opacity-50"
             >
-              <MoreVertical className="w-4 h-4 text-gray-400 group-hover/btn:text-emerald-400" />
+              <CheckCircle2 className="w-3.5 h-3.5" /> Approve
             </button>
-
-            {showMenu && (
-              <div className="absolute right-0 mt-1 w-48 bg-black/95 border border-white/10 rounded-lg shadow-lg overflow-hidden backdrop-blur-sm z-50">
-                <button
-                  onClick={() => {
-                    handleApprove();
-                    setShowMenu(false);
-                  }}
-                  disabled={isUpdating}
-                  className="w-full px-4 py-2.5 text-left text-sm text-emerald-400 hover:bg-emerald-500/20 transition-colors duration-150 disabled:opacity-50"
-                >
-                  ✓ Approve Application
-                </button>
-                <button
-                  onClick={() => {
-                    handleReject();
-                    setShowMenu(false);
-                  }}
-                  disabled={isUpdating}
-                  className="w-full px-4 py-2.5 text-left text-sm text-red-400 hover:bg-red-500/20 transition-colors duration-150 disabled:opacity-50 border-t border-white/10"
-                >
-                  ✕ Reject Application
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      </td>
-    </tr>
+            <button
+              onClick={handleReject}
+              disabled={isUpdating}
+              className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 text-xs font-medium text-red-100 bg-red-500/20 border border-red-500/30 rounded-lg hover:bg-red-500/40 hover:border-red-500/50 hover:shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all disabled:opacity-50"
+            >
+              <XCircle className="w-3.5 h-3.5" /> Reject
+            </button>
+          </>
+        ) : null}
+      </div>
+    </div>
   );
 }

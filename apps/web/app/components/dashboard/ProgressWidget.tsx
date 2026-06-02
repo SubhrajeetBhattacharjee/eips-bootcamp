@@ -1,5 +1,4 @@
-export function ProgressWidget() {
-  const progress = 0;
+export function ProgressWidget({ progress = 0 }: { progress?: number }) {
   const radius = 54;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (progress / 100) * circumference;

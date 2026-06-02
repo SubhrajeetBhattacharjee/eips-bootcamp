@@ -3,10 +3,11 @@
 import { useState, useEffect } from 'react';
 import { useSession, authClient } from '@/app/lib/auth-client';
 import { DashboardShell } from '@/app/components/dashboard/DashboardShell';
+import LoadingScreen from '@/app/components/ui/LoadingScreen';
 import { Camera, MapPin, Briefcase, Link as LinkIcon, User, Save, Globe, Code, BadgeCheck } from 'lucide-react';
 
 export default function ProfilePage() {
-  const { data: session } = useSession();
+  const { data: session, isPending: isLoading } = useSession();
   const user = session?.user;
 
   const [name, setName] = useState(user?.name || '');
@@ -85,10 +86,12 @@ export default function ProfilePage() {
     }
   };
 
-  if (!user || fetching) {
+  if (isLoading || fetching) {
     return (
       <DashboardShell>
-        <div className="flex items-center justify-center h-64 text-zinc-400">Loading profile...</div>
+        <div className="flex items-center justify-center min-h-[500px]">
+          <LoadingScreen text="LOADING PROFILE..." fullScreen={false} />
+        </div>
       </DashboardShell>
     );
   }

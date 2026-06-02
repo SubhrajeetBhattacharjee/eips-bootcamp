@@ -24,67 +24,30 @@ export function ApplicationsTable({ applications, loading, onStatusChange }: App
 
   return (
     <>
-      {/* Table Container */}
-      <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm overflow-hidden hover:border-white/20 transition-all duration-300">
-        {/* Table Header */}
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            {/* Header Row */}
-            <thead>
-              <tr className="border-b border-white/10 bg-black/40">
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                  Applicant
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                  Email
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                  Track
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                  Batch
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                  Applied On
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-
-            {/* Table Body */}
-            <tbody className="divide-y divide-white/10">
-              {loading ? (
-                <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center">
-                    <div className="flex items-center justify-center">
-                      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-emerald-400 border-opacity-50" />
-                    </div>
-                  </td>
-                </tr>
-              ) : applications.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-gray-400">
-                    No applications found
-                  </td>
-                </tr>
-              ) : (
-                applications.map((application) => (
-                  <ApplicationRow
-                    key={application.id}
-                    application={application}
-                    onViewDetails={handleViewDetails}
-                    onStatusChange={onStatusChange}
-                  />
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+      {/* Applications Grid */}
+      <div className="w-full">
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-24 bg-white/5 border border-white/10 rounded-xl">
+            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-emerald-400 border-opacity-50 mb-4" />
+            <p className="text-gray-400 text-sm">Loading applications...</p>
+          </div>
+        ) : applications.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-24 bg-white/5 border border-white/10 rounded-xl">
+            <p className="text-gray-400 text-lg">No applications found</p>
+            <p className="text-gray-500 text-sm mt-2">Try adjusting your filters</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+            {applications.map((application) => (
+              <ApplicationRow
+                key={application.id}
+                application={application}
+                onViewDetails={handleViewDetails}
+                onStatusChange={onStatusChange}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Details Modal */}

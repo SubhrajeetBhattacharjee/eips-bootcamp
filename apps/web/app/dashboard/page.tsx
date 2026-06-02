@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from '@/app/lib/auth-client';
 import { DashboardShell } from '@/app/components/dashboard/DashboardShell';
+import LoadingScreen from '@/app/components/ui/LoadingScreen';
 import { WelcomeHero } from '@/app/components/dashboard/WelcomeHero';
 import { StatsGrid } from '@/app/components/dashboard/StatsGrid';
 import { ReferralCard } from '@/app/components/dashboard/ReferralCard';
@@ -75,7 +76,7 @@ export default function DashboardPage() {
   if (isPending || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#080808] text-white">
-        Loading dashboard...
+        <LoadingScreen text="INITIALIZING DASHBOARD..." />
       </div>
     );
   }
@@ -118,7 +119,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           <LearningProgress />
           <EventsCard />
-          <ProgressWidget />
+          <ProgressWidget progress={Math.min(100, Math.floor((dashboard.xp / 5000) * 100))} />
         </div>
       </div>
     </DashboardShell>

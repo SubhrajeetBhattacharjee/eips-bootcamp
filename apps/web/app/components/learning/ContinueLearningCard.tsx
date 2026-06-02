@@ -1,61 +1,62 @@
-// apps/web/components/learning/ContinueLearningCard.tsx
-
 import React from 'react';
-import { Play, Clock, Zap } from 'lucide-react';
+import { ArrowRight, BookOpen } from 'lucide-react';
+import Link from 'next/link';
 
-export const ContinueLearningCard: React.FC = () => {
-  const moduleTitle = 'Module: Writing & Improving EIPs';
-  const description = 'Learn how to write clear EIP specifications and add ethereum details';
-  const progress = 75;
-  const estimatedTime = '2h 30m';
-  const difficulty = 'Intermediate';
+export const ContinueLearningCard = ({ inProgress }: { inProgress?: any }) => {
+  if (!inProgress) {
+    return (
+      <div className="group relative bg-[#0d0d0d] border border-white/8 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden">
+        {/* Background glow */}
+        <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-emerald-500/5 to-emerald-500/0 group-hover:opacity-100 opacity-50 transition-opacity duration-500" />
+        
+        <div className="relative z-10 text-center md:text-left flex-1">
+          <p className="text-emerald-400 text-xs font-bold uppercase tracking-wider mb-2">Ready to Start?</p>
+          <h2 className="text-2xl md:text-3xl font-black text-white mb-2">Welcome to Web3 Learning</h2>
+          <p className="text-zinc-400 text-sm md:text-base max-w-2xl">Start your first module and begin your journey into Ethereum protocol development.</p>
+        </div>
+
+        <Link href="/dashboard/bootcamp" className="relative z-10 w-full md:w-auto">
+          <button className="w-full md:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-xl transition-all duration-300 transform group-hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)]">
+            Explore Modules
+            <ArrowRight size={18} />
+          </button>
+        </Link>
+      </div>
+    );
+  }
 
   return (
-    <div className="group relative bg-[#0d0d0d] border border-white/8 rounded-2xl p-6 hover:border-emerald-500/20 hover:-translate-y-0.5 transition-all duration-300 overflow-hidden">
-      {/* Hover glow */}
-      <div className="absolute inset-0 bg-emerald-500/0 group-hover:bg-emerald-500/3 transition-all duration-300 rounded-2xl" />
-
-      <div className="relative z-10">
-        <div className="mb-6">
-          <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-3">Continue Learning</p>
-          <h2 className="text-2xl font-bold text-white mb-2">{moduleTitle}</h2>
-          <p className="text-sm text-zinc-400">{description}</p>
+    <div className="group relative bg-[#0d0d0d] border border-white/8 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden">
+      {/* Background glow */}
+      <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-emerald-500/5 to-emerald-500/0 group-hover:opacity-100 opacity-50 transition-opacity duration-500" />
+      
+      <div className="relative z-10 flex flex-col md:flex-row items-center gap-6 flex-1 w-full text-center md:text-left">
+        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-400/20 to-emerald-600/20 border border-emerald-500/30 flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.15)] flex-shrink-0">
+          <BookOpen className="text-emerald-400" size={28} />
         </div>
 
-        {/* Progress Bar */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-medium text-zinc-400">Progress</span>
-            <span className="text-xs font-semibold text-emerald-400">{progress}%</span>
-          </div>
-          <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden border border-white/8">
-            <div
-              className="h-full bg-gradient-to-r from-emerald-500/80 to-emerald-400/80 rounded-full transition-all duration-500"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-        </div>
-
-        {/* Meta Info */}
-        <div className="flex flex-wrap gap-6 mb-6">
-          <div className="flex items-center gap-2 text-xs text-zinc-400">
-            <Clock size={14} className="text-emerald-400/70" />
-            <span>{estimatedTime} remaining</span>
-          </div>
-          <div className="flex items-center gap-2 text-xs text-zinc-400">
-            <Zap size={14} className="text-emerald-400/70" />
-            <span>{difficulty}</span>
+        <div className="flex-1 w-full max-w-2xl">
+          <p className="text-emerald-400 text-xs font-bold uppercase tracking-wider mb-1">Continue Learning</p>
+          <h2 className="text-2xl md:text-3xl font-black text-white mb-2 line-clamp-1">{inProgress.title}</h2>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-zinc-400">
+            <span>{inProgress.moduleName}</span>
+            <span className="hidden sm:inline text-zinc-600">•</span>
+            <div className="flex items-center justify-center sm:justify-start gap-2 flex-1 max-w-xs">
+              <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden flex-1">
+                <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${inProgress.progress}%` }} />
+              </div>
+              <span className="text-xs font-semibold text-emerald-400 min-w-[32px]">{inProgress.progress}%</span>
+            </div>
           </div>
         </div>
-
-        {/* CTA Button */}
-        <button
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold border border-emerald-500/30 hover:border-emerald-500/60 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 hover:text-emerald-200 transition-all duration-200"
-        >
-          <Play size={16} />
-          <span>Resume Lesson</span>
-        </button>
       </div>
+
+      <Link href={`/dashboard/assignments/${inProgress.id}`} className="relative z-10 w-full md:w-auto">
+        <button className="w-full md:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-xl transition-all duration-300 transform group-hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)]">
+          Resume
+          <ArrowRight size={18} />
+        </button>
+      </Link>
     </div>
   );
 };

@@ -5,11 +5,34 @@ import { Flame, TrendingUp } from 'lucide-react';
 
 interface LearningHeroProps {
   userName?: string;
+  stats?: any;
+  streakData?: any[];
 }
 
-export const LearningHero: React.FC<LearningHeroProps> = ({ userName = 'User' }) => {
-  const bootcampCompletion = 72;
-  const currentStreak = 5;
+export const LearningHero: React.FC<LearningHeroProps> = ({ userName = 'User', stats, streakData }) => {
+  const totalModules = stats?.totalModules || 0;
+  const modulesCompleted = stats?.modulesCompleted || 0;
+  const bootcampCompletion = totalModules > 0 ? Math.floor((modulesCompleted / totalModules) * 100) : 0;
+  
+  // Quick calculation for streak
+  let currentStreak = 0;
+  if (streakData && streakData.length > 0) {
+    const sorted = [...streakData].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    let tempStreak = 0;
+    for (let i = 0; i < sorted.length; i++) {
+      if (sorted[i].intensity > 0) {
+        tempStreak++;
+        if (i >= sorted.length - 2) currentStreak = tempStreak;
+      } else {
+        if (i < sorted.length - 1) tempStreak = 0;
+      }
+    }
+    if (sorted[sorted.length - 1].intensity === 0 && sorted[sorted.length - 2].intensity === 0) {
+      currentStreak = 0;
+    } else if (sorted[sorted.length - 1].intensity > 0) {
+      currentStreak = tempStreak;
+    }
+  }
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-white/8 bg-gradient-to-br from-[#0d1a12] via-[#0a0f0d] to-[#080808] min-h-[160px]">
