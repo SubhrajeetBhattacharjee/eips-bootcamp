@@ -47,19 +47,44 @@ export default function AssignmentsPage() {
     if (user?.id) fetchAssignments();
   }, [user?.id]);
 
-  const handleSubmit = async (assignmentId: string) => {
+  const handleSubmit = async (assignmentId: string, file?: File) => {
     if (!user?.id) return;
+    
+    let contentUrl = 'Placeholder content for submission';
+    
     try {
+      if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
+        
+        const uploadRes = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+        
+        if (uploadRes.ok) {
+          const uploadData = await uploadRes.json();
+          contentUrl = uploadData.fileUrl;
+        } else {
+          alert("Failed to upload assignment file");
+          return;
+        }
+      }
+
       const res = await fetch('/api/assignments/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ clerkId: user.id, assignmentId, content: 'Placeholder content for submission' }),
+        body: JSON.stringify({ clerkId: user.id, assignmentId, content: contentUrl }),
       });
       if (res.ok) {
         await fetchAssignments(); // refresh data
+        alert("Assignment submitted successfully!");
+      } else {
+        alert("Failed to submit assignment");
       }
     } catch (e) {
       console.error(e);
+      alert("An error occurred during submission");
     }
   };
 

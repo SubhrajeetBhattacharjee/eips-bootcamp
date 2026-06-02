@@ -28,6 +28,7 @@ export class AssignmentsService {
         status: sub ? this.mapStatus(sub.status) : 'Not Started',
         progress: sub ? sub.progress : 0,
         tags: a.tags,
+        questionFileUrl: a.questionFileUrl,
       };
     });
 
@@ -101,16 +102,23 @@ export class AssignmentsService {
   }
 
   async createAssignment(data: any) {
+    let deadlineDate = new Date(data.deadline);
+    if (isNaN(deadlineDate.getTime())) {
+      deadlineDate = new Date();
+      deadlineDate.setDate(deadlineDate.getDate() + 7); // Default to 7 days from now
+    }
+
     return this.prisma.assignment.create({
       data: {
         title: data.title,
         module: data.module,
         description: data.description,
         difficulty: data.difficulty,
-        xpReward: Number(data.xpReward),
-        deadline: new Date(data.deadline),
-        estimatedTime: Number(data.estimatedTime),
+        xpReward: Number(data.xpReward) || 0,
+        deadline: deadlineDate,
+        estimatedTime: Number(data.estimatedTime) || 0,
         tags: data.tags || [],
+        questionFileUrl: data.questionFileUrl,
       },
     });
   }
@@ -119,6 +127,11 @@ export class AssignmentsService {
     const assignment = await this.prisma.assignment.findUnique({ where: { id: assignmentId } });
     if (!assignment) throw new NotFoundException('Assignment not found');
     
+    let deadlineDate = new Date(data.deadline);
+    if (isNaN(deadlineDate.getTime())) {
+      deadlineDate = assignment.deadline; // Fallback to existing deadline
+    }
+
     return this.prisma.assignment.update({
       where: { id: assignmentId },
       data: {
@@ -126,10 +139,11 @@ export class AssignmentsService {
         module: data.module,
         description: data.description,
         difficulty: data.difficulty,
-        xpReward: Number(data.xpReward),
-        deadline: new Date(data.deadline),
-        estimatedTime: Number(data.estimatedTime),
+        xpReward: Number(data.xpReward) || 0,
+        deadline: deadlineDate,
+        estimatedTime: Number(data.estimatedTime) || 0,
         tags: data.tags || [],
+        questionFileUrl: data.questionFileUrl,
       },
     });
   }

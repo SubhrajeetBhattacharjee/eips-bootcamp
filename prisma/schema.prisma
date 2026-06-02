@@ -208,6 +208,7 @@ model Assignment {
   deadline      DateTime
   estimatedTime Float
   tags          String[]
+  questionFileUrl String?
   createdAt     DateTime @default(now())
 
   submissions   AssignmentSubmission[]
