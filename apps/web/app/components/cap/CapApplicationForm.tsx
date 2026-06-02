@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useUser } from '@clerk/nextjs';
+import { useSession } from '@/app/lib/auth-client';
 import { CAPFormData, submitCAPApplication, CAPApplication } from "../../lib/Cap";
 import { ChevronRight, ChevronLeft, Zap, Users, GraduationCap, CheckCircle2, Trophy } from "lucide-react";
 
@@ -12,7 +12,8 @@ interface Props {
 const GRAD_YEARS = ["2024", "2025", "2026", "2027", "2028", "2029"];
 
 export default function CapApplicationForm({ onSubmitted }: Props) {
-  const { user } = useUser();
+  const { data: session } = useSession();
+  const user = session?.user;
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<CAPFormData>({
     fullName: "",
@@ -81,7 +82,7 @@ export default function CapApplicationForm({ onSubmitted }: Props) {
       }
 
       const app = await submitCAPApplication(userId, form, {
-        email: user.primaryEmailAddress?.emailAddress,
+        email: user.email,
         username: user.username,
       });
       onSubmitted(app);

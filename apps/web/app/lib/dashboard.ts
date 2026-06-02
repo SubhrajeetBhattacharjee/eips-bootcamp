@@ -5,6 +5,7 @@ export type User = {
   email: string;
   clerkId: string;
   username: string;
+  name?: string;
   role: string;
   profile?: {
     fullName: string;
@@ -88,7 +89,7 @@ export async function getDashboardData(clerkId: string) {
     const capStatus = user.capApplication?.status || 'NOT APPLIED';
     
     // Determine display name
-    const displayName = user.profile?.fullName || user.username || user.email.split('@')[0] || 'Explorer';
+    const displayName = user.name || user.profile?.fullName || user.username || user.email.split('@')[0] || 'Explorer';
     user.username = displayName;
 
     // Generate recent activity

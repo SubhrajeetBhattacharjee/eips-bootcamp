@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useUser } from "@clerk/nextjs";
+import { useSession } from '@/app/lib/auth-client';
 import DashboardShell from "../../components/dashboard/DashboardShell";
 import { fetchCAPApplication, type CAPApplication } from "../../lib/Cap";
 import CapApplicationForm from "../../components/cap/CapApplicationForm";
@@ -9,7 +9,8 @@ import CapStatusCard from "../../components/cap/CapStatusCard";
 
 export default function CAPPage() {
   const [application, setApplication] = useState<CAPApplication | null | undefined>(undefined);
-  const { user } = useUser();
+  const { data: session } = useSession();
+  const user = session?.user;
 
   useEffect(() => {
     if (!user?.id) return;

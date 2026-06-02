@@ -1,4 +1,5 @@
-import { auth } from "@clerk/nextjs/server";
+import { auth } from '@/app/lib/auth';
+import { headers } from 'next/headers';;
 import {
   resolveDbUser,
   fetchReferralStats,
@@ -27,7 +28,8 @@ export const metadata = {
 async function getReferralData(): Promise<{ stats: ReferralStats; activity: ReferralActivityType[] }> {
   const empty = { stats: createEmptyReferralStats(), activity: [] };
   try {
-    const { userId: clerkId } = await auth();
+      const session = await auth.api.getSession({ headers: await headers() });
+  const clerkId = session?.user?.id;
     if (!clerkId) return empty;
 
     const dbUser = await resolveDbUser(clerkId);

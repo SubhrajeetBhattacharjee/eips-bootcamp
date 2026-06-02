@@ -1,9 +1,13 @@
-import { auth } from '@clerk/nextjs/server';
+import { auth } from '@/app/lib/auth';
+import { headers } from 'next/headers';;
 import { NextResponse } from 'next/server';
 import { apiFetch } from '@/app/lib/api';
 
 export async function GET(request: Request) {
-  const { userId, sessionClaims } = await auth();
+    const session = await auth.api.getSession({ headers: await headers() });
+  const user = session?.user;
+  const userId = user?.id;
+  const sessionClaims = { metadata: { role: (user as any)?.role || 'user' } };
 
   if (!userId) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });

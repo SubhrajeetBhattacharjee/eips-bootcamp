@@ -1,5 +1,5 @@
 export class SyncUserDto {
-  clerkId!: string;
+  id!: string;
   email!: string;
   username?: string;
 }

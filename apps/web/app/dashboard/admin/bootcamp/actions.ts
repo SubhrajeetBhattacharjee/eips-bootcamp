@@ -1,15 +1,19 @@
 "use server";
 
-import { auth } from "@clerk/nextjs/server";
+import { auth } from '@/app/lib/auth';
+import { headers } from 'next/headers';;
 import { revalidatePath } from "next/cache";
 import { apiFetch } from "@/app/lib/api";
 
 async function verifyAdmin() {
-  const { userId, sessionClaims } = await auth();
+  const session = await auth.api.getSession({ headers: await headers() });
+  const user = session?.user;
+  const userId = user?.id;
+  
   if (!userId) throw new Error("Unauthorized");
   
-  const userRole = (sessionClaims?.metadata as any)?.role || (sessionClaims as any)?.role;
-  if (userRole !== 'admin' && userId !== 'user_3EFohPWsEpwDDfFQxcf3i1T39pJ') {
+  const userRole = (user as any)?.role || 'user';
+  if (userRole !== 'admin' && userRole !== 'ADMIN' && userId !== 'user_3EFohPWsEpwDDfFQxcf3i1T39pJ') {
     throw new Error("Forbidden");
   }
   return userId;

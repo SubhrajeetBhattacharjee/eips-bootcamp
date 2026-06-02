@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useUser } from '@clerk/nextjs';
+import { useSession } from '@/app/lib/auth-client';
 import { DashboardShell } from '@/app/components/dashboard/DashboardShell';
 import { LearningHero } from '@/app/components/learning/LearningHero';
 import { LearningStatsGrid } from '@/app/components/learning/LearningStatsGrid';
@@ -17,9 +17,9 @@ import { SkillAnalytics } from '@/app/components/learning/SkillAnalytics';
 import { LearningStreak } from '@/app/components/learning/LearningStreak';
 
 export default function LearningPage() {
-  const { user, isLoaded } = useUser();
+  const { data: session, isPending } = useSession();
 
-  if (!isLoaded) {
+  if (isPending) {
     return (
       <DashboardShell>
         <div className="flex items-center justify-center h-96">
@@ -32,7 +32,7 @@ export default function LearningPage() {
     );
   }
 
-  const displayName = user?.firstName || 'User';
+  const displayName = session?.user?.name || 'User';
 
   return (
     <DashboardShell>

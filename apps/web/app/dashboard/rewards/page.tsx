@@ -12,10 +12,11 @@ import { ProgressCard } from '@/app/components/rewards/ProgressCard';
 import { EarnXPCard } from '@/app/components/rewards/EarnXPCard';
 import { RewardsHistoryCard } from '@/app/components/rewards/RewardsHistoryCard';
 import { RewardCategory, Reward, UserReward } from '@/app/lib/rewards';
-import { useUser } from '@clerk/nextjs';
+import { useSession } from '@/app/lib/auth-client';
 
 export default function RewardsPage() {
-  const { user } = useUser();
+  const { data: session } = useSession();
+  const user = session?.user;
   const [activeCategory, setActiveCategory] = useState<RewardCategory>('All Rewards');
   const [sortBy, setSortBy] = useState<'popular' | 'cost' | 'new'>('popular');
   const [userData, setUserData] = useState({

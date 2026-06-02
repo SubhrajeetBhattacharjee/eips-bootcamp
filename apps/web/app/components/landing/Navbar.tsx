@@ -2,12 +2,14 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useUser, UserButton } from '@clerk/nextjs';
+import { useSession, } from '@/app/lib/auth-client';
 import { Menu, X, ChevronDown, ArrowRight } from 'lucide-react';
 import { navLinks } from '../../lib/landing-data';
 
 export function Navbar() {
-  const { isSignedIn } = useUser();
+  const { data: session } = useSession();
+  const user = session?.user;
+  const isSignedIn = !!user;
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
@@ -54,9 +56,13 @@ export function Navbar() {
                 >
                   Dashboard <ArrowRight size={14} />
                 </Link>
-                <UserButton
-                  appearance={{ elements: { avatarBox: 'w-8 h-8 ring-2 ring-emerald-500/30 rounded-full' } }}
-                />
+                <Link href="/dashboard/profile" className="w-8 h-8 rounded-full ring-2 ring-emerald-500/30 overflow-hidden bg-emerald-500/10 flex items-center justify-center">
+                  {user?.image ? (
+                    <img src={user.image} alt="Avatar" className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-emerald-400 text-xs font-bold">{user?.name?.charAt(0) || 'U'}</span>
+                  )}
+                </Link>
               </>
             ) : (
               <>

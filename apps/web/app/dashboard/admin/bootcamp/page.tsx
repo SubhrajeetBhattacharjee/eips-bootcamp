@@ -1,4 +1,5 @@
-import { auth } from "@clerk/nextjs/server";
+import { auth } from '@/app/lib/auth';
+import { headers } from 'next/headers';
 import { redirect } from "next/navigation";
 import { apiFetch } from "@/app/lib/api";
 import DashboardShell from "@/app/components/dashboard/DashboardShell";
@@ -9,16 +10,19 @@ export const metadata = {
 };
 
 export default async function AdminBootcampPage() {
-  const { userId, sessionClaims } = await auth();
+  const session = await auth.api.getSession({ headers: await headers() });
+  const user = session?.user;
 
-  if (!userId) {
+  if (!user?.id) {
     redirect("/sign-in");
   }
 
-  const userRole = (sessionClaims?.metadata as any)?.role || (sessionClaims as any)?.role;
-  if (userRole !== 'admin' && userId !== 'user_3EFohPWsEpwDDfFQxcf3i1T39pJ') {
+  const userRole = (user as any).role || 'user';
+  if (userRole !== 'ADMIN' && userRole !== 'admin' && user.id !== 'user_3EFohPWsEpwDDfFQxcf3i1T39pJ') {
     redirect("/dashboard");
   }
+
+  const userId = user.id;
 
   // Fetch all modules. We pass the admin's userId just to satisfy the endpoint,
   // but we only care about the module data itself.

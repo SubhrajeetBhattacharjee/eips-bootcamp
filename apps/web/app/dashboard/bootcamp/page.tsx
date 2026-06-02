@@ -6,11 +6,12 @@ import { DashboardShell } from '@/app/components/dashboard/DashboardShell';
 import { ModuleCard } from '@/app/components/bootcamp/ModuleCard';
 import { ModuleDetail } from '@/app/components/bootcamp/ModuleDetail';
 import Link from 'next/link';
-import { useUser } from '@clerk/nextjs';
+import { useSession } from '@/app/lib/auth-client';
 
 
 export default function BootcampPage() {
-  const { user } = useUser();
+  const { data: session } = useSession();
+  const user = session?.user;
   const [selectedModule, setSelectedModule] = useState<string | null>(null);
   const [modules, setModules] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);

@@ -1,5 +1,6 @@
 // apps/web/app/lib/admin.ts
-import { currentUser } from '@clerk/nextjs/server';
+import { auth } from '@/app/lib/auth';
+import { headers } from 'next/headers';;
 import { apiFetch } from './api';
 
 export interface KPIMetric {
@@ -77,13 +78,14 @@ export interface ReferralPerformanceData {
 // Verify admin role
 export async function verifyAdminRole() {
   try {
-    const user = await currentUser();
+    const session = await auth.api.getSession({ headers: await headers() });
+  const user = session?.user;
     
     if (!user) return false;
     
     // Check for admin role in user metadata or custom claims
-    const isAdmin = user.publicMetadata?.role === 'ADMIN' || 
-                   user.privateMetadata?.role === 'ADMIN' ||
+    const isAdmin = (user as any).role === 'ADMIN' || (user as any).role === 'admin' || (user as any).role?.role === 'ADMIN' || 
+                   (user as any).role?.role === 'ADMIN' ||
                    user.id === 'user_3EFohPWsEpwDDfFQxcf3i1T39pJ';
     
     return isAdmin;

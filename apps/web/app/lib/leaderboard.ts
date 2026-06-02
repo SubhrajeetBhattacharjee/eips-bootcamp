@@ -1,7 +1,5 @@
 // apps/web/app/lib/leaderboard.ts
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "http://127.0.0.1:4000";
-
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type CAPStatusValue = "Approved" | "Applied" | "Pending" | "None";
@@ -69,10 +67,7 @@ const MOCK_IMPACT: ImpactStats = {
 
 async function apiFetch<T>(path: string, fallback: T): Promise<T> {
   try {
-    const res = await fetch(`${API_BASE}${path}`, {
-      headers: { 'x-api-key': 'dev-secret-key' },
-      next: { revalidate: 60 },
-    });
+    const res = await fetch(`/api/proxy?path=${encodeURIComponent(path)}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return (await res.json()) as T;
   } catch {
@@ -128,7 +123,6 @@ export async function fetchImpactStats(): Promise<ImpactStats> {
       communitiesDelta: 2,
     };
   }
-
   return data as ImpactStats;
 }
 

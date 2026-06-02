@@ -26,10 +26,11 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @Get('clerk/:clerkId')
-findByClerkId(@Param('clerkId') clerkId: string) {
-  return this.usersService.findByClerkId(clerkId);
-}
+  @Get('clerk/:id')
+  findByClerkId(@Param('id') id: string) {
+    // Keep route for backwards compatibility but use primary id
+    return this.usersService.findOneFull(id);
+  }
 
   @Get(':id')
   findOne(@Param('id') id: string) {

@@ -1,4 +1,5 @@
-import { auth } from '@clerk/nextjs/server';
+import { auth } from '@/app/lib/auth';
+import { headers } from 'next/headers';;
 import { NextResponse } from 'next/server';
 
 const API_BASE = 'http://127.0.0.1:4000';
@@ -75,7 +76,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'Missing clerkId' }, { status: 400 });
   }
 
-  const { userId } = await auth();
+  const session = await auth.api.getSession({ headers: await headers() });
+  const userId = session?.user?.id;
   if (!userId || userId !== clerkId) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }

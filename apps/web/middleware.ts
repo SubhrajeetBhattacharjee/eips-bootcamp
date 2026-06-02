@@ -1,26 +1,29 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
-const isProtectedRoute = createRouteMatcher([
-  '/dashboard(.*)',
-  '/apply(.*)',
-  '/admin(.*)',
-]);
+export async function middleware(request: NextRequest) {
+  const isProtectedRoute = 
+    request.nextUrl.pathname.startsWith('/dashboard') || 
+    request.nextUrl.pathname.startsWith('/admin') ||
+    request.nextUrl.pathname.startsWith('/apply');
 
-export default clerkMiddleware(async (auth, req) => {
-  // In production we protect sensitive routes. During local development
-  // invoking `auth.protect()` may trigger Clerk's dev-browser rewrite
-  // which requires additional dev setup. Skip protection when running
-  // in development to allow smooth local navigation.
-  if (isProtectedRoute(req) && process.env.NODE_ENV === 'production') {
-    await auth.protect();
+  if (isProtectedRoute) {
+    // Better Auth uses "better-auth.session_token" by default in production,
+    // or "__Secure-better-auth.session_token" depending on env. 
+    // A robust check is to just look for any better-auth session cookie.
+    const hasSession = request.cookies.getAll().some(c => c.name.includes("better-auth.session_token"));
+    
+    if (!hasSession) {
+      return NextResponse.redirect(new URL('/sign-in', request.url));
+    }
   }
-});
+
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
     '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
     '/(api|trpc)(.*)',
   ],
 };

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useUser } from '@clerk/nextjs';
+import { useSession } from '@/app/lib/auth-client';
 import { ArrowRight, BookOpen } from 'lucide-react';
 
 // Inline EIP book illustration — SVG only, no images needed
@@ -138,7 +138,8 @@ function EIPBookIllustration() {
 }
 
 export function HeroSection() {
-  const { isSignedIn } = useUser();
+  const { data: session } = useSession();
+  const isSignedIn = !!session?.user;
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-[#080808] pt-16">

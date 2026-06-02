@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, FileText, Calendar, Tag as TagIcon, Signal, Trash2, AlertTriangle } from "lucide-react";
+import { Plus, FileText, Calendar, Tag as TagIcon, Signal, Trash2, AlertTriangle, Download } from "lucide-react";
 import { createAssignment, deleteAssignment, editAssignment } from "./actions";
 import { useRouter } from "next/navigation";
 
@@ -12,28 +12,53 @@ export default function AssignmentsAdminClient({ initialAssignments }: { initial
   const [editingAssignment, setEditingAssignment] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
 
+  async function handleFileUpload(file: File | null) {
+    if (!file) return undefined;
+    const formData = new FormData();
+    formData.append("file", file);
+    
+    const res = await fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+    });
+    
+    if (!res.ok) throw new Error("Failed to upload file");
+    const data = await res.json();
+    return data.fileUrl;
+  }
+
   async function handleCreate(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     
-    const formData = new FormData(e.currentTarget);
-    const tagsString = formData.get("tags") as string;
-    const tags = tagsString ? tagsString.split(",").map(t => t.trim()).filter(Boolean) : [];
-    
-    await createAssignment({
-      title: formData.get("title") as string,
-      module: formData.get("module") as string,
-      description: formData.get("description") as string,
-      difficulty: formData.get("difficulty") as string,
-      xpReward: Number(formData.get("xpReward")),
-      deadline: formData.get("deadline") as string,
-      estimatedTime: Number(formData.get("estimatedTime")),
-      tags,
-    });
+    try {
+      const formData = new FormData(e.currentTarget);
+      const tagsString = formData.get("tags") as string;
+      const tags = tagsString ? tagsString.split(",").map(t => t.trim()).filter(Boolean) : [];
+      
+      const file = formData.get("questionFile") as File;
+      const fileUrl = file && file.size > 0 ? await handleFileUpload(file) : undefined;
+      
+      await createAssignment({
+        title: formData.get("title") as string,
+        module: formData.get("module") as string,
+        description: formData.get("description") as string,
+        difficulty: formData.get("difficulty") as string,
+        xpReward: Number(formData.get("xpReward")),
+        deadline: formData.get("deadline") as string,
+        estimatedTime: Number(formData.get("estimatedTime")),
+        tags,
+        questionFileUrl: fileUrl,
+      });
 
-    setLoading(false);
-    setIsCreating(false);
-    router.refresh();
+      setIsCreating(false);
+      router.refresh();
+    } catch (err) {
+      console.error(err);
+      alert("Error creating assignment");
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function handleDelete() {
@@ -50,24 +75,34 @@ export default function AssignmentsAdminClient({ initialAssignments }: { initial
     if (!editingAssignment) return;
     setLoading(true);
     
-    const formData = new FormData(e.currentTarget);
-    const tagsString = formData.get("tags") as string;
-    const tags = tagsString ? tagsString.split(",").map(t => t.trim()).filter(Boolean) : [];
-    
-    await editAssignment(editingAssignment.id, {
-      title: formData.get("title") as string,
-      module: formData.get("module") as string,
-      description: formData.get("description") as string,
-      difficulty: formData.get("difficulty") as string,
-      xpReward: Number(formData.get("xpReward")),
-      deadline: formData.get("deadline") as string,
-      estimatedTime: Number(formData.get("estimatedTime")),
-      tags,
-    });
+    try {
+      const formData = new FormData(e.currentTarget);
+      const tagsString = formData.get("tags") as string;
+      const tags = tagsString ? tagsString.split(",").map(t => t.trim()).filter(Boolean) : [];
+      
+      const file = formData.get("questionFile") as File;
+      const fileUrl = file && file.size > 0 ? await handleFileUpload(file) : editingAssignment.questionFileUrl;
+      
+      await editAssignment(editingAssignment.id, {
+        title: formData.get("title") as string,
+        module: formData.get("module") as string,
+        description: formData.get("description") as string,
+        difficulty: formData.get("difficulty") as string,
+        xpReward: Number(formData.get("xpReward")),
+        deadline: formData.get("deadline") as string,
+        estimatedTime: Number(formData.get("estimatedTime")),
+        tags,
+        questionFileUrl: fileUrl,
+      });
 
-    setLoading(false);
-    setEditingAssignment(null);
-    router.refresh();
+      setEditingAssignment(null);
+      router.refresh();
+    } catch (err) {
+      console.error(err);
+      alert("Error saving assignment");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -113,6 +148,15 @@ export default function AssignmentsAdminClient({ initialAssignments }: { initial
               <h3 className="text-lg font-bold text-white mb-2">{assignment.title}</h3>
               <p className="text-sm text-zinc-400 line-clamp-3 mb-4">{assignment.description}</p>
               
+              {assignment.questionFileUrl && (
+                <div className="mb-4">
+                  <a href={assignment.questionFileUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 px-3 py-1.5 rounded-lg transition-colors">
+                    <Download size={14} />
+                    Download Question PDF
+                  </a>
+                </div>
+              )}
+              
               {assignment.tags && assignment.tags.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-4">
                   {assignment.tags.map((tag: string) => (
@@ -120,6 +164,15 @@ export default function AssignmentsAdminClient({ initialAssignments }: { initial
                   ))}
                 </div>
               )}
+
+              <div className="mt-4 pt-4 border-t border-white/5">
+                <a 
+                  href={`/dashboard/admin/assignments/${assignment.id}/submissions`}
+                  className="w-full inline-flex justify-center items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 text-white text-sm font-medium rounded-lg transition-colors"
+                >
+                  View Submissions
+                </a>
+              </div>
             </div>
             <div className="p-4 bg-white/[0.02] border-t border-white/5 grid grid-cols-2 gap-3 text-xs text-zinc-500">
               <div className="flex items-center gap-1.5"><Signal size={14} /> {assignment.difficulty}</div>
@@ -185,6 +238,10 @@ export default function AssignmentsAdminClient({ initialAssignments }: { initial
               <div>
                 <label className="block text-xs font-medium text-zinc-400 mb-1.5">Tags (comma-separated)</label>
                 <input name="tags" className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500" placeholder="solidity, frontend, react" />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-zinc-400 mb-1.5">Question PDF (Optional)</label>
+                <input name="questionFile" type="file" accept=".pdf" className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500" />
               </div>
               <div className="pt-4 flex justify-end gap-3">
                 <button type="button" onClick={() => setIsCreating(false)} className="px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white">Cancel</button>
@@ -273,6 +330,10 @@ export default function AssignmentsAdminClient({ initialAssignments }: { initial
               <div>
                 <label className="block text-xs font-medium text-zinc-400 mb-1.5">Tags (comma-separated)</label>
                 <input name="tags" className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500" defaultValue={editingAssignment.tags?.join(", ")} />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-zinc-400 mb-1.5">Question PDF (Optional)</label>
+                <input name="questionFile" type="file" accept=".pdf" className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500" />
               </div>
               <div className="pt-4 flex justify-end gap-3">
                 <button type="button" onClick={() => setEditingAssignment(null)} className="px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white">Cancel</button>

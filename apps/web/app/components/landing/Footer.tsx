@@ -2,10 +2,11 @@
 
 import Link from 'next/link';
 import { footerLinks } from '../../lib/landing-data';
-import { useUser } from '@clerk/nextjs';
+import { useSession } from '@/app/lib/auth-client';
 
 export function Footer() {
-  const { isSignedIn } = useUser();
+  const { data: session } = useSession();
+  const isSignedIn = !!session?.user;
 
   return (
     <footer className="bg-[#050505] border-t border-white/5">

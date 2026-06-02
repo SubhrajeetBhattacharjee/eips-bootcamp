@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { writeFile } from "fs/promises";
 import { join } from "path";
-import { auth } from "@clerk/nextjs/server";
+import { auth } from '@/app/lib/auth';
+import { headers } from 'next/headers';;
 
 export async function POST(req: NextRequest) {
   try {
     // 1. Verify Admin
-    const { userId, sessionClaims } = await auth();
+      const session = await auth.api.getSession({ headers: await headers() });
+  const user = session?.user;
+  const userId = user?.id;
+  const sessionClaims = { metadata: { role: (user as any)?.role || 'user' } };
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

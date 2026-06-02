@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import { useUser } from "@clerk/nextjs";
+import { useSession } from '@/app/lib/auth-client';
 
 import {
   fetchLeaderboard,
@@ -45,7 +45,8 @@ const NAV_ADMIN = [{ label: "Admin Analytics", href: "/dashboard/admin", icon: "
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function LeaderboardPage() {
-  const { user: clerkUser, isLoaded } = useUser();
+  const { data: session, isPending } = useSession();
+  const currentUser = session?.user;
 
   const [filter, setFilter] = useState<FilterPeriod>("all");
   const [leaderboard, setLeaderboard] = useState<LeaderboardUser[]>([]);
@@ -72,11 +73,11 @@ export default function LeaderboardPage() {
     loadData();
   }, [loadData]);
 
-  // ── Resolve DB user from Clerk ──────────────────────────────────────────────
+  // ── Resolve DB user ──────────────────────────────────────────────
   useEffect(() => {
-    if (!isLoaded || !clerkUser) return;
-    fetchDBUser(clerkUser.id).then(setDbUser);
-  }, [isLoaded, clerkUser]);
+    if (isPending || !currentUser) return;
+    fetchDBUser(currentUser.id).then(setDbUser);
+  }, [isPending, currentUser]);
 
   // ── Mark current user row ───────────────────────────────────────────────────
   const currentUserId = dbUser?.id;

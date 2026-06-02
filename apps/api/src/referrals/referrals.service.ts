@@ -165,9 +165,9 @@ export class ReferralsService {
       const referralsCount = user.referralCode?.referrals?.length || 0;
       return {
         userId: user.id,
-        name: user.profile?.fullName || user.username || (user.email ? user.email.split('@')[0] : 'Unknown'),
+        name: user.name || user.profile?.fullName || user.username || (user.email ? user.email.split('@')[0] : 'Unknown'),
         handle: `@${user.username || user.id.substring(0, 5)}`,
-        avatarUrl: user.profile?.avatarUrl,
+        avatarUrl: user.image || user.profile?.avatarUrl,
         xp,
         referrals: referralsCount,
         capStatus: user.capApplication?.status || 'None',

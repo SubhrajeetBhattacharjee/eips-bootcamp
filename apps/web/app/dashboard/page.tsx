@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useUser } from '@clerk/nextjs';
+import { useSession } from '@/app/lib/auth-client';
 import { DashboardShell } from '@/app/components/dashboard/DashboardShell';
 import { WelcomeHero } from '@/app/components/dashboard/WelcomeHero';
 import { StatsGrid } from '@/app/components/dashboard/StatsGrid';
@@ -16,12 +16,14 @@ import type { DashboardData } from '@/app/lib/dashboard';
 
 export default function DashboardPage() {
   const router = useRouter();
-  const { isLoaded, isSignedIn, user } = useUser();
+  const { data: session, isPending } = useSession();
+  const user = session?.user;
+  const isSignedIn = !!user;
   const [dashboard, setDashboard] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!isLoaded) return;
+    if (isPending) return;
 
     if (!isSignedIn) {
       router.replace('/sign-in');
@@ -68,9 +70,9 @@ export default function DashboardPage() {
     return () => {
       active = false;
     };
-  }, [isLoaded, isSignedIn, router, user?.id]);
+  }, [isPending, isSignedIn, router, user?.id]);
 
-  if (!isLoaded || loading) {
+  if (isPending || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#080808] text-white">
         Loading dashboard...
@@ -82,7 +84,7 @@ export default function DashboardPage() {
     return null;
   }
 
-  const displayName = dashboard.user.username !== 'Explorer' ? dashboard.user.username : (user?.fullName || user?.firstName || 'Explorer');
+  const displayName = dashboard.user.username !== 'Explorer' ? dashboard.user.username : (user?.name || 'Explorer');
 
   return (
     <DashboardShell>

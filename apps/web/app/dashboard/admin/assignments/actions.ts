@@ -1,15 +1,19 @@
 "use server";
 
-import { auth } from "@clerk/nextjs/server";
+import { auth } from '@/app/lib/auth';
+import { headers } from 'next/headers';;
 import { revalidatePath } from "next/cache";
 import { apiFetch } from "@/app/lib/api";
 
 async function verifyAdmin() {
-  const { userId, sessionClaims } = await auth();
+  const session = await auth.api.getSession({ headers: await headers() });
+  const user = session?.user;
+  const userId = user?.id;
+  
   if (!userId) throw new Error("Unauthorized");
   
-  const userRole = (sessionClaims?.metadata as any)?.role || (sessionClaims as any)?.role;
-  if (userRole !== 'admin' && userId !== 'user_3EFohPWsEpwDDfFQxcf3i1T39pJ') {
+  const userRole = (user as any)?.role || 'user';
+  if (userRole !== 'admin' && userRole !== 'ADMIN' && userId !== 'user_3EFohPWsEpwDDfFQxcf3i1T39pJ') {
     throw new Error("Forbidden");
   }
   return userId;
@@ -24,6 +28,7 @@ export async function createAssignment(data: {
   deadline: string;
   estimatedTime: number;
   tags: string[];
+  questionFileUrl?: string;
 }) {
   await verifyAdmin();
   
@@ -67,4 +72,53 @@ export async function editAssignment(assignmentId: string, data: any) {
   } catch (error: any) {
     return { success: false, error: error.message };
   }
+}
+
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
+
+export async function fetchSubmissions(assignmentId: string) {
+  await verifyAdmin();
+  const submissions = await prisma.assignmentSubmission.findMany({
+    where: { assignmentId },
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        }
+      }
+    },
+    orderBy: { submittedAt: 'desc' }
+  });
+  return submissions;
+}
+
+export async function gradeSubmission(submissionId: string, score: number, status: string, assignmentId: string) {
+  await verifyAdmin();
+  
+  const submission = await prisma.assignmentSubmission.update({
+    where: { id: submissionId },
+    data: { score, status }
+  });
+
+  // If the assignment is graded as COMPLETED, we need to award XP to the user
+  if (status === 'COMPLETED' && score > 0) {
+    const assignment = await prisma.assignment.findUnique({ where: { id: assignmentId }});
+    
+    await prisma.xPTransaction.create({
+      data: {
+        userId: submission.userId,
+        amount: score,
+        reason: `Graded Assignment: ${assignment?.title || 'Unknown'}`,
+      }
+    });
+  }
+
+  // Revalidate both the specific submission page and the general assignments page
+  revalidatePath(`/dashboard/admin/assignments/submissions/${assignmentId}`);
+  revalidatePath("/dashboard/admin/assignments");
+
+  return { success: true };
 }

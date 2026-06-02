@@ -1,4 +1,5 @@
-import { currentUser } from '@clerk/nextjs/server';
+import { auth } from '@/app/lib/auth';
+import { headers } from 'next/headers';;
 import { NextResponse } from 'next/server';
 
 const API_BASE = 'http://127.0.0.1:4000';
@@ -26,7 +27,8 @@ export async function GET(request: Request) {
     return NextResponse.json({ message: 'Missing clerkId' }, { status: 400 });
   }
 
-  const userAuth = await currentUser();
+  const session = await auth.api.getSession({ headers: await headers() });
+  const userAuth = session?.user;
   if (!userAuth || userAuth.id !== clerkId) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
@@ -35,7 +37,7 @@ export async function GET(request: Request) {
   
   if (!user?.id) {
     // Sync the user to the internal database automatically
-    const email = userAuth.emailAddresses[0]?.emailAddress;
+    const email = userAuth.email;
     const username = userAuth.username || email?.split('@')[0] || 'student';
     
     try {

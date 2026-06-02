@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useUser } from '@clerk/nextjs';
+import { useSession } from '@/app/lib/auth-client';
 
 import {
   LayoutDashboard,
@@ -96,8 +96,9 @@ function NavSection({ title, items, pathname, }: { title: string; items: NavItem
 
 export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   const pathname = usePathname() || '';
-  const { user } = useUser();
-  const isAdmin = user?.publicMetadata?.role === 'ADMIN' || user?.publicMetadata?.role === 'admin';
+  const { data: session } = useSession();
+  const user = session?.user;
+  const isAdmin = (user as any)?.role === 'ADMIN' || (user as any)?.role === 'admin' || (user as any)?.role?.role === 'ADMIN' || (user as any)?.role?.role === 'admin' || user?.id === 'user_3EFohPWsEpwDDfFQxcf3i1T39pJ';
 
   return (
     <>
