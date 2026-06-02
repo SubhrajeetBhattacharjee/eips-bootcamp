@@ -1,10 +1,9 @@
 "use client";
 
-// app/components/cap/CapApplicationForm.tsx
-
 import React, { useState } from "react";
 import { useUser } from '@clerk/nextjs';
 import { CAPFormData, submitCAPApplication, CAPApplication } from "../../lib/Cap";
+import { ChevronRight, ChevronLeft, Zap, Users, GraduationCap, CheckCircle2, Trophy } from "lucide-react";
 
 interface Props {
   onSubmitted: (app: CAPApplication) => void;
@@ -14,6 +13,7 @@ const GRAD_YEARS = ["2024", "2025", "2026", "2027", "2028", "2029"];
 
 export default function CapApplicationForm({ onSubmitted }: Props) {
   const { user } = useUser();
+  const [step, setStep] = useState(1);
   const [form, setForm] = useState<CAPFormData>({
     fullName: "",
     college: "",
@@ -26,15 +26,38 @@ export default function CapApplicationForm({ onSubmitted }: Props) {
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<Partial<CAPFormData>>({});
 
-  const validate = (): boolean => {
+  const validateStep2 = (): boolean => {
     const e: Partial<CAPFormData> = {};
-    if (!form.fullName.trim()) e.fullName = "Required";
-    if (!form.college.trim()) e.college = "Required";
-    if (!form.city.trim()) e.city = "Required";
-    if (!form.whyJoin.trim()) e.whyJoin = "Required";
-    if (!form.communityExperience.trim()) e.communityExperience = "Required";
+    if (!form.fullName.trim()) e.fullName = "Name is required";
+    if (!form.college.trim()) e.college = "College is required";
     setErrors(e);
     return Object.keys(e).length === 0;
+  };
+
+  const validateStep3 = (): boolean => {
+    const e: Partial<CAPFormData> = {};
+    if (!form.city.trim()) e.city = "City is required";
+    if (!form.socialLinks.trim()) e.socialLinks = "Social links are required";
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const validateStep4 = (): boolean => {
+    const e: Partial<CAPFormData> = {};
+    if (!form.whyJoin.trim()) e.whyJoin = "Tell us why you want to join";
+    if (!form.communityExperience.trim()) e.communityExperience = "Share your community experience";
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const handleNext = () => {
+    if (step === 2 && !validateStep2()) return;
+    if (step === 3 && !validateStep3()) return;
+    setStep((prev) => prev + 1);
+  };
+
+  const handleBack = () => {
+    setStep((prev) => Math.max(1, prev - 1));
   };
 
   const handleChange = (
@@ -48,371 +71,312 @@ export default function CapApplicationForm({ onSubmitted }: Props) {
   };
 
   const handleSubmit = async () => {
-    if (!validate()) return;
+    if (!validateStep4()) return;
     setSubmitting(true);
     try {
-        const userId = user?.id;
-        if (!userId) {
-          setSubmitting(false);
-          return;
-        }
+      const userId = user?.id;
+      if (!userId) {
+        setSubmitting(false);
+        return;
+      }
 
-        const app = await submitCAPApplication(userId, form, {
-          email: user.primaryEmailAddress?.emailAddress,
-          username: user.username,
-        });
+      const app = await submitCAPApplication(userId, form, {
+        email: user.primaryEmailAddress?.emailAddress,
+        username: user.username,
+      });
       onSubmitted(app);
     } catch {
       setSubmitting(false);
     }
   };
 
-  return (
-    <div className="w-full max-w-2xl mx-auto">
-      {/* Form card */}
-      <div
-        className="relative rounded-2xl border border-white/[0.08] overflow-hidden"
-        style={{
-          background:
-            "linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.02) 100%)",
-          backdropFilter: "blur(20px)",
-          boxShadow:
-            "0 0 0 1px rgba(52,211,153,0.08), 0 32px 64px rgba(0,0,0,0.5)",
-        }}
-      >
-        {/* Top accent line */}
-        <div
-          className="absolute inset-x-0 top-0 h-px"
-          style={{
-            background:
-              "linear-gradient(90deg, transparent, rgba(52,211,153,0.6), transparent)",
-          }}
-        />
+  // Progress calculation
+  const totalSteps = 4;
+  const progress = ((step - 1) / (totalSteps - 1)) * 100;
 
-        <div className="p-8">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h2 className="text-xl font-semibold text-white tracking-tight">
-                Apply to the CAP Program
+  return (
+    <div className="w-full max-w-3xl mx-auto relative min-h-[500px] flex flex-col justify-center">
+      {/* Dynamic Background Glow based on step */}
+      <div 
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-lg blur-[120px] rounded-full pointer-events-none transition-all duration-1000"
+        style={{
+          background: step === 1 ? 'rgba(52, 211, 153, 0.15)' : 
+                      step === 4 ? 'rgba(59, 130, 246, 0.15)' : 
+                      'rgba(16, 185, 129, 0.1)'
+        }}
+      />
+
+      <div
+        className="relative z-10 rounded-3xl border border-white/[0.08] overflow-hidden transition-all duration-500 bg-black/40 backdrop-blur-3xl shadow-2xl"
+      >
+        {/* Progress Bar */}
+        {step > 1 && (
+          <div className="w-full h-1 bg-white/5 relative overflow-hidden">
+            <div 
+              className="absolute top-0 left-0 h-full bg-gradient-to-r from-emerald-500 to-cyan-500 transition-all duration-500 ease-out"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        )}
+
+        <div className="p-8 sm:p-12 relative">
+          
+          {/* STEP 1: THE PITCH */}
+          <div className={`transition-all duration-500 ${step === 1 ? 'opacity-100 translate-x-0' : 'opacity-0 absolute inset-0 pointer-events-none translate-x-12'}`}>
+            <div className="text-center space-y-6">
+              <div className="inline-flex items-center justify-center p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 mb-4 animate-pulse">
+                <Trophy className="w-12 h-12 text-emerald-400" />
+              </div>
+              
+              <h2 className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-emerald-200 to-emerald-400 tracking-tight">
+                Become a Campus Ambassador
               </h2>
-              <p className="text-sm text-white/40 mt-1">
-                Fill in your details to join the ambassador program.
+              
+              <p className="text-lg text-white/60 max-w-xl mx-auto leading-relaxed">
+                Join an elite group of student leaders. Bring EIPsInsight to your college, host exclusive seminars, and build the future of Ethereum education.
               </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-8 pb-10">
+                <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.05] flex flex-col items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400"><Users size={20}/></div>
+                  <div className="text-sm font-semibold text-white">Host Seminars</div>
+                </div>
+                <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.05] flex flex-col items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400"><Zap size={20}/></div>
+                  <div className="text-sm font-semibold text-white">Earn XP</div>
+                </div>
+                <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.05] flex flex-col items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400"><GraduationCap size={20}/></div>
+                  <div className="text-sm font-semibold text-white">Unlock Perks</div>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setStep(2)}
+                className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-white text-black font-bold rounded-2xl hover:scale-105 transition-all duration-300"
+              >
+                Start Application
+                <ChevronRight className="group-hover:translate-x-1 transition-transform" />
+                {/* Glow behind button */}
+                <div className="absolute inset-0 rounded-2xl bg-white opacity-20 blur-xl group-hover:opacity-40 transition-opacity" />
+              </button>
             </div>
-            <span
-              className="text-xs font-medium px-3 py-1 rounded-full border"
-              style={{
-                background: "rgba(52,211,153,0.12)",
-                borderColor: "rgba(52,211,153,0.3)",
-                color: "#34d399",
-              }}
-            >
-              Step 1 of 1
-            </span>
           </div>
 
-          {/* Fields grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {/* Full Name */}
-            <div>
-              <FieldLabel icon="👤" label="Full Name" />
-              <Input
-                name="fullName"
-                value={form.fullName}
-                onChange={handleChange}
-                placeholder="Your full name"
-                error={errors.fullName}
+          {/* STEP 2: PERSONAL IDENTITY */}
+          <div className={`transition-all duration-500 ${step === 2 ? 'opacity-100 translate-x-0' : step < 2 ? 'opacity-0 absolute inset-0 pointer-events-none -translate-x-12' : 'opacity-0 absolute inset-0 pointer-events-none translate-x-12'}`}>
+            <StepHeader step="01" title="Who are you?" subtitle="Let's start with the basics." />
+            
+            <div className="space-y-6">
+              <InputField 
+                label="Full Name" 
+                name="fullName" 
+                value={form.fullName} 
+                onChange={handleChange} 
+                error={errors.fullName} 
+                placeholder="Vitalik Buterin" 
               />
-            </div>
-
-            {/* College */}
-            <div>
-              <FieldLabel icon="🏛️" label="College / University" />
-              <Input
-                name="college"
-                value={form.college}
-                onChange={handleChange}
-                placeholder="Your institution"
-                error={errors.college}
+              <InputField 
+                label="College / University" 
+                name="college" 
+                value={form.college} 
+                onChange={handleChange} 
+                error={errors.college} 
+                placeholder="University of Waterloo" 
               />
-            </div>
-
-            {/* Graduation Year */}
-            <div>
-              <FieldLabel icon="🎓" label="Graduation Year" />
-              <div className="relative">
-                <select
-                  name="graduationYear"
-                  value={form.graduationYear}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-xl text-sm text-white appearance-none outline-none transition-all duration-200"
-                  style={{
-                    background: "rgba(255,255,255,0.05)",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                  }}
-                  onFocus={(e) => {
-                    e.currentTarget.style.borderColor = "rgba(52,211,153,0.5)";
-                    e.currentTarget.style.boxShadow =
-                      "0 0 0 3px rgba(52,211,153,0.08)";
-                  }}
-                  onBlur={(e) => {
-                    e.currentTarget.style.borderColor =
-                      "rgba(255,255,255,0.1)";
-                    e.currentTarget.style.boxShadow = "none";
-                  }}
-                >
-                  {GRAD_YEARS.map((y) => (
-                    <option key={y} value={y} style={{ background: "#0a0a0a" }}>
-                      {y}
-                    </option>
-                  ))}
-                </select>
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none text-xs">
-                  ▼
-                </span>
+              
+              <div>
+                <label className="block text-sm font-medium text-white/70 mb-2">Graduation Year</label>
+                <div className="relative group">
+                  <select
+                    name="graduationYear"
+                    value={form.graduationYear}
+                    onChange={handleChange}
+                    className="w-full px-5 py-4 rounded-2xl text-white appearance-none outline-none transition-all duration-300 bg-white/5 border border-white/10 hover:border-emerald-500/50 focus:border-emerald-500 focus:bg-white/10 focus:ring-4 focus:ring-emerald-500/10 cursor-pointer"
+                  >
+                    {GRAD_YEARS.map((y) => (
+                      <option key={y} value={y} className="bg-zinc-900 text-white">{y}</option>
+                    ))}
+                  </select>
+                  <ChevronRight className="absolute right-5 top-1/2 -translate-y-1/2 text-white/30 group-hover:text-emerald-400 rotate-90 transition-colors pointer-events-none" />
+                </div>
               </div>
             </div>
 
-            {/* City */}
-            <div>
-              <FieldLabel icon="📍" label="City" />
-              <Input
-                name="city"
-                value={form.city}
-                onChange={handleChange}
-                placeholder="Your city, Country"
-                error={errors.city}
+            <NavigationButtons onBack={handleBack} onNext={handleNext} />
+          </div>
+
+          {/* STEP 3: ONLINE PRESENCE */}
+          <div className={`transition-all duration-500 ${step === 3 ? 'opacity-100 translate-x-0' : step < 3 ? 'opacity-0 absolute inset-0 pointer-events-none -translate-x-12' : 'opacity-0 absolute inset-0 pointer-events-none translate-x-12'}`}>
+            <StepHeader step="02" title="Where are you based?" subtitle="We want to know where you're representing." />
+            
+            <div className="space-y-6">
+              <InputField 
+                label="City & Country" 
+                name="city" 
+                value={form.city} 
+                onChange={handleChange} 
+                error={errors.city} 
+                placeholder="San Francisco, USA" 
+              />
+              <InputField 
+                label="Social Links" 
+                name="socialLinks" 
+                value={form.socialLinks} 
+                onChange={handleChange} 
+                error={errors.socialLinks} 
+                placeholder="https://twitter.com/yourhandle" 
+                hint="Twitter / LinkedIn / GitHub"
               />
             </div>
 
-            {/* Social Links — full width */}
-            <div className="sm:col-span-2">
-              <FieldLabel
-                icon="🔗"
-                label="Social Links"
-                hint="LinkedIn / Twitter / GitHub / Instagram"
+            <NavigationButtons onBack={handleBack} onNext={handleNext} />
+          </div>
+
+          {/* STEP 4: THE DRIVE */}
+          <div className={`transition-all duration-500 ${step === 4 ? 'opacity-100 translate-x-0' : 'opacity-0 absolute inset-0 pointer-events-none -translate-x-12'}`}>
+            <StepHeader step="03" title="The Pitch" subtitle="Why should you be our next ambassador?" />
+            
+            <div className="space-y-6">
+              <TextareaField 
+                label="Why do you want to join the CAP program?" 
+                name="whyJoin" 
+                value={form.whyJoin} 
+                onChange={handleChange} 
+                error={errors.whyJoin} 
+                placeholder="I am passionate about..." 
               />
-              <Input
-                name="socialLinks"
-                value={form.socialLinks}
-                onChange={handleChange}
-                placeholder="https://linkedin.com/in/yourprofile"
+              <TextareaField 
+                label="Community Experience" 
+                name="communityExperience" 
+                value={form.communityExperience} 
+                onChange={handleChange} 
+                error={errors.communityExperience} 
+                placeholder="Organized a hackathon with 500+ attendees..." 
+                hint="Hackathons, Clubs, Events"
               />
             </div>
 
-            {/* Why join — full width */}
-            <div className="sm:col-span-2">
-              <FieldLabel icon="💬" label="Why do you want to join the CAP program?" />
-              <Textarea
-                name="whyJoin"
-                value={form.whyJoin}
-                onChange={handleChange}
-                maxLength={500}
-                placeholder="Share your motivation..."
-                error={errors.whyJoin}
-              />
-            </div>
-
-            {/* Community Experience — full width */}
-            <div className="sm:col-span-2">
-              <FieldLabel
-                icon="👥"
-                label="Community Experience"
-                hint="Hackathons, Communities, Events, etc."
-              />
-              <Textarea
-                name="communityExperience"
-                value={form.communityExperience}
-                onChange={handleChange}
-                maxLength={500}
-                placeholder="Describe your community involvement..."
-                error={errors.communityExperience}
-              />
+            <div className="mt-8 flex items-center justify-between">
+              <button 
+                onClick={handleBack}
+                className="p-4 rounded-full bg-white/5 hover:bg-white/10 text-white transition-colors"
+              >
+                <ChevronLeft />
+              </button>
+              
+              <button
+                onClick={handleSubmit}
+                disabled={submitting}
+                className="relative flex items-center justify-center gap-3 px-10 py-4 bg-gradient-to-r from-emerald-500 to-emerald-400 hover:to-emerald-300 text-black font-bold rounded-2xl transition-all duration-300 disabled:opacity-50 disabled:scale-100 hover:scale-105 shadow-[0_0_40px_rgba(52,211,153,0.4)]"
+              >
+                {submitting ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin"></div>
+                    Submitting...
+                  </>
+                ) : (
+                  <>
+                    Submit Application
+                    <CheckCircle2 size={20} />
+                  </>
+                )}
+              </button>
             </div>
           </div>
 
-          {/* Notice */}
-          <div
-            className="mt-6 flex items-start gap-3 rounded-xl px-4 py-3"
-            style={{
-              background: "rgba(52,211,153,0.06)",
-              border: "1px solid rgba(52,211,153,0.15)",
-            }}
-          >
-            <span className="text-emerald-400 mt-0.5 shrink-0">🛡️</span>
-            <p className="text-xs text-white/50 leading-relaxed">
-              All information will be reviewed by our team. Please provide
-              accurate information — our team will review your application.
-            </p>
-          </div>
-
-          {/* Submit */}
-          <button
-            onClick={handleSubmit}
-            disabled={submitting}
-            className="mt-6 w-full flex items-center justify-center gap-2 py-4 rounded-xl font-semibold text-sm tracking-wide transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
-            style={{
-              background: submitting
-                ? "rgba(52,211,153,0.3)"
-                : "linear-gradient(135deg, #34d399, #059669)",
-              color: "#000",
-              boxShadow: submitting
-                ? "none"
-                : "0 0 24px rgba(52,211,153,0.35), 0 4px 12px rgba(0,0,0,0.3)",
-            }}
-            onMouseEnter={(e) => {
-              if (!submitting)
-                e.currentTarget.style.boxShadow =
-                  "0 0 36px rgba(52,211,153,0.5), 0 4px 16px rgba(0,0,0,0.4)";
-            }}
-            onMouseLeave={(e) => {
-              if (!submitting)
-                e.currentTarget.style.boxShadow =
-                  "0 0 24px rgba(52,211,153,0.35), 0 4px 12px rgba(0,0,0,0.3)";
-            }}
-          >
-            {submitting ? (
-              <>
-                <span className="animate-spin text-base">⟳</span>
-                Submitting…
-              </>
-            ) : (
-              <>
-                Submit Application
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <line x1="22" y1="2" x2="11" y2="13" />
-                  <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                </svg>
-              </>
-            )}
-          </button>
         </div>
       </div>
     </div>
   );
 }
 
-// ─── Sub-components ──────────────────────────────────────────────────────────
+// ─── Shared UI Components ──────────────────────────────────────────────────
 
-function FieldLabel({
-  icon,
-  label,
-  hint,
-}: {
-  icon: string;
-  label: string;
-  hint?: string;
-}) {
+function StepHeader({ step, title, subtitle }: { step: string, title: string, subtitle: string }) {
   return (
-    <label className="flex items-center gap-1.5 text-xs text-white/50 mb-2 font-medium">
-      <span>{icon}</span>
-      {label}
-      {hint && <span className="text-white/25">({hint})</span>}
-    </label>
-  );
-}
-
-function Input({
-  name,
-  value,
-  onChange,
-  placeholder,
-  error,
-}: {
-  name: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  placeholder?: string;
-  error?: string;
-}) {
-  return (
-    <div>
-      <input
-        name={name}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-white/20 outline-none transition-all duration-200"
-        style={{
-          background: "rgba(255,255,255,0.05)",
-          border: `1px solid ${error ? "rgba(239,68,68,0.5)" : "rgba(255,255,255,0.1)"}`,
-        }}
-        onFocus={(e) => {
-          e.currentTarget.style.borderColor = "rgba(52,211,153,0.5)";
-          e.currentTarget.style.boxShadow = "0 0 0 3px rgba(52,211,153,0.08)";
-        }}
-        onBlur={(e) => {
-          e.currentTarget.style.borderColor = error
-            ? "rgba(239,68,68,0.5)"
-            : "rgba(255,255,255,0.1)";
-          e.currentTarget.style.boxShadow = "none";
-        }}
-      />
-      {error && <p className="mt-1 text-xs text-red-400">{error}</p>}
+    <div className="mb-10">
+      <div className="text-emerald-400 font-mono text-sm tracking-widest mb-3">STEP {step}</div>
+      <h2 className="text-3xl font-bold text-white mb-2 tracking-tight">{title}</h2>
+      <p className="text-white/50">{subtitle}</p>
     </div>
   );
 }
 
-function Textarea({
-  name,
-  value,
-  onChange,
-  maxLength,
-  placeholder,
-  error,
-}: {
-  name: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  maxLength: number;
-  placeholder?: string;
-  error?: string;
-}) {
+function InputField({ label, name, value, onChange, placeholder, error, hint }: any) {
+  const isFilled = value.trim().length > 0;
+  
   return (
     <div>
-      <textarea
-        name={name}
-        value={value}
-        onChange={onChange}
-        maxLength={maxLength}
-        rows={4}
-        placeholder={placeholder}
-        className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-white/20 outline-none resize-none transition-all duration-200"
-        style={{
-          background: "rgba(255,255,255,0.05)",
-          border: `1px solid ${error ? "rgba(239,68,68,0.5)" : "rgba(255,255,255,0.1)"}`,
-        }}
-        onFocus={(e) => {
-          e.currentTarget.style.borderColor = "rgba(52,211,153,0.5)";
-          e.currentTarget.style.boxShadow = "0 0 0 3px rgba(52,211,153,0.08)";
-        }}
-        onBlur={(e) => {
-          e.currentTarget.style.borderColor = error
-            ? "rgba(239,68,68,0.5)"
-            : "rgba(255,255,255,0.1)";
-          e.currentTarget.style.boxShadow = "none";
-        }}
-      />
-      <div className="flex items-center justify-between mt-1">
-        {error ? (
-          <p className="text-xs text-red-400">{error}</p>
-        ) : (
-          <span />
-        )}
-        <p className="text-xs text-white/25 ml-auto">
-          {value.length}/{maxLength}
-        </p>
+      <div className="flex justify-between items-end mb-2">
+        <label className="block text-sm font-medium text-white/70">{label}</label>
+        {hint && <span className="text-xs text-white/30">{hint}</span>}
       </div>
+      <div className="relative">
+        <input
+          name={name}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          className={`w-full px-5 py-4 rounded-2xl text-white placeholder-white/20 outline-none transition-all duration-300 bg-white/5 border ${error ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/10' : 'border-white/10 hover:border-emerald-500/50 focus:border-emerald-500 focus:bg-white/10 focus:ring-4 focus:ring-emerald-500/10'}`}
+        />
+        {isFilled && !error && (
+          <CheckCircle2 className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-500 w-5 h-5" />
+        )}
+      </div>
+      {error && <p className="mt-2 text-sm text-red-400 flex items-center gap-1"><span className="w-1 h-1 rounded-full bg-red-400 inline-block"/> {error}</p>}
+    </div>
+  );
+}
+
+function TextareaField({ label, name, value, onChange, placeholder, error, hint }: any) {
+  const maxLength = 500;
+  const isFilled = value.trim().length > 10;
+  
+  return (
+    <div>
+      <div className="flex justify-between items-end mb-2">
+        <label className="block text-sm font-medium text-white/70">{label}</label>
+        {hint && <span className="text-xs text-white/30">{hint}</span>}
+      </div>
+      <div className="relative">
+        <textarea
+          name={name}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          rows={4}
+          maxLength={maxLength}
+          className={`w-full px-5 py-4 rounded-2xl text-white placeholder-white/20 outline-none resize-none transition-all duration-300 bg-white/5 border ${error ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/10' : 'border-white/10 hover:border-emerald-500/50 focus:border-emerald-500 focus:bg-white/10 focus:ring-4 focus:ring-emerald-500/10'}`}
+        />
+        <div className="absolute bottom-4 right-4 flex items-center gap-2">
+          {isFilled && !error && <CheckCircle2 className="text-emerald-500 w-4 h-4" />}
+          <span className={`text-xs ${value.length >= maxLength ? 'text-red-400' : 'text-white/20'}`}>
+            {value.length}/{maxLength}
+          </span>
+        </div>
+      </div>
+      {error && <p className="mt-2 text-sm text-red-400 flex items-center gap-1"><span className="w-1 h-1 rounded-full bg-red-400 inline-block"/> {error}</p>}
+    </div>
+  );
+}
+
+function NavigationButtons({ onBack, onNext }: { onBack: () => void, onNext: () => void }) {
+  return (
+    <div className="mt-8 flex items-center justify-between pt-6 border-t border-white/5">
+      <button 
+        onClick={onBack}
+        className="p-4 rounded-full bg-white/5 hover:bg-white/10 text-white transition-colors"
+      >
+        <ChevronLeft />
+      </button>
+      <button 
+        onClick={onNext}
+        className="flex items-center gap-2 px-8 py-4 bg-white hover:bg-zinc-200 text-black font-bold rounded-2xl transition-all hover:scale-105"
+      >
+        Continue
+        <ChevronRight size={18} />
+      </button>
     </div>
   );
 }

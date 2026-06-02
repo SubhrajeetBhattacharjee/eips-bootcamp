@@ -1,4 +1,4 @@
-import { auth } from '@clerk/nextjs/server';
+import { currentUser } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
 const API_BASE = 'http://127.0.0.1:4000';
@@ -26,12 +26,32 @@ export async function GET(request: Request) {
     return NextResponse.json({ message: 'Missing clerkId' }, { status: 400 });
   }
 
-  const { userId } = await auth();
-  if (!userId || userId !== clerkId) {
+  const userAuth = await currentUser();
+  if (!userAuth || userAuth.id !== clerkId) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
-  const user = await resolveInternalUserId(clerkId);
+  let user = await resolveInternalUserId(clerkId);
+  
+  if (!user?.id) {
+    // Sync the user to the internal database automatically
+    const email = userAuth.emailAddresses[0]?.emailAddress;
+    const username = userAuth.username || email?.split('@')[0] || 'student';
+    
+    try {
+      const createRes = await fetch(`${API_BASE}/users`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': 'dev-secret-key' },
+        body: JSON.stringify({ clerkId, email, username, role: 'STUDENT' })
+      });
+      if (createRes.ok) {
+        user = await createRes.json();
+      }
+    } catch (e) {
+      console.error('Failed to auto-sync user', e);
+    }
+  }
+
   if (!user?.id) {
     return NextResponse.json({ message: 'User not found' }, { status: 404 });
   }

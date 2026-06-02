@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useUser } from '@clerk/nextjs';
 
 import {
   LayoutDashboard,
@@ -95,6 +96,8 @@ function NavSection({ title, items, pathname, }: { title: string; items: NavItem
 
 export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   const pathname = usePathname() || '';
+  const { user } = useUser();
+  const isAdmin = user?.publicMetadata?.role === 'ADMIN' || user?.publicMetadata?.role === 'admin';
 
   return (
     <>
@@ -140,7 +143,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
         <nav className="flex-1 overflow-y-auto px-3 py-5 scrollbar-hide">
           <NavSection title="Main" items={mainNav} pathname={pathname}/>
           <NavSection title="CAP Program" items={capNav} pathname={pathname}/>
-          <NavSection title="Admin" items={adminNav} pathname={pathname}/>
+          {isAdmin && <NavSection title="Admin" items={adminNav} pathname={pathname}/>}
         </nav>
 
         {/* Upgrade CTA */}
