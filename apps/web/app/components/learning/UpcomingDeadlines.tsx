@@ -1,138 +1,52 @@
-// apps/web/components/learning/UpcomingDeadlines.tsx
-
 import React from 'react';
-import { Calendar, AlertCircle, Clock } from 'lucide-react';
+import { Calendar, Clock, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
-interface Deadline {
-  id: string;
-  title: string;
-  dueDate: string;
-  daysLeft: number;
-  priority: 'high' | 'medium' | 'low';
-  type: string;
-}
+export const UpcomingDeadlines = ({ deadlines }: { deadlines?: any[] }) => {
+  const items = deadlines || [];
 
-const deadlines: Deadline[] = [
-  {
-    id: '1',
-    title: 'Assignment #5: Smart Contracts',
-    dueDate: 'May 30, 2024',
-    daysLeft: 2,
-    priority: 'high',
-    type: 'Assignment',
-  },
-  {
-    id: '2',
-    title: 'Quiz: Web3 Fundamentals',
-    dueDate: 'June 2, 2024',
-    daysLeft: 5,
-    priority: 'medium',
-    type: 'Quiz',
-  },
-  {
-    id: '3',
-    title: 'Project: Build EIP Proposal',
-    dueDate: 'June 10, 2024',
-    daysLeft: 13,
-    priority: 'medium',
-    type: 'Project',
-  },
-  {
-    id: '4',
-    title: 'Code Review Submission',
-    dueDate: 'June 15, 2024',
-    daysLeft: 18,
-    priority: 'low',
-    type: 'Review',
-  },
-];
-
-export const UpcomingDeadlines: React.FC = () => {
   return (
-    <div className="group relative bg-[#0d0d0d] border border-white/8 rounded-2xl p-6 hover:border-emerald-500/20 hover:-translate-y-0.5 transition-all duration-300 overflow-hidden h-full flex flex-col">
-      {/* Hover glow */}
-      <div className="absolute inset-0 bg-emerald-500/0 group-hover:bg-emerald-500/3 transition-all duration-300 rounded-2xl" />
+    <div className="bg-[#0d0d0d] border border-white/8 rounded-2xl p-6 flex flex-col h-full hover:border-emerald-500/20 transition-all duration-300">
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-white font-bold text-base">Upcoming Deadlines</h3>
+      </div>
 
-      <div className="relative z-10 flex-1 flex flex-col">
-        <div className="mb-6">
-          <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">
-            Timeline
-          </p>
-          <h3 className="text-xl font-bold text-white mt-1">
-            Upcoming Deadlines
-          </h3>
-        </div>
-
-        {/* Deadline Items */}
-        <div className="space-y-3 flex-1">
-            {deadlines.map((deadline) => {
-              let priorityColor = 'bg-white/5 text-zinc-300 border-white/8';
-              let dayColor = 'text-zinc-400';
-
-              if (deadline.priority === 'high') {
-                priorityColor = 'bg-red-500/15 text-red-300 border-red-500/20';
-                dayColor = 'text-red-400';
-              } else if (deadline.priority === 'medium') {
-                priorityColor = 'bg-yellow-500/15 text-yellow-300 border-yellow-500/20';
-                dayColor = 'text-yellow-400';
-              } else {
-                priorityColor = 'bg-emerald-500/15 text-emerald-300 border-emerald-500/20';
-                dayColor = 'text-emerald-400';
-              }
-
-              return (
-                <div
-                  key={deadline.id}
-                  className={`
-                    rounded-lg border
-                    bg-white/5 hover:bg-white/8
-                    p-3.5 transition-all duration-200
-                    group/deadline
-                  `}
-                  style={{ borderColor: 'rgba(255, 255, 255, 0.08)' }}
-                >
-                  <div className="flex items-start justify-between gap-3 mb-2.5">
+      <div className="flex-1">
+        {items.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full text-center py-6">
+            <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mb-3">
+              <Calendar size={20} className="text-zinc-500" />
+            </div>
+            <p className="text-white font-semibold text-sm mb-1">No upcoming deadlines</p>
+            <p className="text-zinc-500 text-xs">You're all caught up on assignments!</p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {items.map((item) => (
+              <div key={item.id} className="group flex gap-4 p-4 bg-white/[0.02] border border-white/5 rounded-xl hover:bg-white/[0.04] hover:border-emerald-500/20 transition-all duration-300">
+                <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex flex-col items-center justify-center shrink-0">
+                  <span className="text-[10px] font-bold text-emerald-400 uppercase leading-none mb-1">Due</span>
+                  <span className="text-xs font-black text-white leading-none">{item.deadline.split('/')[1] || item.deadline}</span>
+                </div>
+                
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2">
                     <div>
-                      <p className="text-xs font-semibold text-white">
-                        {deadline.title}
-                      </p>
-                      <p className="text-xs text-zinc-500 mt-0.5">
-                        {deadline.type}
-                      </p>
+                      <p className="text-xs text-emerald-400 font-semibold mb-0.5 truncate">{item.module}</p>
+                      <h4 className="text-sm font-bold text-white leading-tight line-clamp-1 group-hover:text-emerald-300 transition-colors">{item.title}</h4>
                     </div>
-                    <span
-                      className={`
-                        text-xs font-medium px-2.5 py-1 rounded-md border
-                        whitespace-nowrap
-                        ${priorityColor}
-                      `}
-                    >
-                      {deadline.priority.charAt(0).toUpperCase() +
-                        deadline.priority.slice(1)}
-                    </span>
                   </div>
-
-                  <div className="flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-1.5 text-zinc-500">
-                      <Calendar size={13} />
-                      <span>{deadline.dueDate}</span>
-                    </div>
-                    <div className={`flex items-center gap-1 font-semibold ${dayColor}`}>
-                      <Clock size={13} />
-                      <span>{deadline.daysLeft}d</span>
-                    </div>
+                  
+                  <div className="flex items-center gap-3 mt-2">
+                    <Link href={`/dashboard/assignments/${item.id}`} className="text-xs font-semibold text-zinc-400 hover:text-emerald-400 transition-colors flex items-center gap-1">
+                      Go to Assignment <ArrowRight size={10} />
+                    </Link>
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
-
-        {/* View All Button */}
-        <div className="mt-6 pt-4 border-t border-white/8">
-          <button className="w-full rounded-lg font-medium text-sm py-2.5 px-4 transition-all duration-200 border border-emerald-500/30 hover:border-emerald-500/60 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 hover:text-emerald-200">
-            View Calendar →
-          </button>
-        </div>
+        )}
       </div>
     </div>
   );

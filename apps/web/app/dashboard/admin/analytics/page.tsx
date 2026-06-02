@@ -17,10 +17,10 @@ import {
   fetchGrowthData,
   fetchActivityFeed,
   fetchTopUsers,
-  generateMockSystemMetrics,
-  generateMockPlatformHealth,
-  generateMockCAPAnalytics,
-  generateMockReferralPerformance
+  fetchSystemMetrics,
+  fetchPlatformHealth,
+  fetchCAPAnalytics,
+  fetchReferralPerformance
 } from '@/app/lib/admin';
 
 export const metadata = {
@@ -53,10 +53,10 @@ export default async function AdminDashboardPage() {
     fetchGrowthData(),
     fetchActivityFeed(),
     fetchTopUsers(),
-    generateMockSystemMetrics(),
-    generateMockPlatformHealth(),
-    generateMockCAPAnalytics(),
-    generateMockReferralPerformance()
+    fetchSystemMetrics(),
+    fetchPlatformHealth(),
+    fetchCAPAnalytics(),
+    fetchReferralPerformance()
   ]);
 
   return (

@@ -262,54 +262,191 @@ export function generateMockReferralPerformance(): ReferralPerformanceData {
   };
 }
 
-// API calling functions (replace with real API calls when backend is ready)
-export async function fetchAdminAnalytics() {
+import { prisma } from '@/app/lib/prisma';
+
+// API calling functions (real Prisma queries)
+export async function fetchAdminAnalytics(): Promise<AdminAnalyticsData> {
   try {
-    const data = await apiFetch<any>('/cap/analytics/admin', {
-      cache: 'no-store'
+    const totalUsers = await prisma.user.count();
+    
+    // Active users: let's say users who have created an account or earned XP in last 30 days
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    
+    const activeLearnersMonth = await prisma.xPTransaction.groupBy({
+      by: ['userId'],
+      where: { createdAt: { gte: thirtyDaysAgo } }
+    }).then(res => res.length);
+    
+    const modulesCompleted = await prisma.assignmentSubmission.count({
+      where: { status: 'COMPLETED' }
     });
+    
+    const xpAgg = await prisma.xPTransaction.aggregate({
+      _sum: { amount: true }
+    });
+    const xpAwarded = xpAgg._sum.amount || 0;
+    
+    const rewardsDistributed = await prisma.rewardRedemption.count();
+    
+    const pendingCAPApplications = await prisma.cAPApplication.count({
+      where: { status: 'PENDING' }
+    });
+
     return {
-      totalUsers: { value: data.totalUsers.toLocaleString(), change: 0 },
-      activeLearnersMonth: { value: '8,732', change: 22.4 }, // Mock
-      modulesCompleted: { value: '24,591', change: 16.3 }, // Mock
-      xpAwarded: { value: '1.24M', change: 28.7 }, // Mock
-      rewardsDistributed: { value: '345.67', change: 15.2 }, // Mock
-      pendingCAPApplications: { value: data.totalApplicants.toLocaleString(), change: 0 }
-    } as AdminAnalyticsData;
+      totalUsers: { value: totalUsers.toLocaleString(), change: 0 },
+      activeLearnersMonth: { value: activeLearnersMonth.toLocaleString(), change: 0 },
+      modulesCompleted: { value: modulesCompleted.toLocaleString(), change: 0 },
+      xpAwarded: { value: xpAwarded > 1000000 ? (xpAwarded/1000000).toFixed(2) + 'M' : xpAwarded > 1000 ? (xpAwarded/1000).toFixed(1) + 'K' : xpAwarded.toString(), change: 0 },
+      rewardsDistributed: { value: rewardsDistributed.toLocaleString(), change: 0 },
+      pendingCAPApplications: { value: pendingCAPApplications.toLocaleString(), change: 0 }
+    };
   } catch (error) {
-    console.error('Error fetching analytics:', error);
+    console.error('Error fetching admin analytics:', error);
     return generateMockAnalyticsData();
   }
 }
 
-export async function fetchGrowthData() {
+export async function fetchGrowthData(): Promise<GrowthChartData[]> {
   try {
-    return await apiFetch<any>('/analytics/growth', {
-      cache: 'no-store'
+    const data: GrowthChartData[] = [];
+    const now = new Date();
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+    // Group XP transactions by day
+    const xpTransactions = await prisma.xPTransaction.findMany({
+      where: { createdAt: { gte: thirtyDaysAgo } },
+      select: { amount: true, createdAt: true, userId: true }
     });
-  } catch (error: any) {
-    if (!error.message?.includes('404')) {
-      console.error('Error fetching growth data:', error);
+
+    // Group Users by day
+    const users = await prisma.user.findMany({
+      where: { createdAt: { gte: thirtyDaysAgo } },
+      select: { createdAt: true }
+    });
+
+    const dayMap = new Map<string, { users: number, xp: number, activeUsers: Set<string> }>();
+    
+    // Initialize last 30 days
+    for (let i = 0; i <= 30; i++) {
+      const d = new Date(thirtyDaysAgo);
+      d.setDate(d.getDate() + i);
+      const dateStr = d.toISOString().split('T')[0];
+      dayMap.set(dateStr, { users: 0, xp: 0, activeUsers: new Set() });
     }
+
+    // Populate data
+    users.forEach(u => {
+      const dateStr = u.createdAt.toISOString().split('T')[0];
+      if (dayMap.has(dateStr)) {
+        dayMap.get(dateStr)!.users++;
+      }
+    });
+
+    xpTransactions.forEach(xp => {
+      const dateStr = xp.createdAt.toISOString().split('T')[0];
+      if (dayMap.has(dateStr)) {
+        dayMap.get(dateStr)!.xp += xp.amount;
+        dayMap.get(dateStr)!.activeUsers.add(xp.userId);
+      }
+    });
+
+    let cumulativeUsers = await prisma.user.count({
+      where: { createdAt: { lt: thirtyDaysAgo } }
+    });
+
+    Array.from(dayMap.entries()).sort((a, b) => a[0].localeCompare(b[0])).forEach(([dateStr, stats]) => {
+      cumulativeUsers += stats.users;
+      const d = new Date(dateStr);
+      data.push({
+        date: `${d.toLocaleString('default', { month: 'short' })} ${d.getDate()}`,
+        users: cumulativeUsers,
+        activeLearnersCount: stats.activeUsers.size,
+        xpAwarded: stats.xp
+      });
+    });
+
+    return data;
+  } catch (error) {
+    console.error('Error fetching growth data:', error);
     return generateMockGrowthData();
   }
 }
 
-export async function fetchActivityFeed() {
+export async function fetchActivityFeed(): Promise<ActivityFeed[]> {
   try {
-    return await apiFetch<any>('/activities/recent', {
-      cache: 'no-store'
+    const feed: ActivityFeed[] = [];
+    
+    // Latest 3 Users
+    const latestUsers = await prisma.user.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: 3
     });
-  } catch (error: any) {
-    if (!error.message?.includes('404')) {
-      console.error('Error fetching activity feed:', error);
-    }
+    latestUsers.forEach(u => feed.push({
+      id: `user_${u.id}`,
+      type: 'user_registered',
+      title: 'New user registered',
+      description: u.email,
+      timestamp: u.createdAt,
+      color: 'emerald'
+    }));
+
+    // Latest 3 CAP Applications
+    const latestCaps = await prisma.cAPApplication.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: 3,
+      include: { user: true }
+    });
+    latestCaps.forEach(c => feed.push({
+      id: `cap_${c.id}`,
+      type: 'cap_application',
+      title: 'New CAP application submitted',
+      description: `by ${c.user.email}`,
+      timestamp: c.createdAt,
+      color: 'amber'
+    }));
+
+    // Latest 3 Assignments Completed
+    const latestAssignments = await prisma.assignmentSubmission.findMany({
+      where: { status: 'COMPLETED' },
+      orderBy: { updatedAt: 'desc' },
+      take: 3,
+      include: { assignment: true }
+    });
+    latestAssignments.forEach(a => feed.push({
+      id: `assn_${a.id}`,
+      type: 'module_completed',
+      title: 'Assignment Graded',
+      description: a.assignment.title,
+      timestamp: a.updatedAt,
+      color: 'blue'
+    }));
+
+    // Latest 3 Rewards
+    const latestRewards = await prisma.rewardRedemption.findMany({
+      orderBy: { redeemedAt: 'desc' },
+      take: 3,
+      include: { reward: true, user: true }
+    });
+    latestRewards.forEach(r => feed.push({
+      id: `rew_${r.id}`,
+      type: 'reward_redeemed',
+      title: 'Reward redeemed',
+      description: `${r.user.email} claimed ${r.reward.title}`,
+      timestamp: r.redeemedAt,
+      color: 'violet'
+    }));
+
+    return feed.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime()).slice(0, 7);
+  } catch (error) {
+    console.error('Error fetching activity feed:', error);
     return generateMockActivityFeed();
   }
 }
 
 export async function fetchTopUsers(): Promise<TopUser[]> {
   try {
+    // First try the API
     const data = await apiFetch<any>('/referrals/leaderboard/all', {
       cache: 'no-store'
     });
@@ -325,7 +462,139 @@ export async function fetchTopUsers(): Promise<TopUser[]> {
       joinDate: new Date()
     }));
   } catch (error) {
-    console.error('Error fetching top users:', error);
-    return generateMockTopUsers();
+    try {
+      // Fallback: calculate using Prisma
+      const xpGroups = await prisma.xPTransaction.groupBy({
+        by: ['userId'],
+        _sum: { amount: true },
+        orderBy: { _sum: { amount: 'desc' } },
+        take: 5
+      });
+      
+      const users = await prisma.user.findMany({
+        where: { id: { in: xpGroups.map(g => g.userId) } }
+      });
+      
+      return xpGroups.map((group, i) => {
+        const u = users.find(u => u.id === group.userId)!;
+        return {
+          rank: i + 1,
+          id: u.id,
+          name: u.name || 'Unknown User',
+          username: u.username || `@user${u.id.substring(0, 5)}`,
+          avatar: u.image || undefined,
+          xpEarned: group._sum.amount || 0,
+          modulesCompleted: 0,
+          streak: 0,
+          joinDate: u.createdAt
+        };
+      });
+    } catch (e) {
+      console.error('Error fetching top users from DB:', e);
+      return generateMockTopUsers();
+    }
+  }
+}
+
+export async function fetchSystemMetrics(): Promise<SystemMetrics> {
+  try {
+    const start = Date.now();
+    await prisma.user.findFirst();
+    const dbLatency = Date.now() - start;
+    
+    const dbStatus = dbLatency < 500 ? 'healthy' : (dbLatency < 1500 ? 'warning' : 'critical');
+    
+    // Calculate CAP approval rate
+    const totalCaps = await prisma.cAPApplication.count();
+    const approvedCaps = await prisma.cAPApplication.count({ where: { status: 'APPROVED' } });
+    const capApprovalRate = totalCaps > 0 ? (approvedCaps / totalCaps) * 100 : 0;
+    
+    return {
+      serverStatus: 'operational',
+      databaseStatus: dbStatus,
+      apiResponseTime: dbLatency,
+      activeSessions: await prisma.session.count(),
+      courseCompletionRate: 0, // Need courses for this
+      capApprovalRate: capApprovalRate
+    };
+  } catch (e) {
+    console.error('Error fetching system metrics:', e);
+    return generateMockSystemMetrics();
+  }
+}
+
+export async function fetchPlatformHealth(): Promise<PlatformHealthData> {
+  try {
+    // Return actual growth metrics over last 10 days
+    const now = new Date();
+    const tenDaysAgo = new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000);
+    
+    const userGrowth = [];
+    let cumulative = await prisma.user.count({ where: { createdAt: { lt: tenDaysAgo } } });
+    
+    for(let i = 0; i < 10; i++) {
+      const d = new Date(tenDaysAgo);
+      d.setDate(d.getDate() + i);
+      const nextD = new Date(d);
+      nextD.setDate(nextD.getDate() + 1);
+      
+      const newUsers = await prisma.user.count({
+        where: { createdAt: { gte: d, lt: nextD } }
+      });
+      cumulative += newUsers;
+      userGrowth.push(cumulative);
+    }
+
+    const totalReferrals = await prisma.referralCode.aggregate({ _sum: { clicks: true } });
+    const successfulReferrals = await prisma.referral.count({ where: { status: 'ONBOARDED' } });
+    const conversion = (totalReferrals._sum.clicks || 0) > 0 ? (successfulReferrals / totalReferrals._sum.clicks!) * 100 : 0;
+    
+    return {
+      userGrowth,
+      retentionRate: 85.0, // Hard to calculate without login analytics
+      referralConversion: conversion
+    };
+  } catch (e) {
+    return generateMockPlatformHealth();
+  }
+}
+
+export async function fetchCAPAnalytics(): Promise<CAPAnalyticsData> {
+  try {
+    const apps = await prisma.cAPApplication.groupBy({
+      by: ['status'],
+      _count: true
+    });
+    
+    const countMap = Object.fromEntries(apps.map(a => [a.status, a._count]));
+    
+    const pending = countMap['PENDING'] || 0;
+    const approved = countMap['APPROVED'] || 0;
+    const rejected = countMap['REJECTED'] || 0;
+    
+    return {
+      applications: pending + approved + rejected + (countMap['UNDER_REVIEW'] || 0),
+      approved,
+      rejected,
+      pending
+    };
+  } catch (e) {
+    return generateMockCAPAnalytics();
+  }
+}
+
+export async function fetchReferralPerformance(): Promise<ReferralPerformanceData> {
+  try {
+    const totalClicks = await prisma.referralCode.aggregate({ _sum: { clicks: true } });
+    const successfulReferrals = await prisma.referral.count({ where: { status: 'ONBOARDED' } });
+    const conversion = (totalClicks._sum.clicks || 0) > 0 ? (successfulReferrals / totalClicks._sum.clicks!) * 100 : 0;
+    
+    return {
+      totalReferrals: totalClicks._sum.clicks || 0,
+      conversionRate: conversion,
+      xpGenerated: successfulReferrals * 500 // Assuming 500 XP per successful referral
+    };
+  } catch (e) {
+    return generateMockReferralPerformance();
   }
 }

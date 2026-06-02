@@ -95,12 +95,12 @@ export async function fetchSubmissions(assignmentId: string) {
   return submissions;
 }
 
-export async function gradeSubmission(submissionId: string, score: number, status: string, assignmentId: string) {
+export async function gradeSubmission(submissionId: string, score: number, status: string, assignmentId: string, feedback?: string) {
   await verifyAdmin();
   
   const submission = await prisma.assignmentSubmission.update({
     where: { id: submissionId },
-    data: { score, status }
+    data: { score, status, feedback }
   });
 
   // If the assignment is graded as COMPLETED, we need to award XP to the user
