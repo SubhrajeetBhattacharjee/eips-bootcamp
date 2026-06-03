@@ -27,63 +27,30 @@ function normalizeApplication(application: { createdAt?: string; [key: string]: 
   };
 }
 
-async function resolveInternalUserId(clerkId: string) {
-  const res = await fetch(`${API_BASE}/users/clerk/${encodeURIComponent(clerkId)}`, {
-    cache: 'no-store',
-      headers: { 'x-api-key': 'dev-secret-key' },
-  });
 
-  if (!res.ok) return null;
 
-  const text = await res.text();
-  if (!text.trim()) return null;
-
-  return JSON.parse(text) as { id: string } | null;
-}
-
-async function syncClerkUser(clerkId: string, email?: string, username?: string | null) {
-  if (!email) {
-    return null;
-  }
-
-  const res = await fetch(`${API_BASE}/auth/sync`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-api-key': 'dev-secret-key' },
-    body: JSON.stringify({ clerkId, email, username: username ?? undefined }),
-  });
-
-  if (!res.ok) {
-    return null;
-  }
-
-  const text = await res.text();
-  if (!text.trim()) return null;
-
-  return JSON.parse(text) as { id: string } | null;
-}
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const { clerkId, graduationYear, email, username, ...data } = body as {
-    clerkId?: string;
+  const { userId, graduationYear, email, username, ...data } = body as {
+    userId?: string;
     graduationYear?: string | number;
     email?: string;
     username?: string | null;
     [key: string]: unknown;
   };
 
-  if (!clerkId) {
-    return NextResponse.json({ message: 'Missing clerkId' }, { status: 400 });
+  if (!userId) {
+    return NextResponse.json({ message: 'Missing userId' }, { status: 400 });
   }
 
   const session = await auth.api.getSession({ headers: await headers() });
-  const userId = session?.user?.id;
-  if (!userId || userId !== clerkId) {
+  const sessionUserId = session?.user?.id;
+  if (!sessionUserId || sessionUserId !== userId) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
-  const user = await resolveInternalUserId(clerkId);
-  const resolvedUser = user ?? (await syncClerkUser(clerkId, email, username));
+  const resolvedUser = { id: userId };
 
   if (!resolvedUser?.id) {
     return NextResponse.json({ message: 'User not found' }, { status: 404 });

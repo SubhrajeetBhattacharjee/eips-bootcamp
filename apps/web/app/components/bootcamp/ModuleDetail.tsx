@@ -80,7 +80,7 @@ export function ModuleDetail({ module, onBack, lessons, onLessonComplete }: Modu
           <div className="w-full h-2 bg-gray-800/50 rounded-full overflow-hidden">
             <div
               className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all"
-              style={{ width: `${(module.completed / module.lessons) * 100}%` }}
+              style={{ width: `${module.lessons > 0 ? (module.completed / module.lessons) * 100 : 0}%` }}
             />
           </div>
         </div>

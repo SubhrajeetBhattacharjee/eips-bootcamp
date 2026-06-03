@@ -68,18 +68,18 @@ export function ApplicationRow({ application, onViewDetails, onStatusChange }: A
 
       {/* Header: Avatar, Info, Status */}
       <div className="flex items-start justify-between mb-4 z-10">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-1 min-w-0 pr-4">
           <img
             src={application.avatar}
             alt={application.name}
-            className="w-12 h-12 rounded-full border-2 border-emerald-500/30 object-cover shadow-[0_0_15px_rgba(16,185,129,0.2)]"
+            className="flex-shrink-0 w-12 h-12 rounded-full border-2 border-emerald-500/30 object-cover shadow-[0_0_15px_rgba(16,185,129,0.2)]"
           />
-          <div>
+          <div className="min-w-0 flex-1">
             <h3 className="font-semibold text-white text-base leading-tight truncate">{application.name}</h3>
-            <p className="text-xs text-emerald-400 mt-0.5">{application.email}</p>
+            <p className="text-xs text-emerald-400 mt-0.5 truncate">{application.email}</p>
           </div>
         </div>
-        <div className="flex flex-col items-end gap-2">
+        <div className="flex-shrink-0 flex flex-col items-end gap-2">
           <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border shadow-sm ${getStatusColor(application.status)}`}>
             {getStatusIcon(application.status)}
             {application.status}

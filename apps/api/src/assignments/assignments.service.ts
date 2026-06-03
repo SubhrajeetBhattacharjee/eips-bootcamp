@@ -6,7 +6,18 @@ export class AssignmentsService {
   constructor(private prisma: PrismaService) {}
 
   async getAssignmentsForUser(userId: string) {
+    // 1. Get user's module subscriptions
+    const subscriptions = await this.prisma.moduleSubscription.findMany({
+      where: { userId },
+      select: { moduleId: true }
+    });
+    const subscribedModuleIds = subscriptions.map(s => s.moduleId);
+
+    // 2. Fetch assignments only for subscribed modules
     const assignments = await this.prisma.assignment.findMany({
+      where: {
+        module: { in: subscribedModuleIds }
+      },
       include: {
         submissions: {
           where: { userId },

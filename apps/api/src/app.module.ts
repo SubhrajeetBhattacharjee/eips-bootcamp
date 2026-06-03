@@ -14,6 +14,7 @@ import { BootcampModule } from './bootcamp/bootcamp.module';
 import { AssignmentsModule } from './assignments/assignments.module';
 import { RewardsModule } from './rewards/rewards.module';
 import { ApiKeyGuard } from './auth/api-key.guard';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ApiKeyGuard } from './auth/api-key.guard';
     BootcampModule,
     AssignmentsModule,
     RewardsModule,
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [

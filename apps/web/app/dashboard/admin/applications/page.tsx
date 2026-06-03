@@ -41,8 +41,8 @@ export default function ApplicationsPage() {
   useEffect(() => {
     if (!isPending) {
       const user = session?.user;
-      const userRole = 'admin'; // Temporary bypass or fetch actual role from profile
-      const hasAccess = userRole === ADMIN_ROLE || user?.id === 'user_3EFohPWsEpwDDfFQxcf3i1T39pJ';
+      const userRole = (user as any)?.role;
+      const hasAccess = userRole === 'ADMIN' || userRole === 'admin';
       
       setIsAdmin(hasAccess);
       if (hasAccess) {

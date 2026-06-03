@@ -33,46 +33,27 @@ function normalizeApplication(application: BackendCAPApplication) {
   };
 }
 
-async function resolveInternalUserId(clerkId: string) {
-  try {
-    const res = await fetch(`${API_BASE}/users/clerk/${encodeURIComponent(clerkId)}`, {
-      cache: 'no-store',
-      headers: { 'x-api-key': 'dev-secret-key' },
-    });
-
-    if (!res.ok) return null;
-
-    const text = await res.text();
-    if (!text.trim()) return null;
-
-    return JSON.parse(text) as { id: string } | null;
-  } catch (err) {
-    // Backend unreachable — return null so callers can fallback
-    return null;
-  }
-}
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const clerkId = url.searchParams.get('clerkId');
+  const userId = url.searchParams.get('userId');
 
-  if (!clerkId) {
-    return NextResponse.json({ message: 'Missing clerkId' }, { status: 400 });
+  if (!userId) {
+    return NextResponse.json({ message: 'Missing userId' }, { status: 400 });
   }
 
   const session = await auth.api.getSession({ headers: await headers() });
-  const userId = session?.user?.id;
-  if (!userId || userId !== clerkId) {
+  const sessionUserId = session?.user?.id;
+  if (!sessionUserId || sessionUserId !== userId) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
-  const user = await resolveInternalUserId(clerkId);
-  if (!user?.id) {
+  if (!sessionUserId) {
     return NextResponse.json(null, { status: 200 });
   }
 
   try {
-    const res = await fetch(`${API_BASE}/cap/status/${user.id}`, {
+    const res = await fetch(`${API_BASE}/cap/status/${userId}`, {
       cache: 'no-store',
       headers: { 'x-api-key': 'dev-secret-key' },
     });

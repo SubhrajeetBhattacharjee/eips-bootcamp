@@ -76,9 +76,10 @@ export default function ReferralCodeCard({ stats }: Props) {
               onClick={handleCopy}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-all"
               style={{
-                background: "linear-gradient(135deg, #10b981, #059669)",
+                background: copied ? "linear-gradient(135deg, #059669, #047857)" : "linear-gradient(135deg, #10b981, #059669)",
                 color: "white",
-                boxShadow: "0 0 20px rgba(16,185,129,0.3)",
+                boxShadow: copied ? "0 0 30px rgba(16,185,129,0.6)" : "0 0 20px rgba(16,185,129,0.3)",
+                transform: copied ? "scale(0.95)" : "scale(1)",
               }}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none">

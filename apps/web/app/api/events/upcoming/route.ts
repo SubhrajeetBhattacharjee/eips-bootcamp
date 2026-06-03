@@ -1,5 +1,5 @@
 import { auth } from '@/app/lib/auth';
-import { headers } from 'next/headers';;
+import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 const API_BASE = 'http://127.0.0.1:4000';
@@ -14,21 +14,21 @@ export async function GET(request: Request) {
   }
 
   const session = await auth.api.getSession({ headers: await headers() });
-  const sessionUserId = session?.user?.id;
-  if (!sessionUserId || sessionUserId !== userId) {
+  const userAuth = session?.user;
+  if (!userAuth || userAuth.id !== userId) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
   
 
   try {
-    const res = await fetch(`${API_BASE}/rewards/${userId}`, {
+    const res = await fetch(`${API_BASE}/events/upcoming/${userId}`, {
       cache: 'no-store',
       headers: { 'x-api-key': 'dev-secret-key' },
     });
 
     if (!res.ok) {
-      return NextResponse.json({ message: 'Failed to fetch rewards' }, { status: res.status });
+      return NextResponse.json({ message: 'Failed to fetch upcoming events' }, { status: res.status });
     }
 
     const data = await res.json();

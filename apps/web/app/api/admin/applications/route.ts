@@ -13,8 +13,8 @@ export async function GET(request: Request) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
-  const userRole = (sessionClaims?.metadata as any)?.role || (sessionClaims as any)?.role;
-  if (userRole !== 'admin' && userId !== 'user_3EFohPWsEpwDDfFQxcf3i1T39pJ') {
+  const userRole = (user as any)?.role;
+  if (userRole !== 'ADMIN' && userRole !== 'admin') {
     return NextResponse.json({ message: 'Forbidden' }, { status: 403 });
   }
 

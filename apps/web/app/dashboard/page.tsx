@@ -11,6 +11,7 @@ import { ReferralCard } from '@/app/components/dashboard/ReferralCard';
 import { LeaderboardPreview } from '@/app/components/dashboard/LeaderboardPreview';
 import { ActivityFeed } from '@/app/components/dashboard/ActivityFeed';
 import { LearningProgress } from '@/app/components/dashboard/LearningProgress';
+import { UpcomingEventsWidget } from '@/app/components/dashboard/UpcomingEventsWidget';
 import { EventsCard } from '@/app/components/dashboard/EventsCard';
 import { ProgressWidget } from '@/app/components/dashboard/ProgressWidget';
 import type { DashboardData } from '@/app/lib/dashboard';
@@ -43,7 +44,7 @@ export default function DashboardPage() {
       setLoading(true);
 
       try {
-        const res = await fetch(`/api/dashboard?clerkId=${encodeURIComponent(userId)}`, {
+        const res = await fetch(`/api/dashboard?userId=${encodeURIComponent(userId)}`, {
           cache: 'no-store',
         });
 
@@ -118,7 +119,7 @@ export default function DashboardPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           <LearningProgress />
-          <EventsCard />
+          <UpcomingEventsWidget />
           <ProgressWidget progress={Math.min(100, Math.floor((dashboard.xp / 5000) * 100))} />
         </div>
       </div>

@@ -32,6 +32,7 @@ model User {
   lessonProgress   LessonProgress[]
   assignmentSubmissions AssignmentSubmission[]
   rewardRedemptions RewardRedemption[]
+  moduleSubscriptions ModuleSubscription[]
 }
 
 model Profile {
@@ -167,9 +168,38 @@ model Module {
   color       String
   thumbnailUrl String?
   orderIndex  Int
+  isPremium   Boolean  @default(false)
+  price       Int      @default(0)
+  category    String   @default("Beginner")
   createdAt   DateTime @default(now())
 
-  lessons     Lesson[]
+  lessons       Lesson[]
+  subscriptions ModuleSubscription[]
+  events        Event[]
+}
+
+model ModuleSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  moduleId  String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  module    Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, moduleId])
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  link        String   
+  date        DateTime
+  moduleId    String
+
+  module      Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
 }
 
 model Lesson {

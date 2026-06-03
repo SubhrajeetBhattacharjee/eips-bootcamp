@@ -45,7 +45,7 @@ export function ProgressWidget({ progress = 0 }: { progress?: number }) {
 
         <div className="text-center">
           <p className="text-white font-bold text-sm">Overall Progress</p>
-          <p className="text-zinc-500 text-xs mt-0.5">Keep learning, keep building!</p>
+          <p className="text-emerald-400/80 text-[11px] font-medium mt-1">Keep learning to reach the next rank!</p>
         </div>
       </div>
     </div>

@@ -30,7 +30,7 @@ export default function AssignmentsPage() {
   const fetchAssignments = async () => {
     if (!user?.id) return;
     try {
-      const res = await fetch(`/api/assignments?clerkId=${user.id}`);
+      const res = await fetch(`/api/assignments?userId=${user.id}`);
       if (res.ok) {
         const data = await res.json();
         setAssignments(data.assignments || []);
@@ -74,7 +74,7 @@ export default function AssignmentsPage() {
       const res = await fetch('/api/assignments/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ clerkId: user.id, assignmentId, content: contentUrl }),
+        body: JSON.stringify({ userId: user.id, assignmentId, content: contentUrl }),
       });
       if (res.ok) {
         await fetchAssignments(); // refresh data
@@ -189,11 +189,24 @@ export default function AssignmentsPage() {
                       <AssignmentCard key={assignment.id} assignment={assignment} onSubmit={handleSubmit} />
                     ))
                   ) : (
-                    <div className="bg-gradient-to-br from-gray-900/50 to-gray-800/20 border border-gray-700/50 rounded-2xl p-12 text-center">
-                      <p className="text-gray-400 text-lg">No assignments found</p>
-                      <p className="text-gray-500 text-sm mt-2">
-                        Try adjusting your filters or search query
-                      </p>
+                    <div className="bg-[#111] border border-white/5 rounded-2xl p-12 text-center">
+                      <p className="text-white text-lg font-bold mb-2">No assignments found</p>
+                      {assignments.length === 0 ? (
+                        <>
+                          <p className="text-zinc-500 text-sm mb-6">
+                            You need to subscribe to modules in the Marketplace to see related assignments.
+                          </p>
+                          <Link href="/dashboard/marketplace">
+                            <button className="px-6 py-2 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-lg transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+                              Go to Marketplace
+                            </button>
+                          </Link>
+                        </>
+                      ) : (
+                        <p className="text-zinc-500 text-sm mt-2">
+                          Try adjusting your filters or search query
+                        </p>
+                      )}
                     </div>
                   )}
                 </div>

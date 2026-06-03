@@ -35,8 +35,9 @@ interface SidebarProps {
 
 const mainNav: NavItem[] = [
   { label: 'Dashboard', href: '/dashboard', icon: <LayoutDashboard size={18} />, },
-  { label: 'My Learning', href: '/dashboard/learning', icon: <BookOpen size={18} /> },
-  { label: 'Bootcamp Modules', href: '/dashboard/bootcamp', icon: <Layers size={18} /> },
+  { label: 'My Modules', href: '/dashboard/my-modules', icon: <Layers size={18} /> },
+  { label: 'Marketplace', href: '/dashboard/marketplace', icon: <BookOpen size={18} /> },
+  { label: 'My Learning', href: '/dashboard/learning', icon: <Trophy size={18} /> },
   { label: 'Assignments', href: '/dashboard/assignments', icon: <FileText size={18} /> },
   { label: 'Leaderboard', href: '/dashboard/leaderboard', icon: <Trophy size={18} /> },
 ];
@@ -53,6 +54,7 @@ const adminNav: NavItem[] = [
   { label: 'Applications', href: '/dashboard/admin/applications', icon: <ClipboardList size={18} /> },
   { label: 'Manage Bootcamp', href: '/dashboard/admin/bootcamp', icon: <Layers size={18} /> },
   { label: 'Manage Assignments', href: '/dashboard/admin/assignments', icon: <FileText size={18} /> },
+  { label: 'Manage Events', href: '/dashboard/admin/events', icon: <Zap size={18} /> },
 ];
 
 function NavSection({ title, items, pathname, }: { title: string; items: NavItem[], pathname: string; }) {
@@ -70,11 +72,11 @@ function NavSection({ title, items, pathname, }: { title: string; items: NavItem
           <li key={item.href}>
             <Link
                 href={item.href}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 ease-out hover:translate-x-1 group
                   ${
                     active
-                      ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20'
-                      : 'text-zinc-400 hover:text-white hover:bg-white/5'
+                      ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)]'
+                      : 'text-zinc-400 hover:text-white hover:bg-white/5 hover:shadow-[0_0_15px_rgba(255,255,255,0.02)]'
                   }`}
               >
               <span className={`transition-colors ${active ? 'text-emerald-400' : 'text-zinc-500 group-hover:text-emerald-400'}`}>

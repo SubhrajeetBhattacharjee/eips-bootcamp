@@ -226,9 +226,9 @@ export default function BootcampAdminClient({ initialModules }: { initialModules
 
       <div className="space-y-6">
         {initialModules.map((module) => (
-          <div key={module.id} className="bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden transition-all duration-200 hover:border-white/10">
+          <div key={module.id} className="bg-[#0f0f0f] border border-white/5 rounded-xl overflow-hidden transition-all duration-200 hover:border-emerald-500/30 hover:shadow-[0_0_15px_rgba(16,185,129,0.1)]">
             <div 
-              className="p-5 border-b border-white/5 flex items-center justify-between cursor-pointer group"
+              className="p-5 border-b border-white/5 flex items-center justify-between cursor-pointer group hover:bg-white/5 transition-colors"
               onClick={() => toggleModule(module.id)}
             >
               <div className="flex-1">
@@ -279,7 +279,7 @@ export default function BootcampAdminClient({ initialModules }: { initialModules
                 {module.mappedLessons && module.mappedLessons.length > 0 ? (
                   <div className="grid gap-3">
                     {module.mappedLessons.map((lesson: any) => (
-                      <div key={lesson.id} className="flex items-center justify-between p-3 rounded-lg bg-[#141414] border border-white/[0.04] hover:border-white/10 transition-colors group">
+                      <div key={lesson.id} className="flex items-center justify-between p-3 rounded-lg bg-[#141414] border border-white/[0.04] hover:bg-white/5 hover:border-emerald-500/20 transition-all group">
                         <div className="flex items-center gap-3">
                           <BookOpen size={16} className="text-emerald-500/50" />
                           <div>

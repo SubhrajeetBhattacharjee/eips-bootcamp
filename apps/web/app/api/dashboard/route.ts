@@ -5,18 +5,18 @@ import { getDashboardData } from '@/app/lib/dashboard';
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const clerkId = url.searchParams.get('clerkId');
+  const userId = url.searchParams.get('userId');
 
-  if (!clerkId) {
-    return NextResponse.json({ message: 'Missing clerkId' }, { status: 400 });
+  if (!userId) {
+    return NextResponse.json({ message: 'Missing userId' }, { status: 400 });
   }
 
   const session = await auth.api.getSession({ headers: await headers() });
-  const userId = session?.user?.id;
-  if (!userId || userId !== clerkId) {
+  const sessionUserId = session?.user?.id;
+  if (!sessionUserId || sessionUserId !== userId) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
-  const dashboard = await getDashboardData(clerkId);
+  const dashboard = await getDashboardData(userId);
   return NextResponse.json(dashboard);
 }

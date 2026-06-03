@@ -10,6 +10,22 @@ export class BootcampController {
     return this.bootcampService.getModules(userId);
   }
 
+  @Get('my-modules/:userId')
+  async getMyModules(@Param('userId') userId: string) {
+    return this.bootcampService.getMyModules(userId);
+  }
+
+  @Post('modules/:moduleId/subscribe')
+  async subscribeToModule(
+    @Param('moduleId') moduleId: string,
+    @Body('userId') userId: string
+  ) {
+    if (!userId) {
+      throw new NotFoundException('User ID is required');
+    }
+    return this.bootcampService.subscribeToModule(userId, moduleId);
+  }
+
   @Post('modules/:lessonId/complete')
   async completeLesson(
     @Param('lessonId') lessonId: string,

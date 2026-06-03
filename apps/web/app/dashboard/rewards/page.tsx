@@ -34,7 +34,7 @@ export default function RewardsPage() {
   const fetchRewardsData = async () => {
     if (!user?.id) return;
     try {
-      const response = await fetch(`/api/rewards?clerkId=${user.id}`);
+      const response = await fetch(`/api/rewards?userId=${user.id}`);
       if (response.ok) {
         const data = await response.json();
         setUserData(data.userData);
@@ -58,7 +58,7 @@ export default function RewardsPage() {
       const response = await fetch('/api/rewards/redeem', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ clerkId: user.id, rewardId }),
+        body: JSON.stringify({ userId: user.id, rewardId }),
       });
       if (response.ok) {
         await fetchRewardsData(); // Refresh everything

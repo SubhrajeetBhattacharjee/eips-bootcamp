@@ -1,13 +1,16 @@
 import { auth } from '@/app/lib/auth';
-import { headers } from 'next/headers';;
+import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 const API_BASE = 'http://127.0.0.1:4000';
 
 
-export async function GET(request: Request) {
-  const url = new URL(request.url);
-  const userId = url.searchParams.get('userId');
+export async function POST(
+  request: Request,
+  { params }: { params: { moduleId: string } }
+) {
+  const body = await request.json();
+  const userId = body.userId;
 
   if (!userId) {
     return NextResponse.json({ message: 'Missing userId' }, { status: 400 });
@@ -22,13 +25,17 @@ export async function GET(request: Request) {
   
 
   try {
-    const res = await fetch(`${API_BASE}/bootcamp/modules/${userId}`, {
-      cache: 'no-store',
-      headers: { 'x-api-key': 'dev-secret-key' },
+    const res = await fetch(`${API_BASE}/bootcamp/modules/${params.moduleId}/subscribe`, {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'x-api-key': 'dev-secret-key' 
+      },
+      body: JSON.stringify({ userId: userId })
     });
 
     if (!res.ok) {
-      return NextResponse.json({ message: 'Failed to fetch modules' }, { status: res.status });
+      return NextResponse.json({ message: 'Failed to subscribe' }, { status: res.status });
     }
 
     const data = await res.json();

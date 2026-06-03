@@ -4,45 +4,28 @@ import { NextResponse } from 'next/server';
 
 const API_BASE = 'http://127.0.0.1:4000';
 
-async function resolveInternalUserId(clerkId: string) {
-  try {
-    const res = await fetch(`${API_BASE}/users/clerk/${encodeURIComponent(clerkId)}`, {
-      cache: 'no-store',
-      headers: { 'x-api-key': 'dev-secret-key' },
-    });
-    if (!res.ok) return null;
-    const text = await res.text();
-    if (!text.trim()) return null;
-    return JSON.parse(text) as { id: string } | null;
-  } catch (err) {
-    return null;
-  }
-}
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const { clerkId, assignmentId, content } = body;
+  const { userId, assignmentId, content } = body;
 
-  if (!clerkId || !assignmentId || !content) {
+  if (!userId || !assignmentId || !content) {
     return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
   } 
 
   const session = await auth.api.getSession({ headers: await headers() });
-  const userId = session?.user?.id;
-  if (!userId || userId !== clerkId) {
+  const sessionUserId = session?.user?.id;
+  if (!sessionUserId || sessionUserId !== userId) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
-  const user = await resolveInternalUserId(clerkId);
-  if (!user?.id) {
-    return NextResponse.json({ message: 'User not found' }, { status: 404 });
-  }
+  
 
   try {
     const res = await fetch(`${API_BASE}/assignments/${assignmentId}/submit`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-api-key': 'dev-secret-key' },
-      body: JSON.stringify({ userId: user.id, content }),
+      body: JSON.stringify({ userId: userId, content }),
     });
 
     if (!res.ok) {

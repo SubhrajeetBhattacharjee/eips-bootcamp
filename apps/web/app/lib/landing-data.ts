@@ -136,16 +136,17 @@ export const navLinks = [
 ];
 
 export const footerLinks = {
-  platform: [
-    { label: 'Learn', href: '#' },
-    { label: 'EIPs', href: '#' },
-    { label: 'Governance', href: '#' },
-    { label: 'Community', href: '#' },
+  important: [
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Marketplace', href: '/dashboard/marketplace' },
+    { label: 'My Learning', href: '/dashboard/learning' },
+    { label: 'Referrals', href: '/dashboard/referrals' },
+    { label: 'About Us', href: '#' },
   ],
-  company: [
-    { label: 'About', href: '#' },
-    { label: 'GitHub', href: 'https://github.com' },
-    { label: 'Privacy', href: '#' },
-    { label: 'Terms', href: '#' },
+  followUs: [
+    { label: 'YouTube', href: '#' },
+    { label: 'LinkedIn', href: '#' },
+    { label: 'X', href: '#' },
+    { label: 'EtherWorld', href: '#' },
   ],
 };

@@ -28,8 +28,16 @@ export function Topbar({ onMobileMenuOpen }: TopbarProps) {
     if (saved) setClearedAt(parseInt(saved, 10));
 
     if (user) {
+      // Initial fetch
       getUserTotalXp().then(setXp);
       getRecentNotifications().then(setNotifications);
+      
+      // Poll XP every 15 seconds for real-time updates
+      const intervalId = setInterval(() => {
+        getUserTotalXp().then(setXp);
+      }, 15000);
+      
+      return () => clearInterval(intervalId);
     }
   }, [user]);
 
@@ -59,18 +67,18 @@ export function Topbar({ onMobileMenuOpen }: TopbarProps) {
 
       {/* Search */}
       <div className="flex-1 max-w-[500px]">
-        <div className="relative">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+        <div className="relative group">
+          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-emerald-400 transition-colors" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={handleSearch}
             placeholder="Search courses, modules, topics... (Press Enter)"
-            className="w-full bg-white/5 border border-white/8 rounded-lg pl-9 pr-16 py-2 text-sm text-zinc-300 placeholder:text-zinc-600 focus:outline-none focus:border-emerald-500/40 focus:bg-white/8 transition-all duration-200"
+            className="w-full bg-white/5 border border-white/8 rounded-lg pl-9 pr-16 py-2 text-sm text-zinc-300 placeholder:text-zinc-600 focus:outline-none focus:border-emerald-500/50 focus:bg-white/10 focus:shadow-[0_0_15px_rgba(16,185,129,0.15)] transition-all duration-300"
           />
           <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-0.5 pointer-events-none">
-            <kbd className="text-[10px] text-zinc-600 bg-white/5 border border-white/8 rounded px-1.5 py-0.5 font-mono">↵</kbd>
+            <kbd className="text-[10px] text-zinc-600 bg-white/5 border border-white/8 rounded px-1.5 py-0.5 font-mono group-focus-within:border-emerald-500/30 group-focus-within:text-emerald-500/70 transition-colors">↵</kbd>
           </div>
         </div>
       </div>

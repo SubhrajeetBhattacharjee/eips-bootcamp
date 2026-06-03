@@ -16,6 +16,9 @@ export class BootcampService {
             },
           },
         },
+        subscriptions: {
+          where: { userId },
+        },
       },
       orderBy: { orderIndex: 'asc' },
     });
@@ -46,10 +49,39 @@ export class BootcampService {
         color: module.color,
         thumbnailUrl: module.thumbnailUrl,
         section: module.orderIndex.toString(),
+        isPremium: module.isPremium,
+        price: module.price,
+        category: module.category,
+        isSubscribed: module.subscriptions.length > 0,
         lessons: mappedLessons.length,
         completed: completedLessons,
         mappedLessons, // returning the detailed lessons array inside
       };
+    });
+  }
+
+  async getMyModules(userId: string) {
+    const modules = await this.getModules(userId);
+    return modules.filter(m => m.isSubscribed);
+  }
+
+  async subscribeToModule(userId: string, moduleId: string) {
+    const module = await this.prisma.module.findUnique({ where: { id: moduleId } });
+    if (!module) throw new NotFoundException('Module not found');
+
+    const existing = await this.prisma.moduleSubscription.findUnique({
+      where: { userId_moduleId: { userId, moduleId } },
+    });
+
+    if (existing) {
+      throw new BadRequestException('Already subscribed');
+    }
+
+    return this.prisma.moduleSubscription.create({
+      data: {
+        userId,
+        moduleId,
+      },
     });
   }
 

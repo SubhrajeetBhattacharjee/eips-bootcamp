@@ -90,15 +90,30 @@ export function WelcomeHero({ user }: WelcomeHeroProps) {
         </h1>
         <p className="text-zinc-400 text-sm mb-6">Continue building Ethereum&apos;s future.</p>
 
-        {/* Badges */}
-        <div className="flex flex-wrap items-center gap-2.5">
-          <div className="flex items-center gap-1.5 bg-black/40 border border-white/10 rounded-full px-3.5 py-1.5 backdrop-blur-sm">
-            <Shield size={13} className="text-emerald-400" />
-            <span className="text-white text-xs font-semibold">{user.role}</span>
+        {/* Badges & Actions */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mt-6">
+          <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-1.5 bg-black/40 border border-white/10 rounded-full px-3.5 py-1.5 backdrop-blur-sm">
+              <Shield size={13} className="text-emerald-400" />
+              <span className="text-white text-xs font-semibold">{user.role}</span>
+            </div>
           </div>
-          <div className="flex items-center gap-1.5 bg-black/40 border border-white/10 rounded-full px-3.5 py-1.5 backdrop-blur-sm">
-            <Compass size={13} className="text-emerald-400" />
-            <span className="text-white text-xs font-semibold">{user.username}</span>
+          
+          <div className="h-4 w-px bg-white/10 hidden sm:block" />
+          
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <a 
+              href="/dashboard/my-modules" 
+              className="flex-1 sm:flex-none text-center bg-emerald-500 hover:bg-emerald-400 text-black text-sm font-bold px-6 py-2 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+            >
+              Resume Course
+            </a>
+            <a 
+              href="/dashboard/marketplace" 
+              className="flex-1 sm:flex-none text-center bg-white/5 hover:bg-white/10 border border-white/10 hover:border-emerald-500/50 text-white text-sm font-semibold px-6 py-2 rounded-lg transition-all duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.05)]"
+            >
+              Explore Modules
+            </a>
           </div>
         </div>
       </div>
