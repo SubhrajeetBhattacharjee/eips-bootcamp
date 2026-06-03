@@ -40,7 +40,7 @@ export interface ClerkUserDetails {
 
 export async function fetchCAPApplication(clerkId: string): Promise<CAPApplication | null> {
   try {
-    const res = await fetch(`/api/cap/status?clerkId=${encodeURIComponent(clerkId)}`, {
+    const res = await fetch(`/api/cap/status?userId=${encodeURIComponent(clerkId)}`, {
       cache: 'no-store',
     });
 
@@ -66,7 +66,7 @@ export async function submitCAPApplication(
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      clerkId,
+      userId: clerkId,
       ...data,
       graduationYear,
       ...clerkUser,
