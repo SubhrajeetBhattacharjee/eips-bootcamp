@@ -48,7 +48,7 @@ export function ModuleDetail({ module, onBack, lessons, onLessonComplete }: Modu
   return (
     <div className="flex h-full overflow-hidden">
       {/* Sidebar - Lessons List */}
-      <div className="w-96 bg-gradient-to-b from-gray-950 via-black to-black border-r border-border flex flex-col overflow-hidden">
+      <div className="w-96 bg-background border-border flex flex-col overflow-hidden">
         {/* Module Header */}
         <div className="p-6 border-b border-border">
           <button
@@ -125,7 +125,7 @@ export function ModuleDetail({ module, onBack, lessons, onLessonComplete }: Modu
         </div>
 
         {/* Module Stats */}
-        <div className="p-4 border-t border-border space-y-3 bg-gradient-to-t from-black to-transparent">
+        <div className="p-4 border-t border-border space-y-3 bg-background">
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">Total Duration</span>
             <span className="font-semibold text-foreground flex items-center gap-1">
@@ -152,14 +152,20 @@ export function ModuleDetail({ module, onBack, lessons, onLessonComplete }: Modu
             onLessonComplete={onLessonComplete}
           />
         ) : (
-          <ModuleOverview module={module} lessons={lessons} />
+          <ModuleOverview module={module} lessons={lessons}
+            onStartModule={() => {
+            if (lessons.length > 0) {
+              setSelectedLesson(lessons[0].id);
+            }
+            }}
+          />
         )}
       </div>
     </div>
   );
 }
 
-function ModuleOverview({ module, lessons }: { module: Module; lessons: Lesson[] }) {
+function ModuleOverview({ module, lessons, onStartModule }: { module: Module; lessons: Lesson[]; onStartModule: () => void }) {
   return (
     <div className="max-w-4xl mx-auto p-8">
       {/* Header */}
@@ -194,8 +200,10 @@ function ModuleOverview({ module, lessons }: { module: Module; lessons: Lesson[]
         <p className="text-muted-foreground mb-6">
           Click on the first lesson to begin this module. You can progress through lessons at your own pace.
         </p>
-        <button className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-black font-semibold rounded-lg transition-all">
+        <button onClick={onStartModule} className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-black font-semibold rounded-lg transition-all"
+        >
           <PlayCircle size={20} />
+          {/*open the first lesson, exactly like clicking the first lesson in the sidebar.*/}
           Start Module
         </button>
       </div>

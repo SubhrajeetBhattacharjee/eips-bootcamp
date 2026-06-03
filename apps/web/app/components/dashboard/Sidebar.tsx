@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession } from '@/app/lib/auth-client';
@@ -98,6 +98,21 @@ function NavSection({ title, items, pathname, }: { title: string; items: NavItem
 
 export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   const pathname = usePathname() || '';
+  const [showUpgradeCTA, setShowUpgradeCTA] = useState(true);
+  // Added the CTA state and effect
+  useEffect(() => {
+    const isDismissed = localStorage.getItem('upgrade-cta-dismissed');
+
+    if (isDismissed === 'true') {
+      setShowUpgradeCTA(false);
+    }
+  }, []);
+  // Add the CTA dismiss handler
+  const dismissUpgradeCTA = () => {
+  localStorage.setItem('upgrade-cta-dismissed', 'true');
+  setShowUpgradeCTA(false);
+};
+
   const { data: session } = useSession();
   const user = session?.user;
   const isAdmin = (user as any)?.role === 'ADMIN' || (user as any)?.role === 'admin' || (user as any)?.role?.role === 'ADMIN' || (user as any)?.role?.role === 'admin' || user?.id === 'user_3EFohPWsEpwDDfFQxcf3i1T39pJ';
@@ -118,6 +133,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
           ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
         {/* Logo */}
+        <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
         <div className="flex items-center justify-between px-4 py-5 border-b border-border">
           <div className="flex items-center gap-3">
             {/* Ethereum diamond logo placeholder */}
@@ -141,6 +157,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
             <X size={18} />
           </button>
         </div>
+        </Link>
 
         {/* Nav */}
         <nav className="flex-1 overflow-y-auto px-3 py-5 scrollbar-hide">
@@ -150,8 +167,17 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
         </nav>
 
         {/* Upgrade CTA */}
+        {showUpgradeCTA && (
         <div className="px-3 py-4 border-t border-border">
-          <div className="bg-gradient-to-br from-emerald-500/10 to-accent dark:from-emerald-950/80 dark:to-black border border-emerald-500/20 rounded-xl p-4">
+          <div className="relative bg-gradient-to-br from-emerald-500/10 to-accent dark:from-emerald-950/80 dark:to-black border border-emerald-500/20 rounded-xl p-4">
+            {/* Close button */}
+            <button
+              onClick={dismissUpgradeCTA}
+              className="absolute top-2 right-2 text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Close upgrade banner"
+              >
+                <X size={14} />
+            </button>
             <div className="flex items-center gap-2 mb-2">
               <Zap size={16} className="text-emerald-400" />
               <span className="text-emerald-400 font-bold text-sm">Upgrade to Pro</span>
@@ -165,6 +191,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
             </button>
           </div>
         </div>
+        )}
       </aside>
     </>
   );
