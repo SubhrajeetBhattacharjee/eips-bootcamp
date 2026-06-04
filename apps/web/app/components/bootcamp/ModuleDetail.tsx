@@ -11,6 +11,7 @@ import {
   PlayCircle,
   Lock,
   ChevronRight,
+  BookOpen,
 } from 'lucide-react';
 
 interface Lesson {
@@ -43,6 +44,12 @@ interface ModuleDetailProps {
 
 export function ModuleDetail({ module, onBack, lessons, onLessonComplete }: ModuleDetailProps) {
   const [selectedLesson, setSelectedLesson] = useState<string | null>(null);
+  const continueLearning = () => {
+  const lesson =
+    lessons.find((l) => !l.completed) ?? lessons[0];
+
+  setSelectedLesson(lesson.id);
+};
   const selectedLessonData = lessons.find(l => l.id === selectedLesson);
 
   return (
@@ -154,10 +161,11 @@ export function ModuleDetail({ module, onBack, lessons, onLessonComplete }: Modu
         ) : (
           <ModuleOverview module={module} lessons={lessons}
             onStartModule={() => {
-            if (lessons.length > 0) {
-              setSelectedLesson(lessons[0].id);
-            }
+              if (lessons.length > 0) {
+                setSelectedLesson(lessons[0].id);
+              }
             }}
+            onContinueLearning={continueLearning}
           />
         )}
       </div>
@@ -165,7 +173,7 @@ export function ModuleDetail({ module, onBack, lessons, onLessonComplete }: Modu
   );
 }
 
-function ModuleOverview({ module, lessons, onStartModule }: { module: Module; lessons: Lesson[]; onStartModule: () => void }) {
+function ModuleOverview({ module, lessons, onStartModule, onContinueLearning, }: { module: Module; lessons: Lesson[]; onStartModule: () => void; onContinueLearning: () => void; }) {
   return (
     <div className="max-w-4xl mx-auto p-8">
       {/* Header */}
@@ -200,12 +208,19 @@ function ModuleOverview({ module, lessons, onStartModule }: { module: Module; le
         <p className="text-muted-foreground mb-6">
           Click on the first lesson to begin this module. You can progress through lessons at your own pace.
         </p>
-        <button onClick={onStartModule} className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-black font-semibold rounded-lg transition-all"
-        >
-          <PlayCircle size={20} />
-          {/*open the first lesson, exactly like clicking the first lesson in the sidebar.*/}
-          Start Module
-        </button>
+        <div className="flex items-center gap-4">
+          <button onClick={onStartModule} className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-foreground font-semibold rounded-lg transition-all"
+          >
+            <PlayCircle size={20} />
+            {/*open the first lesson, exactly like clicking the first lesson in the sidebar.*/}
+            Start Module
+          </button>
+          <button onClick={onContinueLearning} className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-foreground font-semibold rounded-lg transition-all"
+          >
+            <BookOpen size={20} />
+            Continue Learning
+          </button>
+        </div>
       </div>
     </div>
   );
