@@ -21,7 +21,7 @@ export function LearningProgress() {
     <div className="bg-card border border-border rounded-2xl p-5 flex flex-col h-full">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-foreground font-bold text-base">Continue Your Learning</h3>
-        <Link href="/dashboard/bootcamp">  
+        <Link href="/dashboard/my-modules">  
           <button className="text-emerald-400 text-xs font-semibold hover:text-emerald-300 transition-colors flex items-center gap-1">
           View All Modules <ArrowRight size={12} />
         </button>
