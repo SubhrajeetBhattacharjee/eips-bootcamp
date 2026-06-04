@@ -144,9 +144,9 @@ export const footerLinks = {
     { label: 'About Us', href: '#' },
   ],
   followUs: [
-    { label: 'YouTube', href: '#' },
-    { label: 'LinkedIn', href: '#' },
-    { label: 'X', href: '#' },
-    { label: 'EtherWorld', href: '#' },
+    { label: 'YouTube', href: 'https://www.youtube.com/@etherworldco' },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/company/eipsinsight' },
+    { label: 'X', href: 'https://x.com/EIPsInsight' },
+    { label: 'EtherWorld', href: 'https://etherworld.co/' },
   ],
 };
