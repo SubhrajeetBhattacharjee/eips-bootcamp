@@ -136,6 +136,10 @@ export const navLinks = [
 ];
 
 export const footerLinks = {
+  joinUs: [
+    // Add Discord invite later when specific channel is created.
+    { label: 'Discord', href: '#' },
+  ],
   important: [
     { label: 'Dashboard', href: '/dashboard' },
     { label: 'Marketplace', href: '/dashboard/marketplace' },
