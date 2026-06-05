@@ -167,34 +167,65 @@ const IllustrationPlaceholder = ({ level, cardNumber }: { level: string; cardNum
 interface CarouselCardProps {
   track: LearningTrack;
   index: number;
-  isActive: boolean;
-  isLeft: boolean;
+  position: "left" | "center" | "right" | "hidden";
 }
 
-function CarouselCard({ track, index, isActive, isLeft }: CarouselCardProps) {
+function CarouselCard({ track, index, position }: CarouselCardProps) {
   const cardNumber = parseInt(track.id === 'fundamentals' ? '0' : track.id === 'eips' ? '1' : track.id === 'governance' ? '2' : track.id === 'research' ? '3' : '4');
+  const styles = {
+  center: {
+    transform:
+      "translateX(0px) translateY(-10px) scale(1)",
+    opacity: 1,
+    zIndex: 30,
+  },
+
+  left: {
+    transform:
+      "translateX(-220px) translateY(10px) scale(0.9)",
+    opacity: 0.65,
+    zIndex: 20,
+  },
+
+  right: {
+    transform:
+      "translateX(220px) translateY(10px) scale(0.9)",
+    opacity: 0.65,
+    zIndex: 20,
+  },
+
+  hidden: {
+    // transform:
+    //   "translateX(500px) translateY(20px) scale(0.85)",
+    opacity: 0,
+    zIndex: 0,
+    pointerEvents: "none" as const,
+  },
+};
+
+const style = styles[position];
 
   return (
     <div
-      className="absolute w-full h-full transition-all duration-700 ease-out"
-      style={{
-        transform: isActive
-          ? 'translateX(0) scale(1)'
-          : isLeft
-          ? 'translateX(-100%) scale(0.88)'
-          : 'translateX(100%) scale(0.88)',
-        opacity: isActive ? 1 : 0.75,
-        zIndex: isActive ? 20 : 10,
-      }}
+      className="
+        absolute
+        w-[280px]
+        lg:w-[320px]
+        h-[450px]
+        transition-all
+        duration-700
+        ease-in-out
+      "
+      style={style}
     >
       <div
         className={`h-full rounded-2xl border backdrop-blur-sm transition-all duration-700 overflow-hidden relative group ${
-          isActive
+          position === "center"
             ? 'bg-black/60 border-emerald-500/30 shadow-2xl'
             : 'bg-black/40 border-white/10 shadow-lg'
         }`}
         style={
-          isActive
+          position === "center"
             ? {
                 boxShadow:
                   '0 0 30px rgba(16, 185, 129, 0.2), 0 0 60px rgba(16, 185, 129, 0.1), inset 0 1px 0 rgba(16, 185, 129, 0.1)',
@@ -203,7 +234,7 @@ function CarouselCard({ track, index, isActive, isLeft }: CarouselCardProps) {
         }
       >
         {/* Glowing border top */}
-        {isActive && (
+        {position === "center" && (
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent pointer-events-none" />
         )}
 
@@ -322,7 +353,7 @@ export function LearningTracks() {
     if (!isHovering) {
       intervalRef.current = setInterval(() => {
         setActiveIndex((prev) => (prev + 1) % totalTracks);
-      }, 4500); // 4.5 seconds
+      }, 1500); // 1.5 seconds
     }
 
     return () => {
@@ -346,8 +377,15 @@ export function LearningTracks() {
   };
 
   // Get visible card indices
-  const leftIndex = (activeIndex - 1 + totalTracks) % totalTracks;
-  const rightIndex = (activeIndex + 1) % totalTracks;
+  const getPosition = (index: number) => {
+  const diff = (index - activeIndex + totalTracks) % totalTracks;
+
+  if (diff === 0) return "center";
+  if (diff === 1) return "right";
+  if (diff === totalTracks - 1) return "left";
+
+  return "hidden";
+};
 
   return (
     <section id="learn" className="py-16 sm:py-24 bg-background relative overflow-hidden">
@@ -378,37 +416,26 @@ export function LearningTracks() {
           onMouseLeave={() => setIsHovering(false)}
         >
           {/* Carousel viewport */}
-          <div className="relative h-80 sm:h-96 lg:h-[420px] overflow-hidden rounded-2xl">
+          <div
+            className="
+              relative
+              h-[500px]
+              overflow-hidden
+              rounded-2xl
+            "
+          >
             {/* Visible cards container */}
             <div className="relative w-full h-full flex items-center">
               {/* Left card */}
-              <div className="absolute left-0 w-1/3 h-full hidden lg:block">
-                <CarouselCard
-                  track={learningTracks[leftIndex]}
-                  index={leftIndex}
-                  isActive={false}
-                  isLeft={true}
-                />
-              </div>
-
-              {/* Center/Active card */}
-              <div className="absolute left-1/2 transform -translate-x-1/2 w-full sm:w-2/3 lg:w-1/3 h-full px-4 sm:px-0">
-                <CarouselCard
-                  track={learningTracks[activeIndex]}
-                  index={activeIndex}
-                  isActive={true}
-                  isLeft={false}
-                />
-              </div>
-
-              {/* Right card */}
-              <div className="absolute right-0 w-1/3 h-full hidden lg:block">
-                <CarouselCard
-                  track={learningTracks[rightIndex]}
-                  index={rightIndex}
-                  isActive={false}
-                  isLeft={false}
-                />
+              <div className="relative w-full h-full flex items-center justify-center">
+                {learningTracks.map((track, idx) => (
+                  <CarouselCard
+                    key={track.id}
+                    track={track}
+                    index={idx}
+                    position={getPosition(idx)}
+                  />
+                ))}
               </div>
             </div>
 
