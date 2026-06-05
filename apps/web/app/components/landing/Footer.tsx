@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { footerLinks } from '../../lib/landing-data';
 import { Heart, Globe } from 'lucide-react';
+import { ThemedLogoGif } from "@/app/components/ThemedLogoGif";
 
 import Image from 'next/image';
 
@@ -15,9 +16,14 @@ export function Footer() {
           {/* Column 1: Brand & Info */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-6">
-              {/* Processed Hex Crystal Image */}
-              <div className="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 relative drop-shadow-[0_0_10px_rgba(16,185,129,0.3)]">
-                <Image src="/brand-logo.png" alt="EIPsInsight Logo" fill className="object-contain" />
+              {/* EIPsInsight Logo Added */}
+              <div className="relative bottom-1.5" >
+                  <ThemedLogoGif
+                    alt="EIPsInsight"
+                    width={45}
+                    height={45}
+                    unoptimized
+                  />
               </div>
               <div className="text-foreground font-bold text-xl tracking-tight">
                 EIPsInsight Bootcamp

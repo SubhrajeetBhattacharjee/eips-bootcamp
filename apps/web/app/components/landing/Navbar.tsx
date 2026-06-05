@@ -6,6 +6,7 @@ import { useSession, } from '@/app/lib/auth-client';
 import { Menu, X, ChevronDown, ArrowRight } from 'lucide-react';
 import { navLinks } from '../../lib/landing-data';
 import { ThemeToggle } from '../ThemeToggle';
+import { ThemedLogoGif } from "@/app/components/ThemedLogoGif";
 
 export function Navbar() {
   const { data: session } = useSession();
@@ -20,13 +21,13 @@ export function Navbar() {
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center">
-              <svg viewBox="0 0 24 24" className="w-4.5 h-4.5 text-emerald-400" fill="currentColor" width="18" height="18">
-                <polygon points="12,2 20,8 20,16 12,22 4,16 4,8" opacity="0.25" />
-                <polygon points="12,2 20,8 12,12" />
-                <polygon points="4,8 12,12 12,22" opacity="0.6" />
-                <polygon points="20,8 12,12 12,22" opacity="0.85" />
-              </svg>
+            <div className="relative bottom-1.5" >
+              <ThemedLogoGif
+                alt="EIPsInsight"
+                width={45}
+                height={45}
+                unoptimized
+              />
             </div>
             <div>
               <div className="text-foreground font-bold text-sm leading-none">EIPsInsight</div>

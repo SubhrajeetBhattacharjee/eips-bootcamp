@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession } from '@/app/lib/auth-client';
+import { ThemedLogoGif } from "@/app/components/ThemedLogoGif";
 
 import {
   LayoutDashboard,
@@ -136,15 +137,15 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
         <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
         <div className="flex items-center justify-between px-4 py-5 border-b border-border">
           <div className="flex items-center gap-3">
-            {/* Ethereum diamond logo placeholder */}
-            <div className="w-9 h-9 rounded-lg bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center">
-              <svg viewBox="0 0 24 24" className="w-5 h-5 text-emerald-400" fill="currentColor">
-                <polygon points="12,2 20,8 20,16 12,22 4,16 4,8" opacity="0.3" />
-                <polygon points="12,2 20,8 12,12" />
-                <polygon points="4,8 12,12 12,22" opacity="0.6" />
-                <polygon points="20,8 12,12 12,22" opacity="0.8" />
-              </svg>
-            </div>
+            {/* EIPsInsight Logo Added */}
+              <div className="relative bottom-1.5" >
+                <ThemedLogoGif
+                  alt="EIPsInsight"
+                  width={45}
+                  height={45}
+                  unoptimized
+                />
+              </div>
             <div>
               <div className="text-foreground font-bold text-sm leading-none">EIPsInsight</div>
               <div className="text-emerald-400 text-xs font-medium mt-0.5">Academy</div>
