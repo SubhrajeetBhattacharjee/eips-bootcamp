@@ -195,8 +195,7 @@ function CarouselCard({ track, index, position }: CarouselCardProps) {
   },
 
   hidden: {
-    // transform:
-    //   "translateX(500px) translateY(20px) scale(0.85)",
+    transform: "scale(0.8)",
     opacity: 0,
     zIndex: 0,
     pointerEvents: "none" as const,
@@ -221,8 +220,8 @@ const style = styles[position];
       <div
         className={`h-full rounded-2xl border backdrop-blur-sm transition-all duration-700 overflow-hidden relative group ${
           position === "center"
-            ? 'bg-black/60 border-emerald-500/30 shadow-2xl'
-            : 'bg-black/40 border-white/10 shadow-lg'
+            ? 'bg-card border-emerald-500/30 shadow-2xl'
+            : 'bg-muted/40 border-white/10 shadow-lg'
         }`}
         style={
           position === "center"
@@ -303,11 +302,11 @@ function StatsPanel() {
 
         return (
           <div key={idx} className="flex items-center gap-3 text-right">
-            <div className={`p-2.5 rounded-lg bg-white/5 border border-white/10 ${colorClasses}`}>
+            <div className={`p-2.5 rounded-lg bg-white/5 border border-border ${colorClasses}`}>
               <Icon size={20} strokeWidth={1.5} />
             </div>
             <div className="text-left">
-              <p className="text-2xl sm:text-3xl font-black text-white">{stat.value}</p>
+              <p className="text-2xl sm:text-3xl font-black text-foreground">{stat.value}</p>
               <p className="text-xs sm:text-sm text-gray-400 font-medium">{stat.label}</p>
             </div>
           </div>
@@ -320,13 +319,13 @@ function StatsPanel() {
 // CTA section component
 function CTASection() {
   return (
-    <div className="mt-16 sm:mt-24 rounded-2xl border border-emerald-500/20 bg-black/40 backdrop-blur-sm p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+    <div className="mt-16 sm:mt-24 rounded-2xl border border-emerald-500/20 bg-background backdrop-blur-sm p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
       <div className="flex items-start gap-4 flex-1">
         <div className="p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex-shrink-0">
           <Star size={20} />
         </div>
         <div>
-          <h3 className="text-white font-bold text-lg sm:text-xl mb-1">Not sure where to start?</h3>
+          <h3 className="text-foreground font-bold text-lg sm:text-xl mb-1">Not sure where to start?</h3>
           <p className="text-gray-400 text-sm sm:text-base">
             Answer a few questions and we'll recommend the perfect learning path for you.
           </p>
@@ -397,7 +396,7 @@ export function LearningTracks() {
         <div className="mb-12 sm:mb-16 relative">
           <div className="max-w-2xl">
             <p className="text-emerald-400 text-sm font-semibold mb-3 tracking-wide uppercase">Learning Paths</p>
-            <h2 className="text-white font-black text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-tight mb-4 max-w-xl">
+            <h2 className="text-foreground font-black text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-tight mb-4 max-w-xl">
               Your path to Ethereum knowledge starts here
             </h2>
             <p className="text-gray-400 text-sm sm:text-base leading-relaxed max-w-xl">
@@ -426,7 +425,7 @@ export function LearningTracks() {
           >
             {/* Visible cards container */}
             <div className="relative w-full h-full flex items-center">
-              {/* Left card */}
+              {/* Carousel Cards */}
               <div className="relative w-full h-full flex items-center justify-center">
                 {learningTracks.map((track, idx) => (
                   <CarouselCard
@@ -442,7 +441,7 @@ export function LearningTracks() {
             {/* Navigation arrows */}
             <button
               onClick={goToPrevious}
-              className="absolute left-4 sm:left-6 top-1/2 transform -translate-y-1/2 z-30 p-2 rounded-full border border-emerald-500/30 bg-black/40 backdrop-blur-sm text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500/50 transition-all duration-300 group hidden sm:flex items-center justify-center"
+              className="absolute left-4 sm:left-6 top-1/2 transform -translate-y-1/2 z-30 p-2 rounded-full border border-emerald-500/30 bg-primary backdrop-blur-sm text-primary-foreground hover:opacity-90 hover:border-emerald-500/50 transition-all duration-300 group hidden sm:flex items-center justify-center"
               aria-label="Previous card"
             >
               <ChevronLeft size={20} className="group-hover:scale-110 transition-transform" />
@@ -450,7 +449,7 @@ export function LearningTracks() {
 
             <button
               onClick={goToNext}
-              className="absolute right-4 sm:right-6 top-1/2 transform -translate-y-1/2 z-30 p-2 rounded-full border border-emerald-500/30 bg-black/40 backdrop-blur-sm text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500/50 transition-all duration-300 group hidden sm:flex items-center justify-center"
+              className="absolute right-4 sm:right-6 top-1/2 transform -translate-y-1/2 z-30 p-2 rounded-full border border-emerald-500/30 bg-primary backdrop-blur-sm text-primary-foreground hover:opacity-90 hover:border-emerald-500/50 transition-all duration-300 group hidden sm:flex items-center justify-center"
               aria-label="Next card"
             >
               <ChevronRight size={20} className="group-hover:scale-110 transition-transform" />
