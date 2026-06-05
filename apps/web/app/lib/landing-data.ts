@@ -136,6 +136,10 @@ export const navLinks = [
 ];
 
 export const footerLinks = {
+  joinUs: [
+    // Add Discord invite later when specific channel is created.
+    { label: 'Discord', href: '#' },
+  ],
   important: [
     { label: 'Dashboard', href: '/dashboard' },
     { label: 'Marketplace', href: '/dashboard/marketplace' },
@@ -144,9 +148,9 @@ export const footerLinks = {
     { label: 'About Us', href: '#' },
   ],
   followUs: [
-    { label: 'YouTube', href: '#' },
-    { label: 'LinkedIn', href: '#' },
-    { label: 'X', href: '#' },
-    { label: 'EtherWorld', href: '#' },
+    { label: 'YouTube', href: 'https://www.youtube.com/@etherworldco' },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/company/eipsinsight' },
+    { label: 'X', href: 'https://x.com/EIPsInsight' },
+    { label: 'EtherWorld', href: 'https://etherworld.co/' },
   ],
 };

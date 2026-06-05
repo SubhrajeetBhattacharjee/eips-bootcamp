@@ -54,11 +54,6 @@ export const EarnXPCard: React.FC = () => {
           ))}
         </div>
 
-        {/* View All Button */}
-        <button className="w-full py-2.5 rounded-lg text-emerald-400 font-bold text-xs uppercase tracking-wider hover:text-emerald-300 transition-colors duration-200 flex items-center justify-center gap-2">
-          <span>View all ways to earn XP</span>
-          <span>→</span>
-        </button>
       </div>
     </div>
   );

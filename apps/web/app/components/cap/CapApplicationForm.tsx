@@ -138,15 +138,15 @@ export default function CapApplicationForm({ onSubmitted }: Props) {
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-8 pb-10">
-                <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.05] flex flex-col items-center gap-3">
+                <div className="p-4 rounded-2xl bg-card border border-border flex flex-col items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400"><Users size={20}/></div>
                   <div className="text-sm font-semibold text-foreground">Host Seminars</div>
                 </div>
-                <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.05] flex flex-col items-center gap-3">
+                <div className="p-4 rounded-2xl bg-card border border-border flex flex-col items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400"><Zap size={20}/></div>
                   <div className="text-sm font-semibold text-foreground">Earn XP</div>
                 </div>
-                <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.05] flex flex-col items-center gap-3">
+                <div className="p-4 rounded-2xl bg-card border border-border flex flex-col items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400"><GraduationCap size={20}/></div>
                   <div className="text-sm font-semibold text-foreground">Unlock Perks</div>
                 </div>
@@ -154,12 +154,10 @@ export default function CapApplicationForm({ onSubmitted }: Props) {
 
               <button
                 onClick={() => setStep(2)}
-                className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-white text-black font-bold rounded-2xl hover:scale-105 transition-all duration-300"
+                className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-primary text-primary-foreground font-bold rounded-2xl hover:scale-105 transition-all duration-300"
               >
                 Start Application
                 <ChevronRight className="group-hover:translate-x-1 transition-transform" />
-                {/* Glow behind button */}
-                <div className="absolute inset-0 rounded-2xl bg-white opacity-20 blur-xl group-hover:opacity-40 transition-opacity" />
               </button>
             </div>
           </div>
@@ -196,7 +194,7 @@ export default function CapApplicationForm({ onSubmitted }: Props) {
                     className="w-full px-5 py-4 rounded-2xl text-foreground appearance-none outline-none transition-all duration-300 bg-accent border border-border hover:border-emerald-500/50 focus:border-emerald-500 focus:bg-accent focus:ring-4 focus:ring-emerald-500/10 cursor-pointer"
                   >
                     {GRAD_YEARS.map((y) => (
-                      <option key={y} value={y} className="bg-accent text-foreground">{y}</option>
+                      <option key={y} value={y} className="bg-card text-foreground">{y}</option>
                     ))}
                   </select>
                   <ChevronRight className="absolute right-5 top-1/2 -translate-y-1/2 text-foreground/30 group-hover:text-emerald-400 rotate-90 transition-colors pointer-events-none" />
@@ -319,7 +317,7 @@ function InputField({ label, name, value, onChange, placeholder, error, hint }: 
           value={value}
           onChange={onChange}
           placeholder={placeholder}
-          className={`w-full px-5 py-4 rounded-2xl text-foreground placeholder-white/20 outline-none transition-all duration-300 bg-accent border ${error ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/10' : 'border-border hover:border-emerald-500/50 focus:border-emerald-500 focus:bg-accent focus:ring-4 focus:ring-emerald-500/10'}`}
+          className={`w-full px-5 py-4 rounded-2xl text-foreground placeholder:text-muted-foreground outline-none transition-all duration-300 bg-accent border ${error ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/10' : 'border-border hover:border-emerald-500/50 focus:border-emerald-500 focus:bg-accent focus:ring-4 focus:ring-emerald-500/10'}`}
         />
         {isFilled && !error && (
           <CheckCircle2 className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-500 w-5 h-5" />
@@ -348,7 +346,7 @@ function TextareaField({ label, name, value, onChange, placeholder, error, hint 
           placeholder={placeholder}
           rows={4}
           maxLength={maxLength}
-          className={`w-full px-5 py-4 rounded-2xl text-foreground placeholder-white/20 outline-none resize-none transition-all duration-300 bg-accent border ${error ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/10' : 'border-border hover:border-emerald-500/50 focus:border-emerald-500 focus:bg-accent focus:ring-4 focus:ring-emerald-500/10'}`}
+          className={`w-full px-5 py-4 rounded-2xl text-foreground placeholder:text-muted-foreground outline-none resize-none transition-all duration-300 bg-accent border ${error ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/10' : 'border-border hover:border-emerald-500/50 focus:border-emerald-500 focus:bg-accent focus:ring-4 focus:ring-emerald-500/10'}`}
         />
         <div className="absolute bottom-4 right-4 flex items-center gap-2">
           {isFilled && !error && <CheckCircle2 className="text-emerald-500 w-4 h-4" />}
@@ -373,7 +371,7 @@ function NavigationButtons({ onBack, onNext }: { onBack: () => void, onNext: () 
       </button>
       <button 
         onClick={onNext}
-        className="flex items-center gap-2 px-8 py-4 bg-white hover:bg-zinc-200 text-black font-bold rounded-2xl transition-all hover:scale-105"
+        className="flex items-center gap-2 px-8 py-4 bg-primary hover:opacity-90 text-primary-foreground font-bold rounded-2xl transition-all hover:scale-105"
       >
         Continue
         <ChevronRight size={18} />

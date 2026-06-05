@@ -31,7 +31,18 @@ export function Footer() {
             <div>
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">JOIN US:</p>
               <div className="inline-flex items-center justify-center px-3 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono font-bold">
-                v4.1
+                <ul className="space-y-3.5">
+                  {footerLinks.joinUs.map((l) => (
+                  <li key={l.label}>
+                    <Link href={l.href} target="_blank" className="text-muted-foreground text-sm hover:text-emerald-400 transition-colors flex items-center gap-2">
+                      {l.label === 'Discord' && (
+                        <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current" aria-hidden="true"><path d="M20.317 4.369A19.791 19.791 0 0 0 15.885 3c-.191.328-.403.768-.553 1.11a18.27 18.27 0 0 0-5.29 0A11.64 11.64 0 0 0 9.49 3a19.736 19.736 0 0 0-4.435 1.371C2.249 8.57 1.484 12.663 1.866 16.699a19.9 19.9 0 0 0 5.993 3.028c.48-.654.908-1.346 1.276-2.07a12.93 12.93 0 0 1-2.008-.964c.169-.124.334-.253.494-.386 3.874 1.82 8.08 1.82 11.908 0 .162.133.327.262.496.386a12.89 12.89 0 0 1-2.011.965c.368.723.796 1.415 1.276 2.068a19.86 19.86 0 0 0 5.996-3.028c.448-4.678-.765-8.734-3.969-12.329ZM8.02 14.247c-1.182 0-2.151-1.085-2.151-2.419 0-1.333.95-2.418 2.151-2.418 1.211 0 2.17 1.094 2.151 2.418 0 1.334-.95 2.419-2.151 2.419Zm7.96 0c-1.182 0-2.151-1.085-2.151-2.419 0-1.333.95-2.418 2.151-2.418 1.211 0 2.17 1.094 2.151 2.418 0 1.334-.94 2.419-2.151 2.419Z" /></svg>
+                      )}
+                      {l.label}
+                    </Link>
+                  </li>
+                  ))}
+                </ul>
               </div>
             </div>
           </div>
@@ -57,7 +68,7 @@ export function Footer() {
               {footerLinks.followUs.map((l) => {
                 return (
                   <li key={l.label}>
-                    <Link href={l.href} className="text-muted-foreground text-sm hover:text-emerald-400 transition-colors flex items-center gap-2">
+                    <Link href={l.href} target="_blank" className="text-muted-foreground text-sm hover:text-emerald-400 transition-colors flex items-center gap-2">
                       {l.label === 'YouTube' && (
                         <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" /></svg>
                       )}

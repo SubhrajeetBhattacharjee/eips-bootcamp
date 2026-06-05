@@ -17,11 +17,6 @@ export default function XPInfoCard({ compact }: { compact?: boolean }) {
           </li>
         ))}
       </ul>
-      {!compact && (
-        <div className="mt-4">
-          <button className="w-full py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-black font-semibold">View all ways to earn XP</button>
-        </div>
-      )}
     </div>
   );
 }
