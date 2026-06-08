@@ -23,28 +23,50 @@ interface ApplicationDetailsModalProps {
   application: Application;
   isOpen: boolean;
   onClose: () => void;
+  onStatusChange?: () => void;
 }
 
 export function ApplicationDetailsModal({
   application,
   isOpen,
   onClose,
+  onStatusChange,
 }: ApplicationDetailsModalProps) {
   const [isUpdating, setIsUpdating] = useState(false);
   const [status, setStatus] = useState(application.status);
 
   const handleApprove = async () => {
     setIsUpdating(true);
-    // API call would go here
-    setStatus('approved');
-    setTimeout(() => setIsUpdating(false), 500);
+    try {
+      await fetch(`/api/admin/applications/${application.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'APPROVED' }),
+      });
+      setStatus('approved');
+      if (onStatusChange) onStatusChange();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   const handleReject = async () => {
     setIsUpdating(true);
-    // API call would go here
-    setStatus('rejected');
-    setTimeout(() => setIsUpdating(false), 500);
+    try {
+      await fetch(`/api/admin/applications/${application.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'REJECTED' }),
+      });
+      setStatus('rejected');
+      if (onStatusChange) onStatusChange();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   if (!isOpen) return null;
