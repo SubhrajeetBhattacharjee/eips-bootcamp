@@ -148,7 +148,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
               </div>
             <div>
               <div className="text-foreground font-bold text-sm leading-none">EIPsInsight</div>
-              <div className="text-emerald-400 text-xs font-medium mt-0.5">Academy</div>
+              <div className="text-emerald-400 text-xs font-medium mt-0.5">Bootcamp</div>
             </div>
           </div>
           <button
