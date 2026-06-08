@@ -13,6 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 import { ThemeProvider } from "./components/ThemeProvider";
+import { Web3Provider } from "./components/Web3Provider";
 
 export const metadata: Metadata = {
   title: "EIPsInsight Bootcamp",
@@ -37,7 +38,9 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          {children}
+          <Web3Provider>
+            {children}
+          </Web3Provider>
         </ThemeProvider>
       </body>
     </html>

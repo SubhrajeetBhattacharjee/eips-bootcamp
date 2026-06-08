@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { useSession, authClient } from '@/app/lib/auth-client';
 import { DashboardShell } from '@/app/components/dashboard/DashboardShell';
 import LoadingScreen from '@/app/components/ui/LoadingScreen';
-import { Camera, MapPin, Briefcase, Link as LinkIcon, User, Save, Globe, Code, BadgeCheck } from 'lucide-react';
+import { Camera, MapPin, Briefcase, Link as LinkIcon, User, Save, Globe, Code, BadgeCheck, Wallet } from 'lucide-react';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 export default function ProfilePage() {
   const { data: session, isPending: isLoading } = useSession();
@@ -218,6 +219,25 @@ export default function ProfilePage() {
                       placeholder="e.g. United States"
                       className="w-full bg-accent border border-border rounded-lg px-4 py-2.5 text-foreground focus:outline-none focus:border-emerald-500/50 transition-colors"
                     />
+                  </div>
+                </div>
+              </div>
+
+              <div className="h-px bg-accent"></div>
+
+              {/* Web3 Wallet Section */}
+              <div>
+                <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                  <Wallet size={18} className="text-emerald-400" />
+                  Web3 Wallet
+                </h3>
+                <div className="p-4 bg-accent/50 border border-border rounded-xl flex items-center justify-between">
+                  <div>
+                    <h4 className="text-sm font-medium text-foreground mb-1">Connected Wallet</h4>
+                    <p className="text-xs text-muted-foreground">Link your wallet to participate in on-chain activities.</p>
+                  </div>
+                  <div>
+                    <ConnectButton />
                   </div>
                 </div>
               </div>
