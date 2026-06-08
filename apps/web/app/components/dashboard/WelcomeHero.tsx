@@ -1,6 +1,7 @@
 'use client';
 
-import { Shield, Compass } from 'lucide-react';
+import { Shield, Compass, Wallet } from 'lucide-react';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 type WelcomeHeroProps = {
   user: {
@@ -114,6 +115,12 @@ export function WelcomeHero({ user }: WelcomeHeroProps) {
             >
               Explore Modules
             </a>
+            <div className="flex-1 sm:flex-none hidden sm:block">
+              <ConnectButton />
+            </div>
+          </div>
+          <div className="sm:hidden w-full mt-2">
+            <ConnectButton />
           </div>
         </div>
       </div>

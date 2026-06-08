@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { ThemeToggle } from '../ThemeToggle';
 import { useState, useEffect } from 'react';
 import { getUserTotalXp, getRecentNotifications, type AppNotification } from '@/app/actions/topbar';
+import { useDisconnect } from 'wagmi';
 
 interface TopbarProps {
   onMobileMenuOpen: () => void;
@@ -16,6 +17,7 @@ export function Topbar({ onMobileMenuOpen }: TopbarProps) {
   const { data: session } = useSession();
   const user = session?.user;
   const router = useRouter();
+  const { disconnect } = useDisconnect();
 
   const [xp, setXp] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState("");
@@ -164,6 +166,7 @@ export function Topbar({ onMobileMenuOpen }: TopbarProps) {
             </Link>
             <button 
               onClick={async () => {
+                disconnect();
                 const { error } = await signOut();
                 if (error) {
                   alert("Sign out failed: " + error.message);
