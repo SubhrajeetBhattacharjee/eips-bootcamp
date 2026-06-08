@@ -56,6 +56,7 @@ export function ApplicationsTable({ applications, loading, onStatusChange }: App
           application={selectedApplication}
           isOpen={showDetailsModal}
           onClose={() => setShowDetailsModal(false)}
+          onStatusChange={onStatusChange}
         />
       )}
     </>
