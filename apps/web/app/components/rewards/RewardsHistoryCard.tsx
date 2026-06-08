@@ -29,7 +29,8 @@ export const RewardsHistoryCard: React.FC<RewardsHistoryCardProps> = ({ history 
       <div className="absolute inset-0 bg-gradient-to-br from-emerald-600/10 to-transparent rounded-2xl blur-xl" />
 
       {/* Card */}
-      <div className="relative bg-gradient-to-br from-slate-800/80 via-slate-900/60 to-slate-900/40 backdrop-blur-xl border border-emerald-500/20 rounded-2xl p-8 shadow-xl">
+      <div className="relative bg-gradient-to-br from-slate-100/90 via-slate-200/70 to-slate-300/50
+  dark:from-slate-800/80 dark:via-slate-900/60 dark:to-slate-900/40 backdrop-blur-xl border border-emerald-500/20 rounded-2xl p-8 shadow-xl">
         {/* Background Pattern */}
         <div className="absolute -top-10 -right-10 w-32 h-32 bg-emerald-500/5 rounded-full blur-3xl" />
 

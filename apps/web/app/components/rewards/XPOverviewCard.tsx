@@ -18,7 +18,7 @@ export const XPOverviewCard: React.FC<XPOverviewCardProps> = ({ data }) => {
       <div className="absolute inset-0 bg-gradient-to-r from-emerald-600/10 via-transparent to-emerald-600/5 rounded-2xl blur-xl" />
 
       {/* Main Card */}
-      <div className="relative bg-gradient-to-br from-slate-800/80 via-slate-900/60 to-slate-900/40 backdrop-blur-xl border border-emerald-500/20 rounded-2xl p-8 shadow-xl">
+      <div className="relative bg-gradient-to-br from-slate-100/90 via-slate-200/70 to-slate-300/50 dark:from-slate-800/80 dark:via-slate-900/60 dark:to-slate-900/40 backdrop-blur-xl border border-emerald-500/20 rounded-2xl p-8 shadow-xl">
         {/* Grid of Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {/* Your Balance */}

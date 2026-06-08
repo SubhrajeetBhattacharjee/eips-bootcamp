@@ -140,18 +140,6 @@ export default function SignIn() {
           Continue with Google
         </button>
 
-        <button
-          onClick={() => alert('Metamask integration coming soon!')}
-          className="w-full flex items-center justify-center gap-2 bg-[#F6851B]/10 border border-[#F6851B]/20 text-[#F6851B] font-bold py-2.5 rounded-lg hover:bg-[#F6851B]/20 transition-colors"
-        >
-          <svg className="w-5 h-5" viewBox="0 0 32 32">
-            <path d="M28.452 7.711l-5.659-1.89-6.326-4.22-6.505 4.357-5.518 1.761-3.69 11.758 7.424 5.922-1.748 4.795 9.878 1.488 10.155-1.488-1.785-4.795 7.61-5.914zM16.324 3.754l4.572 3.041 3.204 1.059-8.081 5.929-7.85-5.929 3.234-1.029z" fill="#E2761B"/>
-            <path d="M2.541 19.387l2.678-8.525 5.562-1.777-6.025 8.785 1.488 4.089z" fill="#E4761B"/>
-            <path d="M29.614 19.387l-3.553-2.148 1.347-4.104-5.839-8.777 5.703 1.903 2.502 8.525z" fill="#E4761B"/>
-            <path d="M12.753 28.536l3.371 1.785 3.527-1.882-1.168-5.385-2.21-1.071-2.455 1.071z" fill="#E4761B"/>
-          </svg>
-          Continue with Metamask
-        </button>
 
         <p className="mt-6 text-center text-sm text-muted-foreground">
           Don't have an account? <Link href="/sign-up" className="text-emerald-400 hover:text-emerald-300">Sign Up</Link>

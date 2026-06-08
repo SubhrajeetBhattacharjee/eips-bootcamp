@@ -9,7 +9,7 @@ interface Props {
 
 export default function ImpactCard({ impact }: Props) {
   return (
-    <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+    <div className="rounded-xl p-4 border border-border" style={{ background: "rgba(255,255,255,0.03)", }}>
       <h3 className="text-sm font-semibold text-foreground/90 mb-2">Community Impact</h3>
       <div className="grid grid-cols-3 gap-3 mb-3 text-center">
         <div>
@@ -30,9 +30,9 @@ export default function ImpactCard({ impact }: Props) {
           <div className="text-xs mt-1"><span className="text-emerald-400">▲ {impact.communitiesDelta}%</span></div>
         </div>
       </div>
-      <div className="mt-3">
+      {/* <div className="mt-3">
         <XPInfoCard compact />
-      </div>
+      </div> */}
     </div>
   );
 }

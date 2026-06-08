@@ -27,7 +27,7 @@ export default function FeaturedContributor({ contributor }: Props) {
   } = contributor;
 
   return (
-    <div className="relative rounded-2xl overflow-hidden flex flex-col sm:flex-row items-stretch gap-6 p-6" style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.02) 100%)", border: "1px solid rgba(255,255,255,0.08)", backdropFilter: "blur(20px)", boxShadow: "0 0 0 1px rgba(52,211,153,0.06), 0 24px 48px rgba(0,0,0,0.5)" }}>
+    <div className="relative rounded-2xl overflow-hidden border border-border flex flex-col sm:flex-row items-stretch gap-6 p-6" style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.02) 100%)", backdropFilter: "blur(20px)",  }}>
       <div className="absolute inset-x-0 top-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(52,211,153,0.5), transparent)" }} />
 
       <div className="flex flex-col items-center justify-center shrink-0 w-28">
@@ -95,7 +95,7 @@ function StatBlock({ label, value, sub, accent }: { label: string; value: string
   return (
     <div className="text-center">
       <p className="text-[10px] font-bold tracking-widest text-foreground/30 mb-1">{label}</p>
-      <p className="text-3xl font-bold leading-none mb-1" style={{ color: accent ? "#34d399" : "#fff" }}>{value}</p>
+      <p className="text-3xl font-bold leading-none mb-1" style={{ color: accent ? "#34d399" : "text-foreground" }}>{value}</p>
       <p className="text-xs text-foreground/35">{sub}</p>
     </div>
   );

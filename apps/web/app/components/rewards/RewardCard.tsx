@@ -40,7 +40,8 @@ export const RewardCard: React.FC<RewardCardProps> = ({
       )}
 
       {/* Card */}
-      <div className="relative h-full bg-gradient-to-br from-slate-800/80 via-slate-900/60 to-slate-900/40 backdrop-blur-xl border border-emerald-500/20 group-hover:border-emerald-500/40 rounded-2xl p-6 transition-all duration-300 flex flex-col shadow-xl overflow-hidden">
+      <div className="relative h-full bg-gradient-to-br from-slate-100/90 via-slate-200/70 to-slate-300/50
+  dark:from-slate-800/80 dark:via-slate-900/60 dark:to-slate-900/40 backdrop-blur-xl border border-emerald-500/20 group-hover:border-emerald-500/40 rounded-2xl p-6 transition-all duration-300 flex flex-col shadow-xl overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute -top-10 -right-10 w-32 h-32 bg-emerald-500/5 rounded-full blur-3xl" />
         <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-emerald-500/5 rounded-full blur-3xl" />
@@ -51,7 +52,8 @@ export const RewardCard: React.FC<RewardCardProps> = ({
         </div>
 
         {/* Image/Icon Area */}
-        <div className="relative mb-6 h-32 lg:h-40 flex items-center justify-center bg-gradient-to-br from-slate-700/40 to-slate-800/40 border border-emerald-500/10 rounded-lg group-hover:border-emerald-500/30 transition-all duration-300">
+        <div className="relative mb-6 h-32 lg:h-40 flex items-center justify-center bg-gradient-to-br from-slate-100/80 to-slate-200/60
+dark:from-slate-700/40 dark:to-slate-800/40 border border-emerald-500/10 rounded-lg group-hover:border-emerald-500/30 transition-all duration-300">
           <div
             className="text-6xl lg:text-7xl filter drop-shadow-lg transition-transform duration-300 group-hover:scale-110"
             style={{
@@ -88,7 +90,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({
             className={`w-full py-3 rounded-lg font-bold uppercase text-sm tracking-wider transition-all duration-300 ${
               isRedeemable
                 ? 'bg-gradient-to-r from-emerald-600 to-emerald-500 text-black hover:from-emerald-500 hover:to-emerald-400 shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 cursor-pointer'
-                : 'bg-slate-700/50 text-muted-foreground cursor-not-allowed opacity-50'
+                : 'bg-slate-700/50 text-foreground cursor-not-allowed opacity-50'
             }`}
           >
             {isRedeemable ? 'Redeem Now' : 'Locked'}

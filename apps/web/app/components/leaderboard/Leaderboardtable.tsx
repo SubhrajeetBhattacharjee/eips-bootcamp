@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { useState } from "react";
 import { LeaderboardUser } from "@/app/lib/leaderboard";
 
 interface Props {
@@ -7,6 +8,10 @@ interface Props {
 }
 
 export default function LeaderboardTable({ users }: Props) {
+  // expand/collapse state
+  const [expanded, setExpanded] = useState(false);
+  const displayedUsers = expanded ? users : users.slice(0, 3);
+
   return (
     <div className="rounded-xl overflow-hidden border border-border">
       <table className="w-full table-fixed text-left">
@@ -19,7 +24,7 @@ export default function LeaderboardTable({ users }: Props) {
           </tr>
         </thead>
         <tbody>
-          {users.map((u) => (
+          {displayedUsers.map((u) => (
             <tr
               key={u.userId}
               className={"border-t border-border " + (u.isCurrentUser ? "bg-emerald-500/10 ring-1 ring-emerald-400" : "")}
@@ -45,9 +50,16 @@ export default function LeaderboardTable({ users }: Props) {
           ))}
         </tbody>
       </table>
+      {users.length > 3 && (
       <div className="p-3 border-t border-border bg-accent/50">
-        <button className="w-full py-2 rounded-lg bg-accent hover:bg-accent-foreground/5 text-sm font-semibold transition-colors">View full leaderboard</button>
+        <button 
+        onClick={() => setExpanded((prev) => !prev)} 
+        className="w-full py-2 rounded-lg bg-foreground/6 hover:bg-emerald-600 text-sm font-semibold transition-colors"
+        >
+          {expanded ? "Show less" : "View full leaderboard"}
+        </button>
       </div>
+      )}
     </div>
   );
 }
