@@ -22,7 +22,8 @@ export default function TopTracksCard({ applications }: { applications: any[] })
   };
 
   return (
-    <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border border-emerald-400/10 rounded-xl p-5 backdrop-blur-md">
+    <div className="bg-gradient-to-br from-slate-100/90 via-slate-200/70 to-slate-300/50
+  dark:from-slate-800/80 dark:via-slate-900/60 dark:to-slate-900/40 border border-emerald-400/10 rounded-xl p-5 backdrop-blur-md">
       <div className="space-y-4">
         <div>
           <h3 className="text-sm font-semibold text-foreground mb-1">Top Tracks</h3>
