@@ -110,7 +110,7 @@ export const LearningStreak = ({ streakData }: { streakData?: any[] }) => {
           </div>
 
           {/* Heatmap */}
-          <div className="overflow-x-auto px-2 py-2 custom-scrollbar">
+          <div className="pt-2 pl-4 custom-scrollbar">
             <div className="flex gap-1.5 mb-4 min-w-max">
               {weeks.map((week, weekIndex) => (
                 <div key={weekIndex} className="flex flex-col gap-1.5">
