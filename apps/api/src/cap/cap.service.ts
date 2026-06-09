@@ -87,14 +87,17 @@ async updateStatus(id: string, updateCapStatusDto: UpdateCapStatusDto) {
   });
 
   if (updateCapStatusDto.status === 'APPROVED') {
-    await this.prisma.user.update({
-      where: {
-        id: application.userId,
-      },
-      data: {
-        role: 'AMBASSADOR',
-      },
-    });
+    const user = await this.prisma.user.findUnique({ where: { id: application.userId } });
+    if (user && user.role !== 'ADMIN') {
+      await this.prisma.user.update({
+        where: {
+          id: application.userId,
+        },
+        data: {
+          role: 'AMBASSADOR',
+        },
+      });
+    }
 
     await this.prisma.xPTransaction.create({
       data: {
@@ -106,6 +109,30 @@ async updateStatus(id: string, updateCapStatusDto: UpdateCapStatusDto) {
   }
 
   return application;
+}
+
+async revokeApplication(id: string) {
+  const application = await this.prisma.cAPApplication.findUnique({
+    where: { id },
+  });
+
+  if (!application) {
+    throw new Error('Application not found');
+  }
+
+  // Downgrade user role only if they are not an ADMIN
+  const user = await this.prisma.user.findUnique({ where: { id: application.userId } });
+  if (user && user.role !== 'ADMIN') {
+    await this.prisma.user.update({
+      where: { id: application.userId },
+      data: { role: 'STUDENT' },
+    });
+  }
+
+  // Delete the application so they can apply again
+  return this.prisma.cAPApplication.delete({
+    where: { id },
+  });
 }
 
 async getAnalytics() {
