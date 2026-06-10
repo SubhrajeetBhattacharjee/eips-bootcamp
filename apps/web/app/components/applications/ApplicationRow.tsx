@@ -5,16 +5,29 @@ import { Eye, CheckCircle2, XCircle, Clock } from 'lucide-react';
 import { getStatusColor, getTrackColor, getStatusIcon } from '@/app/lib/applications';
 import type { Application } from '@/app/lib/applications';
 
-function Avatar({ name, avatarUrl, className }: { name: string; avatarUrl?: string; className?: string }) {
-  if (avatarUrl && avatarUrl.trim() !== '') {
-    return <img src={avatarUrl} alt={name} className={className} />;
-  }
+function Avatar({ name, avatar, className }: { name: string; avatar?: string; className?: string }) {
+  // if (avatarUrl && avatarUrl.trim() !== '') {
+  //   return <img src={avatarUrl} alt={name} className={className} />;
+  // }
   const initials = name.replace(/[^a-zA-Z]/g, '').slice(0, 2).toUpperCase() || 'U';
   const colors = ['bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300', 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300', 'bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300', 'bg-pink-100 text-pink-800 dark:bg-pink-900/50 dark:text-pink-300', 'bg-orange-100 text-orange-800 dark:bg-orange-900/50 dark:text-orange-300'];
   const idx = name.charCodeAt(0) % colors.length;
   return (
-    <div className={`${className} ${colors[idx]} flex items-center justify-center font-bold flex-shrink-0`}>
-      {initials}
+    <div className="w-10 h-10 rounded-full overflow-hidden">
+      {avatar ? (
+        <img
+          src={avatar}
+          alt={name}
+          className="w-full h-full object-cover"
+        />
+        ) : (
+      <div className={`
+      w-10 h-10 rounded-full flex items-center justify-center
+      text-foreground text-sm font-semibold ${colors}
+      `}>
+        {initials}
+      </div>
+      )}
     </div>
   );
 }
@@ -28,15 +41,23 @@ interface ApplicationRowProps {
 export function ApplicationRow({ application, onViewDetails, onStatusChange }: ApplicationRowProps) {
   const [isUpdating, setIsUpdating] = useState(false);
 
-  const formattedDate = new Date(application.appliedDate).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-  });
+  function formatIST(dateInput: string | Date) {
+  const date = new Date(dateInput);
 
-  const time = new Date(application.appliedDate).toLocaleTimeString('en-US', {
+  const datePart = new Intl.DateTimeFormat('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  }).format(date);
+
+  const timePart = new Intl.DateTimeFormat('en-US', {
     hour: '2-digit',
     minute: '2-digit',
-  });
+    hour12: true,
+  }).format(date);
+
+  return `${datePart}, ${timePart} IST`;
+}
 
   const handleApprove = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -83,11 +104,9 @@ export function ApplicationRow({ application, onViewDetails, onStatusChange }: A
       {/* Header: Avatar, Info, Status */}
       <div className="flex items-start justify-between mb-4 z-10">
         <div className="flex items-center gap-3 flex-1 min-w-0 pr-4">
-          <Avatar
-            name={application.name}
-            avatarUrl={application.avatar}
-            className="flex-shrink-0 w-12 h-12 rounded-full border-2 border-emerald-500/30 object-cover shadow-[0_0_15px_rgba(16,185,129,0.2)]"
-          />
+          <div className="flex items-center gap-3">
+            <Avatar name={application.name} avatar={application.avatar} />
+          </div>
           <div className="min-w-0 flex-1">
             <h3 className="font-semibold text-foreground text-base leading-tight truncate">{application.name}</h3>
             <p className="text-xs text-emerald-400 mt-0.5 truncate">{application.email}</p>
@@ -118,7 +137,7 @@ export function ApplicationRow({ application, onViewDetails, onStatusChange }: A
           <span className="text-xs text-muted-foreground mb-0.5">Applied</span>
           <div className="flex items-center gap-1.5 text-foreground">
             <Clock className="w-3.5 h-3.5" />
-            <span>{formattedDate} at {time}</span>
+            <span>{formatIST(application.appliedDate)}</span>
           </div>
         </div>
       </div>
