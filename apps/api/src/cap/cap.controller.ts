@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, Patch } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Patch, Delete } from '@nestjs/common';
 import { CapService } from './cap.service';
 import { CreateCapApplicationDto } from './dto/create-cap-application.dto';
 import { UpdateCapStatusDto } from './dto/update-cap-status.dto';
@@ -33,5 +33,10 @@ export class CapController {
     @Body() updateCapStatusDto: UpdateCapStatusDto,
   ) {
     return this.capService.updateStatus(id, updateCapStatusDto);
+  }
+
+  @Delete(':id')
+  revokeApplication(@Param('id') id: string) {
+    return this.capService.revokeApplication(id);
   }
 }
