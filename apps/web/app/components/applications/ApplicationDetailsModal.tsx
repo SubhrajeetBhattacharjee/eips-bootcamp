@@ -69,6 +69,26 @@ export function ApplicationDetailsModal({
     }
   };
 
+  const handleRevoke = async () => {
+    if (!confirm('Are you sure you want to revoke this application? This will downgrade the user and delete their application.')) {
+      return;
+    }
+    
+    setIsUpdating(true);
+    try {
+      await fetch(`/api/admin/applications/${application.id}`, {
+        method: 'DELETE',
+      });
+      // Removing it from local status view, but since it's deleted, closing modal is best
+      if (onStatusChange) onStatusChange();
+      onClose();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -190,23 +210,36 @@ export function ApplicationDetailsModal({
           </section>
 
           {/* Decision Buttons */}
-          {status === 'pending' && (
+          {(status === 'pending' || status === 'approved') && (
             <section className="border-t border-border pt-8">
               <div className="flex gap-4">
-                <button
-                  onClick={handleApprove}
-                  disabled={isUpdating}
-                  className="flex-1 px-6 py-3 bg-emerald-500/20 border border-emerald-500/50 rounded-lg text-emerald-400 font-semibold hover:bg-emerald-500/30 transition-all duration-200 disabled:opacity-50"
-                >
-                  ✓ Approve Application
-                </button>
-                <button
-                  onClick={handleReject}
-                  disabled={isUpdating}
-                  className="flex-1 px-6 py-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 font-semibold hover:bg-red-500/30 transition-all duration-200 disabled:opacity-50"
-                >
-                  ✕ Reject Application
-                </button>
+                {status === 'pending' && (
+                  <>
+                    <button
+                      onClick={handleApprove}
+                      disabled={isUpdating}
+                      className="flex-1 px-6 py-3 bg-emerald-500/20 border border-emerald-500/50 rounded-lg text-emerald-400 font-semibold hover:bg-emerald-500/30 transition-all duration-200 disabled:opacity-50"
+                    >
+                      ✓ Approve Application
+                    </button>
+                    <button
+                      onClick={handleReject}
+                      disabled={isUpdating}
+                      className="flex-1 px-6 py-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 font-semibold hover:bg-red-500/30 transition-all duration-200 disabled:opacity-50"
+                    >
+                      ✕ Reject Application
+                    </button>
+                  </>
+                )}
+                {status === 'approved' && (
+                  <button
+                    onClick={handleRevoke}
+                    disabled={isUpdating}
+                    className="flex-1 px-6 py-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 font-semibold hover:bg-red-500/30 transition-all duration-200 disabled:opacity-50"
+                  >
+                    ⚠ Revoke CAP Status
+                  </button>
+                )}
               </div>
             </section>
           )}
