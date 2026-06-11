@@ -1,4 +1,5 @@
 import { Navbar } from "../components/landing/Navbar";
+import { Zap, TrendingUp, Trophy, BookOpen } from "lucide-react";
 
 export default function AuthLayout({
   children,
@@ -53,7 +54,7 @@ export default function AuthLayout({
         <div className="grid min-h-[calc(100vh-4rem)] lg:grid-cols-2">
           
           {/* Left Panel */}
-          <div className="hidden lg:flex flex-col justify-center px-16 xl:px-24">
+          <div className="hidden lg:flex flex-col justify-center items-center px-16 xl:px-24">
             {/* EthereumLearningAnimation */}
             <div className="relative flex flex-col items-center justify-center">
               {/* Glow effect behind the logo */}
@@ -96,34 +97,54 @@ export default function AuthLayout({
               </div>
             </div>
 
-            <div className="hidden lg:flex flex-col justify-center px-16 xl:px-24">
-              <h1 className="mt-6 text-5xl xl:text-6xl font-bold text-center">
-                Learn.
-                <span className="text-emerald-500"> Build.</span>
-                <br />
-                Grow.
-              </h1>
+            {/* Heading */}
+            <h1 className="mt-6 text-5xl xl:text-6xl font-bold text-center">
+              Learn.
+              <span className="text-emerald-500"> Build.</span>
+              <br />
+              Grow.
+            </h1>
 
-              <p className="mt-4 max-w-md text-center text-muted-foreground text-base leading-relaxed">
-                Master Ethereum development through structured learning and real progress tracking.
-              </p>
-            </div>
+            {/* Description */}
+            <p className="mt-4 max-w-md text-center text-muted-foreground text-base leading-relaxed">
+              Master Ethereum development through structured learning and real progress tracking.
+            </p>
+            
+            {/* SaaS cards */}
+            <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl mx-auto">
+  
+              <div className="flex items-start gap-2 rounded-xl border border-white/10 bg-white/5 p-2 backdrop-blur">
+                <span className="text-emerald-400">⚡</span>
+                <div>
+                  <p className="font-medium">Earn XP</p>
+                  <p className="text-sm text-muted-foreground">Complete tasks and level up</p>
+                </div>
+              </div>
 
-            {/* <p className="mt-4 max-w-lg text-center text-muted-foreground">
-              Complete EIPs, earn XP, maintain streaks and
-              climb the community leaderboard.
-            </p> */}
+              <div className="flex items-start gap-2 rounded-xl border border-white/10 bg-white/5 p-2 backdrop-blur">
+                <span className="text-emerald-400">🔥</span>
+                <div>
+                  <p className="font-medium">Streak System</p>
+                  <p className="text-sm text-muted-foreground">Stay consistent daily</p>
+                </div>
+              </div>
 
-            {/* <p className="mt-6 max-w-md text-lg text-muted-foreground">
-              Complete learning paths, earn XP, maintain streaks,
-              and climb the leaderboard.
-            </p> */}
+              <div className="flex items-start gap-2 rounded-xl border border-white/10 bg-white/5 p-2 backdrop-blur">
+                <span className="text-emerald-400">🏆</span>
+                <div>
+                  <p className="font-medium">Leaderboard</p>
+                  <p className="text-sm text-muted-foreground">Compete globally</p>
+                </div>
+              </div>
 
-            <div className="mt-10 space-y-4 pl-35">
-              <div>⚡ Complete tasks and earn XP</div>
-              <div>🔥 Maintain learning streaks</div>
-              <div>🏆 Compete on the leaderboard</div>
-              <div>📚 Explore Ethereum Improvement Proposals</div>
+              <div className="flex items-start gap-2 rounded-xl border border-white/10 bg-white/5 p-2 backdrop-blur">
+                <span className="text-emerald-400">📘</span>
+                <div>
+                  <p className="font-medium">EIP Explorer</p>
+                  <p className="text-sm text-muted-foreground">Study Ethereum proposals</p>
+                </div>
+              </div>
+
             </div>
 
           </div> 
