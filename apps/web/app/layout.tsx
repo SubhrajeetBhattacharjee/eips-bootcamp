@@ -23,6 +23,8 @@ export const metadata: Metadata = {
   description: "EthShala Platform",
 };
 
+import { Chatbot } from "./components/Chatbot";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -43,6 +45,7 @@ export default function RootLayout({
         >
           <Web3Provider>
             {children}
+            <Chatbot />
           </Web3Provider>
         </ThemeProvider>
       </body>

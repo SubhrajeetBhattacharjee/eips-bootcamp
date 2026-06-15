@@ -31,7 +31,27 @@ export default function RewardsPage() {
   const [history, setHistory] = useState<UserReward[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchRewardsData = async () => {
+  useEffect(() => {
+    const fetchRewardsData = async () => {
+      if (!user?.id) return;
+      try {
+        const response = await fetch(`/api/rewards?userId=${user.id}`);
+        if (response.ok) {
+          const data = await response.json();
+          setUserData(data.userData);
+          setRewards(data.rewards);
+          setHistory(data.history);
+        }
+      } catch (error) {
+        console.error('Failed to fetch rewards data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchRewardsData();
+  }, [user?.id]);
+
+  const refreshRewardsData = async () => {
     if (!user?.id) return;
     try {
       const response = await fetch(`/api/rewards?userId=${user.id}`);
@@ -43,14 +63,8 @@ export default function RewardsPage() {
       }
     } catch (error) {
       console.error('Failed to fetch rewards data:', error);
-    } finally {
-      setLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchRewardsData();
-  }, [user?.id]);
 
   const handleRedeem = async (rewardId: string) => {
     if (!user?.id) return;
@@ -61,7 +75,7 @@ export default function RewardsPage() {
         body: JSON.stringify({ userId: user.id, rewardId }),
       });
       if (response.ok) {
-        await fetchRewardsData(); // Refresh everything
+        await refreshRewardsData(); // Refresh everything
       } else {
         const err = await response.json();
         alert(err.message || 'Failed to redeem reward');

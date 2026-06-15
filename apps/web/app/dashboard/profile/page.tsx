@@ -126,7 +126,7 @@ export default function ProfilePage() {
               
               <div className="flex-1 pb-2">
                 <h2 className="text-2xl font-bold text-foreground">{name || 'Unnamed User'}</h2>
-                <p className="text-emerald-400/80 font-medium">{user.email}</p>
+                <p className="text-emerald-400/80 font-medium">{user?.email}</p>
               </div>
             </div>
 

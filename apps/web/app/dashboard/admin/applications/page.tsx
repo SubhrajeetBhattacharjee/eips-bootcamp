@@ -37,24 +37,8 @@ export default function ApplicationsPage() {
   });
   const [loading, setLoading] = useState(true);
 
-  // Check admin access
-  useEffect(() => {
-    if (!isPending) {
-      const user = session?.user;
-      const userRole = (user as any)?.role;
-      const hasAccess = userRole === 'ADMIN' || userRole === 'admin';
-      
-      setIsAdmin(hasAccess);
-      if (hasAccess) {
-        fetchApplications();
-      } else {
-        setLoading(false);
-      }
-    }
-  }, [isPending, session]);
-
   // Fetch applications from API
-  const fetchApplications = async () => {
+  async function fetchApplications() {
     try {
       setLoading(true);
       // Fetch through Next.js proxy to securely attach API keys
@@ -77,13 +61,29 @@ export default function ApplicationsPage() {
     }
   };
 
-  const processApplications = (data: Application[]) => {
+  // Check admin access
+  useEffect(() => {
+    if (!isPending) {
+      const user = session?.user;
+      const userRole = (user as any)?.role;
+      const hasAccess = userRole === 'ADMIN' || userRole === 'admin';
+      
+      setIsAdmin(hasAccess);
+      if (hasAccess) {
+        fetchApplications();
+      } else {
+        setLoading(false);
+      }
+    }
+  }, [isPending, session]);
+
+  function processApplications(data: Application[]) {
     setApplications(data);
     calculateStats(data);
     applyFilters(data, filters);
   };
 
-  const calculateStats = (data: Application[]) => {
+  function calculateStats(data: Application[]) {
     const total = data.length;
     const approved = data.filter((a) => a.status === 'approved').length;
     const pending = data.filter((a) => a.status === 'pending').length;
@@ -99,7 +99,7 @@ export default function ApplicationsPage() {
     });
   };
 
-  const applyFilters = (data: Application[], filterState: FilterState) => {
+  function applyFilters(data: Application[], filterState: FilterState) {
     let filtered = data;
 
     // Search filter

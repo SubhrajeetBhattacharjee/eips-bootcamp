@@ -23,7 +23,7 @@ export async function getStudentFeedback(): Promise<StudentFeedback[]> {
     const submissions = await prisma.assignmentSubmission.findMany({
       where: { 
         userId: dbUser.id,
-        feedback: { not: null, not: "" }
+        feedback: { not: null }
       },
       include: {
         assignment: true
@@ -35,7 +35,7 @@ export async function getStudentFeedback(): Promise<StudentFeedback[]> {
     return submissions.map(sub => {
       let status: 'positive' | 'neutral' | 'critical' = 'neutral';
       if (sub.status === 'COMPLETED') status = 'positive';
-      if (sub.status === 'REJECTED') status = 'critical';
+      if (sub.status === 'OVERDUE') status = 'critical';
 
       return {
         id: sub.id,

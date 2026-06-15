@@ -16,7 +16,7 @@ function DonutChart({ approved, rejected, pending, total }: { approved: number; 
   const rejectedPercent = (rejected / total) * 100;
   const pendingPercent = (pending / total) * 100;
 
-  let approvedOffset = 0;
+  const approvedOffset = 0;
   const rejectedOffset = (approvedPercent / 100) * circumference;
   const pendingOffset = ((approvedPercent + rejectedPercent) / 100) * circumference;
 

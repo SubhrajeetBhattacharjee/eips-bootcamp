@@ -26,7 +26,7 @@ export default async function AdminBootcampPage() {
 
   // Fetch all modules. We pass the admin's userId just to satisfy the endpoint,
   // but we only care about the module data itself.
-  let modules = [];
+  let modules: any[] = [];
   try {
     modules = await apiFetch(`/bootcamp/modules/${userId}`);
   } catch (error) {

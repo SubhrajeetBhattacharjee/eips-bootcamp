@@ -5,7 +5,8 @@ import { auth } from "@/app/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-export default async function SubmissionsPage({ params }: { params: { id: string } }) {
+export default async function SubmissionsPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params;
   const session = await auth.api.getSession({ headers: await headers() });
   const user = session?.user;
   
@@ -16,13 +17,13 @@ export default async function SubmissionsPage({ params }: { params: { id: string
     redirect("/dashboard");
   }
 
-  const submissions = await fetchSubmissions(params.id);
+  const submissions = await fetchSubmissions(resolvedParams.id);
 
   return (
     <DashboardShell>
       <div className="flex-1 flex flex-col overflow-hidden bg-background">
         <div className="flex-1 overflow-auto">
-          <SubmissionsClient submissions={submissions} assignmentId={params.id} />
+          <SubmissionsClient submissions={submissions} assignmentId={resolvedParams.id} />
         </div>
       </div>
     </DashboardShell>

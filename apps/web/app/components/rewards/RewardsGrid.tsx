@@ -40,7 +40,7 @@ export const RewardsGrid: React.FC<RewardsGridProps> = ({
     }
 
     // Sort
-    let sorted = [...filtered];
+    const sorted = [...filtered];
     if (sortBy === 'cost') {
       sorted.sort((a, b) => a.cost - b.cost);
     } else if (sortBy === 'new') {

@@ -100,7 +100,7 @@ export async function gradeSubmission(submissionId: string, score: number, statu
   
   const submission = await prisma.assignmentSubmission.update({
     where: { id: submissionId },
-    data: { score, status, feedback }
+    data: { score, status: status as import('@prisma/client').SubmissionStatus, feedback }
   });
 
   // If the assignment is graded as COMPLETED, we need to award XP to the user

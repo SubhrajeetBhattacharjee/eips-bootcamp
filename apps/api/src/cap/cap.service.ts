@@ -5,7 +5,7 @@ import { UpdateCapStatusDto } from './dto/update-cap-status.dto';
 
 @Injectable()
 export class CapService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   apply(createCapApplicationDto: CreateCapApplicationDto) {
     return this.prisma.cAPApplication.create({

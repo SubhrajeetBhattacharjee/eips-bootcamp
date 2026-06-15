@@ -83,7 +83,7 @@ export default function CapApplicationForm({ onSubmitted }: Props) {
 
       const app = await submitCAPApplication(userId, form, {
         email: user.email,
-        username: user.username,
+        username: (user as any).username || '',
       });
       onSubmitted(app);
     } catch {

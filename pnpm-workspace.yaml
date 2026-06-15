@@ -13,3 +13,9 @@ allowBuilds:
   sharp: true
   unrs-resolver: true
   utf-8-validate: set this to true or false
+minimumReleaseAgeExclude:
+  - '@ai-sdk/gateway@3.0.129'
+  - '@ai-sdk/openai@3.0.71'
+  - '@ai-sdk/provider-utils@4.0.29'
+  - ai@6.0.203
+  - '@ai-sdk/react@3.0.205'

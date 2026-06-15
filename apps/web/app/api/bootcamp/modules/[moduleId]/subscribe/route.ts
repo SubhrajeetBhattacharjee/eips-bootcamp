@@ -7,8 +7,9 @@ const API_BASE = 'http://127.0.0.1:4000';
 
 export async function POST(
   request: Request,
-  { params }: { params: { moduleId: string } }
+  { params }: { params: Promise<{ moduleId: string }> }
 ) {
+  const resolvedParams = await params;
   const body = await request.json();
   const userId = body.userId;
 
@@ -25,7 +26,7 @@ export async function POST(
   
 
   try {
-    const res = await fetch(`${API_BASE}/bootcamp/modules/${params.moduleId}/subscribe`, {
+    const res = await fetch(`${API_BASE}/bootcamp/modules/${resolvedParams.moduleId}/subscribe`, {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',

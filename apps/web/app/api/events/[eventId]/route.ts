@@ -4,10 +4,11 @@ const API_BASE = 'http://127.0.0.1:4000';
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { eventId: string } }
+  { params }: { params: Promise<{ eventId: string }> }
 ) {
+  const resolvedParams = await params;
   try {
-    const res = await fetch(`${API_BASE}/events/${params.eventId}`, {
+    const res = await fetch(`${API_BASE}/events/${resolvedParams.eventId}`, {
       method: 'DELETE',
       headers: { 'x-api-key': 'dev-secret-key' },
     });
