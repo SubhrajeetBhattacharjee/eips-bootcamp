@@ -134,7 +134,7 @@ export default function CapApplicationForm({ onSubmitted }: Props) {
               </h2>
               
               <p className="text-lg text-foreground/60 max-w-xl mx-auto leading-relaxed">
-                Join an elite group of student leaders. Bring EIPsInsight to your college, host exclusive seminars, and build the future of Ethereum education.
+                Join an elite group of student leaders. Bring EthShala to your college, host exclusive seminars, and build the future of Ethereum education.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-8 pb-10">

@@ -35,18 +35,18 @@ export interface XPActivity {
 export const REWARDS_DATA: Reward[] = [
   {
     id: 'hoodie',
-    title: 'EIPsInsight Hoodie',
+    title: 'EthShala Hoodie',
     description: 'Premium hoodie for true Ethereum builders.',
     cost: 1200,
     category: 'merchandise',
     badge: 'MERCH',
-    image: '🎽',
+    image: '👕',
     available: true,
   },
   {
     id: 'genesis-nft',
     title: 'Genesis Role NFT',
-    description: 'Exclusive NFT for early EIPsInsight contributors.',
+    description: 'Exclusive NFT for early EthShala contributors.',
     cost: 2000,
     category: 'nfts',
     badge: 'NFT',
@@ -55,7 +55,7 @@ export const REWARDS_DATA: Reward[] = [
   },
   {
     id: 'pro-pass',
-    title: 'EIPsInsight Pro Pass',
+    title: 'EthShala Pro Pass',
     description: 'Unlock premium courses and exclusive content.',
     cost: 1500,
     category: 'experiences',
@@ -65,7 +65,7 @@ export const REWARDS_DATA: Reward[] = [
   },
   {
     id: 'cap',
-    title: 'EIPsInsight Cap',
+    title: 'EthShala Cap',
     description: 'Limited edition cap representing your journey.',
     cost: 800,
     category: 'merchandise',
@@ -105,7 +105,7 @@ export const REWARDS_DATA: Reward[] = [
   },
   {
     id: 'mug',
-    title: 'EIPsInsight Mug',
+    title: 'EthShala Mug',
     description: 'Sip your coffee in style with our branded mug.',
     cost: 500,
     category: 'merchandise',
@@ -135,7 +135,7 @@ export const XP_ACTIVITIES: XPActivity[] = [
 export const MOCK_REWARDS_HISTORY: UserReward[] = [
   {
     rewardId: 'cap',
-    title: 'EIPsInsight Cap',
+    title: 'EthShala Cap',
     xpSpent: 800,
     redeemedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
   },

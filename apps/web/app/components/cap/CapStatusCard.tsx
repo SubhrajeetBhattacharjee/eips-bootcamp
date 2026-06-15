@@ -136,7 +136,7 @@ function ApprovedCard({ application }: { application: CAPApplication }) {
       <p className="text-foreground/45 text-sm max-w-sm mx-auto leading-relaxed">
         You are now part of the{" "}
         <span className="text-emerald-400 font-medium">
-          EIPsInsight Campus Ambassador Program.
+          EthShala Campus Ambassador Program.
         </span>{" "}
         Start spreading Ethereum education on your campus.
       </p>
