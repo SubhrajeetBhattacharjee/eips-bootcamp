@@ -16,5 +16,15 @@
     "dotenv": "^17.4.2",
     "prisma": "^6.9.0",
     "turbo": "^2.9.14"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "bufferutil",
+      "keccak",
+      "utf-8-validate",
+      "@prisma/client",
+      "@prisma/engines",
+      "sharp"
+    ]
   }
 }
