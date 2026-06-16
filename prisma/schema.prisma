@@ -8,31 +8,27 @@ datasource db {
 }
 
 model User {
-  id            String   @id @default(cuid())
-  name          String?  // Better Auth
-  email         String   @unique
-  emailVerified Boolean  @default(false) // Better Auth
-  image         String?  // Better Auth
-  
-  username      String?  @unique
-  walletAddress String?  @unique
-  role          UserRole @default(STUDENT)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  sessions      Session[]
-  accounts      Account[]
-
-  profile        Profile?
-  capApplication CAPApplication?
-
-  referralCode     ReferralCode?
-  referredBy       Referral?
-  xpTransactions   XPTransaction[]
-  lessonProgress   LessonProgress[]
+  id                    String                 @id @default(cuid())
+  email                 String                 @unique
+  username              String?                @unique
+  walletAddress         String?                @unique
+  role                  UserRole               @default(STUDENT)
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  emailVerified         Boolean                @default(false)
+  image                 String?
+  name                  String?
+  accounts              Account[]
   assignmentSubmissions AssignmentSubmission[]
-  rewardRedemptions RewardRedemption[]
-  moduleSubscriptions ModuleSubscription[]
+  capApplication        CAPApplication?
+  lessonProgress        LessonProgress[]
+  moduleSubscriptions   ModuleSubscription[]
+  profile               Profile?
+  referredBy            Referral?
+  referralCode          ReferralCode?
+  rewardRedemptions     RewardRedemption[]
+  sessions              Session[]
+  xpTransactions        XPTransaction[]
 }
 
 model Profile {
@@ -45,12 +41,11 @@ model Profile {
   country   String?
   avatarUrl String?
   bio       String?
-  hobbies   String?
-  twitter   String?
   github    String?
+  hobbies   String?
   linkedin  String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  twitter   String?
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Session {
@@ -70,7 +65,6 @@ model Account {
   accountId             String
   providerId            String
   userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken           String?
   refreshToken          String?
   idToken               String?
@@ -80,6 +74,7 @@ model Account {
   password              String?
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Verification {
@@ -104,30 +99,27 @@ model CAPApplication {
   status              ApplicationStatus @default(PENDING)
   createdAt           DateTime          @default(now())
   updatedAt           DateTime          @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ReferralCode {
-  id          String   @id @default(cuid())
-  code        String   @unique
-  userId      String   @unique
-  clicks      Int      @default(0)
-  createdAt   DateTime @default(now())
-
-  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  referrals   Referral[]
+  id        String     @id @default(cuid())
+  code      String     @unique
+  userId    String     @unique
+  clicks    Int        @default(0)
+  createdAt DateTime   @default(now())
+  referrals Referral[]
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Referral {
-  id             String   @id @default(cuid())
+  id             String         @id @default(cuid())
   referralCodeId String
-  referredUserId String   @unique
+  referredUserId String         @unique
   status         ReferralStatus @default(JOINED)
-  createdAt      DateTime @default(now())
-
-  referralCode   ReferralCode @relation(fields: [referralCodeId], references: [id], onDelete: Cascade)
-  referredUser   User         @relation(fields: [referredUserId], references: [id], onDelete: Cascade)
+  createdAt      DateTime       @default(now())
+  referralCode   ReferralCode   @relation(fields: [referralCodeId], references: [id], onDelete: Cascade)
+  referredUser   User           @relation(fields: [referredUserId], references: [id], onDelete: Cascade)
 }
 
 model XPTransaction {
@@ -136,8 +128,129 @@ model XPTransaction {
   amount    Int
   reason    String
   createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+model Module {
+  id            String               @id @default(cuid())
+  title         String
+  description   String
+  xpReward      Int
+  duration      String
+  color         String
+  orderIndex    Int
+  createdAt     DateTime             @default(now())
+  thumbnailUrl  String?
+  category      String               @default("Beginner")
+  isPremium     Boolean              @default(false)
+  price         Int                  @default(0)
+  events        Event[]
+  lessons       Lesson[]
+  subscriptions ModuleSubscription[]
+}
+
+model ModuleSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  moduleId  String
+  createdAt DateTime @default(now())
+  module    Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, moduleId])
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  link        String
+  date        DateTime
+  moduleId    String
+  createdAt   DateTime @default(now())
+  module      Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+}
+
+model Lesson {
+  id          String           @id @default(cuid())
+  moduleId    String
+  title       String
+  description String
+  duration    String
+  content     String?
+  orderIndex  Int
+  createdAt   DateTime         @default(now())
+  module      Module           @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  progress    LessonProgress[]
+}
+
+model LessonProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  lessonId    String
+  completedAt DateTime @default(now())
+  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+}
+
+model Assignment {
+  id              String                 @id @default(cuid())
+  title           String
+  module          String
+  description     String
+  difficulty      String
+  xpReward        Int
+  deadline        DateTime
+  estimatedTime   Float
+  tags            String[]
+  createdAt       DateTime               @default(now())
+  questionFileUrl String?
+  submissions     AssignmentSubmission[]
+}
+
+model AssignmentSubmission {
+  id           String           @id @default(cuid())
+  assignmentId String
+  userId       String
+  content      String?
+  status       SubmissionStatus @default(NOT_STARTED)
+  progress     Int              @default(0)
+  feedback     String?
+  score        Int?
+  submittedAt  DateTime?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  assignment   Assignment       @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, assignmentId])
+}
+
+model Reward {
+  id          String             @id @default(cuid())
+  title       String
+  description String
+  cost        Int
+  category    String
+  badge       String
+  image       String
+  available   Boolean            @default(true)
+  createdAt   DateTime           @default(now())
+  redemptions RewardRedemption[]
+}
+
+model RewardRedemption {
+  id         String   @id @default(cuid())
+  userId     String
+  rewardId   String
+  xpSpent    Int
+  redeemedAt DateTime @default(now())
+  reward     Reward   @relation(fields: [rewardId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 enum UserRole {
@@ -159,110 +272,6 @@ enum ReferralStatus {
   ONBOARDED
 }
 
-model Module {
-  id          String   @id @default(cuid())
-  title       String
-  description String
-  xpReward    Int
-  duration    String
-  color       String
-  thumbnailUrl String?
-  orderIndex  Int
-  isPremium   Boolean  @default(false)
-  price       Int      @default(0)
-  category    String   @default("Beginner")
-  createdAt   DateTime @default(now())
-
-  lessons       Lesson[]
-  subscriptions ModuleSubscription[]
-  events        Event[]
-}
-
-model ModuleSubscription {
-  id        String   @id @default(cuid())
-  userId    String
-  moduleId  String
-  createdAt DateTime @default(now())
-
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  module    Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, moduleId])
-}
-
-model Event {
-  id          String   @id @default(cuid())
-  title       String
-  description String
-  link        String   
-  date        DateTime
-  moduleId    String
-
-  module      Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
-  createdAt   DateTime @default(now())
-}
-
-model Lesson {
-  id          String   @id @default(cuid())
-  moduleId    String
-  title       String
-  description String
-  duration    String
-  content     String?  // JSON stringified or raw text
-  orderIndex  Int
-  createdAt   DateTime @default(now())
-
-  module      Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
-  progress    LessonProgress[]
-}
-
-model LessonProgress {
-  id          String   @id @default(cuid())
-  userId      String
-  lessonId    String
-  completedAt DateTime @default(now())
-
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, lessonId])
-}
-
-model Assignment {
-  id            String   @id @default(cuid())
-  title         String
-  module        String
-  description   String
-  difficulty    String
-  xpReward      Int
-  deadline      DateTime
-  estimatedTime Float
-  tags          String[]
-  questionFileUrl String?
-  createdAt     DateTime @default(now())
-
-  submissions   AssignmentSubmission[]
-}
-
-model AssignmentSubmission {
-  id           String   @id @default(cuid())
-  assignmentId String
-  userId       String
-  content      String?  @db.Text
-  status       SubmissionStatus @default(NOT_STARTED)
-  progress     Int      @default(0)
-  feedback     String?  @db.Text
-  score        Int?
-  submittedAt  DateTime?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
-  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, assignmentId])
-}
-
 enum SubmissionStatus {
   NOT_STARTED
   IN_PROGRESS
@@ -270,31 +279,4 @@ enum SubmissionStatus {
   UNDER_REVIEW
   COMPLETED
   OVERDUE
-}
-
-model Reward {
-  id          String   @id @default(cuid())
-  title       String
-  description String
-  cost        Int
-  category    String
-  badge       String
-  image       String
-  available   Boolean  @default(true)
-  createdAt   DateTime @default(now())
-
-  redemptions RewardRedemption[]
-}
-
-model RewardRedemption {
-  id         String   @id @default(cuid())
-  userId     String
-  rewardId   String
-  xpSpent    Int
-  redeemedAt DateTime @default(now())
-
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  reward     Reward   @relation(fields: [rewardId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
 }

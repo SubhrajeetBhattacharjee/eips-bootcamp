@@ -154,4 +154,4 @@ export function Navbar({ className, showNavLinks = true,}: NavbarProps) {
       )}
     </header>
   );
-}}
+}
