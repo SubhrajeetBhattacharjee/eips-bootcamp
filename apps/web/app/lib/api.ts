@@ -2,7 +2,7 @@ const API_BASE = 'http://127.0.0.1:4000';
 
 export async function apiFetch<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const headers = new Headers(options.headers || {});
-  headers.set('x-api-key', 'dev-secret-key');
+  headers.set('x-api-key', process.env.INTERNAL_API_KEY || 'dev-secret-key');
 
   const res = await fetch(`${API_BASE}${endpoint}`, {
     ...options,
