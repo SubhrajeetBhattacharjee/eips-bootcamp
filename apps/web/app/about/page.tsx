@@ -118,7 +118,7 @@ export default function AboutPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Placeholder 1 */}
-            <div className="p-6 rounded-2xl bg-muted/40 border border-border hover:border-primary/40 flex gap-6">
+            <div className="p-4 sm:p-6 rounded-2xl bg-muted/40 border border-border hover:border-primary/40 flex flex-col sm:flex-row gap-4 sm:gap-6">
               <div className="w-16 h-16 rounded-full bg-muted border border-border shrink-0 overflow-hidden relative">
                 <Image
                   src="/team/pooja_ranjan.jpg"
@@ -127,15 +127,15 @@ export default function AboutPage() {
                   className="object-cover"
                 />
               </div>
-              <div>
+              <div className="min-w-0">
                 <div className="flex items-center gap-3 mb-1">
-                  <h4 className="font-bold">Pooja Ranjan</h4>
+                  <h4 className="font-bold break-words">Pooja Ranjan</h4>
                   <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-muted border border-border">Active</span>
                 </div>
                 <p className="text-primary text-sm font-medium mb-3">Founder</p>
                 <h5 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Ecosystem strategy</h5>
-                <p className="text-xs text-muted-foreground mb-4">Shapes the long-range direction of EthShala and keeps the work anchored to Ethereum governance needs.</p>
-                <div className="flex gap-3">
+                <p className="text-xs text-muted-foreground mb-4 break-words">Shapes the long-range direction of EthShala and keeps the work anchored to Ethereum governance needs.</p>
+                <div className="flex flex-wrap gap-2 sm:gap-3">
                   <Link href="https://github.com/poojaranjan">
                   <button className="flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-lg border border-border hover:border-primary/40 hover:bg-primary/10 hover:text-primary transition-colors"><GithubIcon className="w-3 h-3"/> GitHub</button>
                   </Link>
@@ -147,7 +147,7 @@ export default function AboutPage() {
             </div>
 
             {/* Placeholder 2 */}
-            <div className="p-6 rounded-2xl bg-muted/40 border border-border hover:border-primary/40 flex gap-6">
+            <div className="p-4 sm:p-6 rounded-2xl bg-muted/40 border border-border hover:border-primary/40 flex flex-col sm:flex-row gap-4 sm:gap-6">
               <div className="w-16 h-16 rounded-full bg-muted border border-border shrink-0 overflow-hidden relative">
                 <Image
                   src="/team/yash.jpg"
@@ -156,15 +156,15 @@ export default function AboutPage() {
                   className="object-cover"
                 />
               </div>
-              <div>
+              <div className="min-w-0">
                 <div className="flex items-center gap-3 mb-1">
-                  <h4 className="font-bold">Yash Kamal Chaturvedi</h4>
+                  <h4 className="font-bold break-words">Yash Kamal Chaturvedi</h4>
                   <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-muted border border-border">Active</span>
                 </div>
                 <p className="text-primary text-sm font-medium mb-3">Operations Lead</p>
                 <h5 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Operations and delivery</h5>
-                <p className="text-xs text-muted-foreground mb-4">Keeps programs, coordination, and day-to-day execution moving across research, platform work, and partnerships.</p>
-                <div className="flex gap-3">
+                <p className="text-xs text-muted-foreground mb-4 break-words">Keeps programs, coordination, and day-to-day execution moving across research, platform work, and partnerships.</p>
+                <div className="flex flex-wrap gap-2 sm:gap-3">
                   <Link href="https://www.linkedin.com/in/yash-kamal-chaturvedi/">
                   <button className="flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-lg border border-border hover:border-primary/40 hover:bg-primary/10 hover:text-primary transition-colors"><LinkedInIcon className="w-3 h-3"/> LinkedIn</button>
                   </Link>
@@ -173,7 +173,7 @@ export default function AboutPage() {
             </div>
             
             {/* Placeholder 3 */}
-            <div className="p-6 rounded-2xl bg-muted/40 border border-border hover:border-primary/40 flex gap-6">
+            <div className="p-4 sm:p-6 rounded-2xl bg-muted/40 border border-border hover:border-primary/40 flex flex-col sm:flex-row gap-4 sm:gap-6">
               <div className="w-16 h-16 rounded-full bg-muted border border-border shrink-0 overflow-hidden relative">
                 <Image
                   src="/team/Dhanush.jpg"
@@ -182,15 +182,15 @@ export default function AboutPage() {
                   className="object-cover"
                 />
               </div>
-              <div>
+              <div className="min-w-0">
                 <div className="flex items-center gap-3 mb-1">
-                  <h4 className="font-bold">Dhanush Naik</h4>
+                  <h4 className="font-bold break-words">Dhanush Naik</h4>
                   <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-muted border border-border">Active</span>
                 </div>
                 <p className="text-primary text-sm font-medium mb-3">Full Stack Engineer</p>
                 <h5 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Platform engineering</h5>
-                <p className="text-xs text-muted-foreground mb-4">Builds the product surface, analytics experience, and internal systems that turn raw governance data into usable tooling.</p>
-                <div className="flex gap-3">
+                <p className="text-xs text-muted-foreground mb-4 break-words">Builds the product surface, analytics experience, and internal systems that turn raw governance data into usable tooling.</p>
+                <div className="flex flex-wrap gap-2 sm:gap-3">
                   <Link href="https://github.com/dhanushlnaik">
                   <button className="flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-lg border border-border hover:border-primary/40 hover:bg-primary/10 hover:text-primary transition-colors"><GithubIcon className="w-3 h-3"/> GitHub</button>
                   </Link>
@@ -202,7 +202,7 @@ export default function AboutPage() {
             </div>
 
             {/* Placeholder 4 */}
-            <div className="p-6 rounded-2xl bg-muted/40 border border-border hover:border-primary/40 flex gap-6">
+            <div className="p-4 sm:p-6 rounded-2xl bg-muted/40 border border-border hover:border-primary/40 flex flex-col sm:flex-row gap-4 sm:gap-6">
               <div className="w-16 h-16 rounded-full bg-muted border border-border shrink-0 overflow-hidden relative">
                 <Image
                   src="/team/SubhrajeetBhattacharjee.webp"
@@ -211,15 +211,15 @@ export default function AboutPage() {
                   className="object-cover"
                 />
               </div>
-              <div>
+              <div className="min-w-0">
                 <div className="flex items-center gap-3 mb-1">
-                  <h4 className="font-bold">Subhrajeet Bhattacharjee</h4>
+                  <h4 className="font-bold break-words">Subhrajeet Bhattacharjee</h4>
                   <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-muted border border-border">Active</span>
                 </div>
                 <p className="text-primary text-sm font-medium mb-3">Full Stack Intern</p>
                 <h5 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Full stack implementation</h5>
-                <p className="text-xs text-muted-foreground mb-4">Contributes across frontend and backend work to support feature delivery and improve the platform experience.</p>
-                <div className="flex gap-3">
+                <p className="text-xs text-muted-foreground mb-4 break-words">Contributes across frontend and backend work to support feature delivery and improve the platform experience.</p>
+                <div className="flex flex-wrap gap-2 sm:gap-3">
                   <Link href="https://github.com/SubhrajeetBhattacharjee">
                   <button className="flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-lg border border-border hover:border-primary/40 hover:bg-primary/10 hover:text-primary transition-colors"><GithubIcon className="w-3 h-3"/> GitHub</button>
                   </Link>
@@ -231,7 +231,7 @@ export default function AboutPage() {
             </div>
 
             {/* Placeholder 5 */}
-            <div className="p-6 rounded-2xl bg-muted/40 border border-border hover:border-primary/40 flex gap-6">
+            <div className="p-4 sm:p-6 rounded-2xl bg-muted/40 border border-border hover:border-primary/40 flex flex-col sm:flex-row gap-4 sm:gap-6">
               <div className="w-16 h-16 rounded-full bg-muted border border-border shrink-0 overflow-hidden relative">
                 <Image
                   src="/team/rajdeep.jpg"
@@ -240,15 +240,15 @@ export default function AboutPage() {
                   className="object-cover"
                 />
               </div>
-              <div>
+              <div className="min-w-0">
                 <div className="flex items-center gap-3 mb-1">
-                  <h4 className="font-bold">Rajdeep Chakraborty</h4>
+                  <h4 className="font-bold break-words">Rajdeep Chakraborty</h4>
                   <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-muted border border-border">Active</span>
                 </div>
                 <p className="text-primary text-sm font-medium mb-3">Full Stack Intern</p>
                 <h5 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Full stack implementation</h5>
-                <p className="text-xs text-muted-foreground mb-4">Contributes across frontend and backend work to support feature delivery and improve the platform experience.</p>
-                <div className="flex gap-3">
+                <p className="text-xs text-muted-foreground mb-4 break-words">Contributes across frontend and backend work to support feature delivery and improve the platform experience.</p>
+                <div className="flex flex-wrap gap-2 sm:gap-3">
                   <Link href="https://github.com/rajdeepchakraborty-rc">
                   <button className="flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-lg border border-border hover:border-primary/40 hover:bg-primary/10 hover:text-primary transition-colors"><GithubIcon className="w-3 h-3"/> GitHub</button>
                   </Link>
