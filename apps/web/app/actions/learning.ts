@@ -3,6 +3,14 @@
 import { prisma } from '@/app/lib/prisma';
 import { auth } from '@/app/lib/auth';
 import { headers } from 'next/headers';
+import {
+  InProgressModule,
+  TimelineItem,
+  ActivityItem,
+  DeadlineItem,
+  SkillItem,
+  StreakItem
+} from '@/app/lib/bootcamp.types';
 
 export interface LearningData {
   stats: {
@@ -12,13 +20,13 @@ export interface LearningData {
     activeAssignments: number;
     totalModules: number;
   };
-  inProgress: any;
-  nextStep: any;
-  timeline: any[];
-  activity: any[];
-  deadlines: any[];
-  skills: any[];
-  streak: any[];
+  inProgress: InProgressModule | null;
+  nextStep: InProgressModule | null;
+  timeline: TimelineItem[];
+  activity: ActivityItem[];
+  deadlines: DeadlineItem[];
+  skills: SkillItem[];
+  streak: StreakItem[];
 }
 
 export async function getLearningData(): Promise<LearningData | null> {

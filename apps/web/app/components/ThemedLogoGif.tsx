@@ -2,8 +2,8 @@
 
 import Image, { type ImageProps } from "next/image";
 
-const LIGHT_LOGO_SRC = "/EIPsInsightsDark.gif";
-const DARK_LOGO_SRC = "/EIPsInsights.gif";
+const LIGHT_LOGO_SRC = "/brand/ethshala_logo_black.svg";
+const DARK_LOGO_SRC = "/brand/ethshala_logo_white.svg";
 
 type ThemedLogoGifProps = Omit<ImageProps, "src"> & {
   lightSrc?: string;

@@ -1,7 +1,49 @@
 /**
- * Bootcamp Module Types
- * TypeScript interfaces and types for the EthShala
+ * EthShala Module Types
+ * TypeScript interfaces and types for EthShala
  */
+
+export interface InProgressModule {
+  id: string;
+  title: string;
+  moduleName: string;
+  progress: number;
+}
+
+export interface TimelineItem {
+  id: string;
+  title: string;
+  description: string | null;
+  status: 'COMPLETED' | 'IN_PROGRESS' | 'NOT_STARTED';
+  duration: string;
+  xpReward: number;
+}
+
+export interface ActivityItem {
+  id: string;
+  title: string;
+  time: string;
+  type: 'assignment' | 'achievement';
+  xp: number;
+}
+
+export interface DeadlineItem {
+  id: string;
+  title: string;
+  module: string;
+  deadline: string;
+}
+
+export interface SkillItem {
+  name: string;
+  progress: number;
+  category: 'technical' | 'soft';
+}
+
+export interface StreakItem {
+  date: Date;
+  intensity: 0 | 1 | 2 | 3 | 4;
+}
 
 /**
  * Represents a single module in the bootcamp

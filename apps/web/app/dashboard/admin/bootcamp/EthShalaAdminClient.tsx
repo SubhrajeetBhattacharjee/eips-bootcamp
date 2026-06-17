@@ -5,7 +5,7 @@ import { Plus, Video, Image as ImageIcon, BookOpen, Clock, Tag, Trash2, ChevronD
 import { createModule, createLesson, deleteModule, deleteLesson, editModule, editLesson } from "./actions";
 import { useRouter } from "next/navigation";
 
-export default function BootcampAdminClient({ initialModules }: { initialModules: any[] }) {
+export default function EthShalaAdminClient({ initialModules }: { initialModules: any[] }) {
   const router = useRouter();
   const [isCreatingModule, setIsCreatingModule] = useState(false);
   const [isCreatingLessonFor, setIsCreatingLessonFor] = useState<string | null>(null);

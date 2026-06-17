@@ -3,8 +3,9 @@
 import Link from 'next/link';
 import { useSession } from '@/app/lib/auth-client';
 import { ArrowRight, BookOpen } from 'lucide-react';
+import { Button } from '../ui/Button';
 
-// Inline EIP book illustration — SVG only, no images needed
+// Inline EIP book illustration
 function EIPBookIllustration() {
   return (
     <div className="relative flex items-center justify-center w-full h-full select-none pointer-events-none">
@@ -179,13 +180,14 @@ export function HeroSection() {
 
             {/* CTAs */}
             <div className="flex flex-wrap items-center gap-4 mb-10">
-              <Link
+              <Button
                 href={isSignedIn ? '/dashboard' : '/sign-up'}
-                className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-sm px-6 py-3.5 rounded-xl transition-all duration-200 shadow-[0_0_24px_rgba(16,185,129,0.25)] hover:shadow-[0_0_36px_rgba(16,185,129,0.4)] group"
+                size="lg"
+                rightIcon={<ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />}
+                className="group"
               >
                 {isSignedIn ? 'Continue Learning' : 'Start Learning'}
-                <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
-              </Link>
+              </Button>
               {!isSignedIn && (
                 <div className="text-sm text-muted-foreground leading-snug">
                   Sign in or create an account<br />
@@ -207,8 +209,8 @@ export function HeroSection() {
           <div className="hidden lg:flex items-center justify-center h-[560px]">
             <EIPBookIllustration />
           </div>
-        </div>
-      </div>
-    </section>
-  );
-}
+          </div>
+          </div>
+          </section>
+          );
+          }
