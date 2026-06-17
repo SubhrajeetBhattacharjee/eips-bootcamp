@@ -307,7 +307,7 @@ export default function AboutPage() {
             <h2 className="text-2xl font-grotesk font-medium mb-6">Working alongside ecosystem operators.</h2>
             <div className="space-y-4">
               <div className="p-5 rounded-2xl bg-muted/40 border border-border hover:border-primary/40">
-                <Link className="flex items-center gap-6" href="https://etherworld.co/">
+                <Link target="_blank" className="flex items-center gap-6" href="https://etherworld.co/">
                 <div className="w-16 h-16 rounded-full bg-muted border border-border shrink-0 overflow-hidden relative">
                 <Image
                   src="/brand/partners/ew.png"
@@ -324,7 +324,7 @@ export default function AboutPage() {
                 </Link>
               </div>
               <div className="p-5 rounded-2xl bg-muted/40 border border-border hover:border-primary/40">
-                <Link className="flex items-center gap-6" target="_blank" href="https://www.ethcatherders.com/">
+                <Link target="_blank" className="flex items-center gap-6" target="_blank" href="https://www.ethcatherders.com/">
                 <div className="w-16 h-16 rounded-full bg-muted border border-border shrink-0 overflow-hidden relative">
                 <Image
                   src="/brand/partners/ech.png"

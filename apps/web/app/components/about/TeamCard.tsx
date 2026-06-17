@@ -73,7 +73,7 @@ export default function TeamCard({
         {socials.length > 0 && (
           <div className="flex flex-wrap gap-2 sm:gap-3">
             {socials.map((social) => (
-              <Link key={social.href} href={social.href}>
+              <Link key={social.href} href={social.href} target="_blank">
                 <button className="flex items-center gap-2 text-xs font-medium px-2 sm:px-3 py-1.5 rounded-lg border border-border hover:border-primary/40 hover:bg-primary/10 hover:text-primary transition-colors whitespace-nowrap">
                   {social.icon}
                   {social.label}
