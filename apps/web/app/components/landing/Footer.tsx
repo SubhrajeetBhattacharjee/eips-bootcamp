@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { footerLinks } from '../../lib/landing-data';
 import { Heart, Globe } from 'lucide-react';
-import { ThemedLogoGif } from "@/app/components/ThemedLogoGif";
+import { Logo } from '../ui/Logo';
+import { ThemedLogoGif } from '@/app/components/ThemedLogoGif';
 
 import Image from 'next/image';
 
@@ -16,22 +17,17 @@ export function Footer() {
           {/* Column 1: Brand & Info */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-6">
-              {/* EthShala Logo Added */}
               <div className="relative bottom-1.5" >
-                  <ThemedLogoGif
-                    alt="EthShala"
-                    width={45}
-                    height={45}
-                    unoptimized
-                  />
+                <ThemedLogoGif
+                  alt="EthShala"
+                  width={45}
+                  height={45}
+                  unoptimized
+                />
               </div>
-              <div className="text-foreground font-bold text-2xl leading-none">
-                <span className="text-emerald-400 font-semibold mt-0.5">
-                Eth
-                </span>
-                Shala
-              </div>
+              <Logo />
             </div>
+
             
             <p className="text-muted-foreground text-sm flex items-center gap-1.5 mb-8">
               Build With <Heart size={14} className="text-emerald-500 fill-emerald-500/20" /> by Avarch

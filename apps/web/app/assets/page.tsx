@@ -3,10 +3,13 @@
 import React from "react";
 import { Navbar } from "../components/landing/Navbar";
 import { Footer } from "../components/landing/Footer";
+import { Logo } from "../components/ui/Logo";
+import { ThemedLogoGif } from "../components/ThemedLogoGif";
 import { Card } from "../components/ui/Card";
 import { Button } from "../components/ui/Button";
 import { Download, Copy, Check, ExternalLink } from "lucide-react";
 import Image from "next/image";
+import { Badge } from "../components/ui/Badge";
 
 const ASSETS = [
   {
@@ -59,6 +62,68 @@ export default function AssetsPage() {
             Download the official EthShala logos and branding materials. These assets are intended for use in partnerships, community content, and media.
           </p>
         </div>
+
+        {/* Integrated Branding Section */}
+        <section className="space-y-8">
+          <div className="flex flex-col gap-2">
+            <h2 className="text-2xl font-bold border-b border-border pb-4">Integrated Branding</h2>
+            <p className="text-sm text-muted-foreground">How we combine the visual mark and typography in our navigation components.</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <Card className="flex flex-col !p-0 overflow-hidden border-border bg-white">
+              <div className="p-4 border-b border-border">
+                <Badge variant="neutral" className="text-slate-900 border-slate-200 bg-slate-50">Light Theme Usage</Badge>
+              </div>
+              <div className="h-40 flex items-center justify-center bg-slate-50">
+                <div className="flex items-center gap-3 scale-125 pointer-events-none">
+                  <div className="relative bottom-1.5 shrink-0">
+                    <ThemedLogoGif
+                      alt="EthShala"
+                      width={45}
+                      height={45}
+                      unoptimized
+                      lightSrc="/brand/ethshala_logo_black.svg"
+                      darkSrc="/brand/ethshala_logo_black.svg"
+                    />
+                  </div>
+                  <Logo />
+                </div>
+              </div>
+              <div className="p-6">
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  The black visual mark is paired with the standard EthShala wordmark for high contrast on light surfaces.
+                </p>
+              </div>
+            </Card>
+
+            <Card className="flex flex-col !p-0 overflow-hidden border-white/5 bg-[#0a0c0b]">
+              <div className="p-4 border-b border-white/5">
+                <Badge variant="neutral" className="text-white border-white/10 bg-white/5">Dark Theme Usage</Badge>
+              </div>
+              <div className="h-40 flex items-center justify-center bg-[#121413]">
+                <div className="flex items-center gap-3 scale-125 pointer-events-none">
+                  <div className="relative bottom-1.5 shrink-0">
+                    <ThemedLogoGif
+                      alt="EthShala"
+                      width={45}
+                      height={45}
+                      unoptimized
+                      lightSrc="/brand/ethshala_logo_white.svg"
+                      darkSrc="/brand/ethshala_logo_white.svg"
+                    />
+                  </div>
+                  <Logo />
+                </div>
+              </div>
+              <div className="p-6">
+                <p className="text-xs text-muted-foreground leading-relaxed text-center">
+                  The white visual mark is paired with the standard wordmark for dark mode consistency.
+                </p>
+              </div>
+            </Card>
+          </div>
+        </section>
 
         {/* Logos Grid */}
         <section className="space-y-8">

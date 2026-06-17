@@ -2,6 +2,7 @@ import React from 'react';
 import { Navbar } from '../components/landing/Navbar';
 import { Footer } from '../components/landing/Footer';
 import TeamCard from '../components/about/TeamCard';
+import { Logo } from '../components/ui/Logo';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Search, BarChart2, GitBranch, FileText, Shield, Activity, Globe, MessageSquare, Heart, Mail, ExternalLink, ArrowRight } from 'lucide-react';
@@ -35,7 +36,7 @@ export default function AboutPage() {
           <div className="inline-block px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold tracking-widest uppercase mb-6">
             About
           </div>
-          <h1 className="text-4xl md:text-5xl font-serif font-medium mb-6 leading-tight">
+          <h1 className="text-4xl md:text-5xl font-grotesk font-medium mb-6 leading-tight">
             EthShala makes Ethereum protocol governance accessible to everyone.
           </h1>
           <p className="text-lg text-muted-foreground mb-12 max-w-3xl">
@@ -62,7 +63,7 @@ export default function AboutPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8">
           <div>
             <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">Why We Built This</h3>
-            <h2 className="text-3xl font-serif font-medium mb-6">
+            <h2 className="text-3xl font-grotesk font-medium mb-6">
               Standards and governance should not require institutional memory to follow.
             </h2>
             <div className="space-y-4 text-muted-foreground text-sm">
@@ -110,7 +111,7 @@ export default function AboutPage() {
         {/* Team Section */}
         <div className="p-8 md:p-12 rounded-3xl bg-muted/20 border border-border">
           <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">Team</h3>
-          <h2 className="text-3xl font-serif font-medium mb-4">
+          <h2 className="text-3xl font-grotesk font-medium mb-4">
             A compact team working across strategy, operations, engineering, and product systems.
           </h2>
           <p className="text-sm text-muted-foreground mb-12">
@@ -224,7 +225,7 @@ export default function AboutPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="p-8 rounded-3xl bg-muted/20 border border-border">
             <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">Values</h3>
-            <h2 className="text-3xl font-serif font-medium mb-8">The product is opinionated about clarity.</h2>
+            <h2 className="text-3xl font-grotesk font-medium mb-8">The product is opinionated about clarity.</h2>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="p-5 rounded-2xl bg-muted/40 border border-border">
@@ -288,7 +289,7 @@ export default function AboutPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="p-8 rounded-3xl bg-muted/20 border border-border">
             <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">Support</h3>
-            <h2 className="text-2xl font-serif font-medium mb-6">Backed by grants, community support, and ecosystem collaboration.</h2>
+            <h2 className="text-2xl font-grotesk font-medium mb-6">Backed by grants, community support, and ecosystem collaboration.</h2>
             <div className="space-y-4">
               <div className="p-5 rounded-2xl bg-muted/40 border border-border">
                 <h4 className="font-bold text-sm mb-2">Ecosystem Support Program (EF ESP)</h4>
@@ -303,7 +304,7 @@ export default function AboutPage() {
 
           <div className="p-8 rounded-3xl bg-muted/20 border border-border">
             <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">Partners</h3>
-            <h2 className="text-2xl font-serif font-medium mb-6">Working alongside ecosystem operators.</h2>
+            <h2 className="text-2xl font-grotesk font-medium mb-6">Working alongside ecosystem operators.</h2>
             <div className="space-y-4">
               <div className="p-5 rounded-2xl bg-muted/40 border border-border hover:border-primary/40">
                 <Link className="flex items-center gap-6" href="https://etherworld.co/">
@@ -346,7 +347,7 @@ export default function AboutPage() {
         {/* Bottom CTA Block */}
         <div className="p-8 md:p-12 rounded-3xl bg-muted/20 border border-border">
           <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">Get Involved</h3>
-          <h2 className="text-2xl font-serif font-medium mb-4">Support the platform, contribute feedback, or build on top of the work.</h2>
+          <h2 className="text-2xl font-grotesk font-medium mb-4">Support the platform, contribute feedback, or build on top of the work.</h2>
           <p className="text-sm text-muted-foreground mb-8 max-w-2xl">
             EthShala is a community resource. If you want to help, the best paths are straightforward: use it, critique it, contribute to it, or support the infrastructure behind it.
           </p>
@@ -369,7 +370,7 @@ export default function AboutPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="p-8 rounded-3xl bg-muted/20 border border-border">
             <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">Policy</h3>
-            <h2 className="text-xl font-serif font-medium mb-4">Legal and privacy</h2>
+            <h2 className="text-xl font-grotesk font-medium mb-4">Legal and privacy</h2>
             <p className="text-xs text-muted-foreground mb-6">We keep the legal and privacy layer explicit. Use these documents when you need the operational details behind account, data, and platform usage.</p>
             <div className="flex gap-4">
               <button className="flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-lg bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-colors">Privacy Policy <ArrowRight className="w-3 h-3"/></button>
@@ -378,7 +379,7 @@ export default function AboutPage() {
           </div>
           <div className="p-8 rounded-3xl bg-muted/20 border border-border">
             <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">Contact</h3>
-            <h2 className="text-xl font-serif font-medium mb-4">Reach the team</h2>
+            <h2 className="text-xl font-grotesk font-medium mb-4">Reach the team</h2>
             <p className="text-xs text-muted-foreground mb-6">For collaboration, platform questions, or product feedback, contact us directly.</p>
             <div className="p-4 rounded-xl border border-border bg-muted/30">
               <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Email</p>

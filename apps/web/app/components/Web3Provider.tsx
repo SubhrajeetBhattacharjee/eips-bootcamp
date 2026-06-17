@@ -4,6 +4,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 
 import {
   getDefaultConfig,
+  getDefaultWallets,
   RainbowKitProvider,
   darkTheme,
   lightTheme
@@ -30,6 +31,10 @@ const config = getDefaultConfig({
   projectId: 'c03554e26fbbf209dc9bd4f49488e0db', // Replace with your actual WalletConnect project ID from cloud.walletconnect.com
   chains: [mainnet, polygon, optimism, arbitrum, base, sepolia],
   ssr: true, // Next.js SSR compatibility
+  wallets: getDefaultWallets().wallets.map((group) => ({
+    ...group,
+    wallets: group.wallets.filter((wallet) => wallet.name !== 'MetaMask'),
+  })),
 });
 
 export function Web3Provider({ children }: { children: React.ReactNode }) {
