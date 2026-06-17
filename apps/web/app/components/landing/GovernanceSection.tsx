@@ -24,7 +24,7 @@ const governanceCards: GovernanceCard[] = [
     icon: 'vote',
     title: 'Ideas Become Decisions',
     description:
-      'Ethereum governance is open and iterative — proposals move through discussion, review, and community consensus.',
+      'Ethereum governance is open and iterative - proposals move through discussion, review, and community consensus.',
   },
   {
     id: 2,
@@ -124,7 +124,7 @@ export function GovernanceSection() {
 
           <p className="text-muted-foreground mt-3">
             Governance in Ethereum happens through open discussion,
-            proposal review, and rough consensus — not centralized control.
+            proposal review, and rough consensus - not centralized control.
           </p>
         </div>
 

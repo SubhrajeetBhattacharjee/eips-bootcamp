@@ -400,7 +400,7 @@ export function LearningTracks() {
               Your path to Ethereum knowledge starts here
             </h2>
             <p className="text-gray-400 text-sm sm:text-base leading-relaxed max-w-xl">
-              Structured tracks built for learners who want depth — from core Ethereum fundamentals to active protocol participation.
+              Structured tracks built for learners who want depth - from core Ethereum fundamentals to active protocol participation.
             </p>
           </div>
 

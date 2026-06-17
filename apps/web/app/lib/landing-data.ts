@@ -38,7 +38,7 @@ export const learningTracks: LearningTrack[] = [
   {
     id: 'eips',
     title: 'Understanding EIPs',
-    description: 'Deep dive into Ethereum Improvement Proposals — how they are written, reviewed, and finalized.',
+    description: 'Deep dive into Ethereum Improvement Proposals - how they are written, reviewed, and finalized.',
     tags: ['ERC', 'Core EIPs', 'Process'],
     icon: 'file-text',
     level: 'Intermediate',
@@ -46,7 +46,7 @@ export const learningTracks: LearningTrack[] = [
   {
     id: 'governance',
     title: 'Governance & Decision Making',
-    description: 'Learn how Ethereum governance works — from All Core Devs calls to rough consensus.',
+    description: 'Learn how Ethereum governance works - from All Core Devs calls to rough consensus.',
     tags: ['ACD', 'Rough Consensus', 'Signaling'],
     icon: 'vote',
     level: 'Intermediate',
@@ -62,7 +62,7 @@ export const learningTracks: LearningTrack[] = [
   {
     id: 'contributor',
     title: 'Contributor Journey',
-    description: 'A guided path from learner to active Ethereum ecosystem contributor — step by step.',
+    description: 'A guided path from learner to active Ethereum ecosystem contributor - step by step.',
     tags: ['Open Source', 'GitHub', 'Community'],
     icon: 'git-branch',
     level: 'Beginner',
@@ -95,7 +95,7 @@ export const journeySteps: JourneyStep[] = [
     id: 'contribute',
     step: '04',
     title: 'Contribute',
-    description: 'Take your knowledge into the ecosystem — review EIPs, write proposals, mentor others.',
+    description: 'Take your knowledge into the ecosystem - review EIPs, write proposals, mentor others.',
     icon: 'git-commit',
   },
 ];
@@ -104,7 +104,7 @@ export const whyCards: WhyCard[] = [
   {
     id: 'evolving',
     title: 'Ethereum Evolves Through Proposals',
-    description: 'Every major change to Ethereum — from EIP-1559 to The Merge — began as a written proposal. Understanding this process is foundational.',
+    description: 'Every major change to Ethereum - from EIP-1559 to The Merge - began as a written proposal. Understanding this process is foundational.',
     icon: 'layers',
   },
   {
@@ -116,7 +116,7 @@ export const whyCards: WhyCard[] = [
   {
     id: 'active',
     title: 'The Ecosystem Is Actively Changing',
-    description: 'Verkle Trees, PeerDAS, EOF — upgrades are happening now. Stay informed and understand what is being built and why.',
+    description: 'Verkle Trees, PeerDAS, EOF - upgrades are happening now. Stay informed and understand what is being built and why.',
     icon: 'activity',
   },
   {
