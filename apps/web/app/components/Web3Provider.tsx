@@ -25,11 +25,15 @@ import {
 import { useTheme } from 'next-themes';
 import { useState, useEffect } from 'react';
 
+import { http } from 'wagmi';
+
 const config = getDefaultConfig({
   appName: 'EthShala',
-
   projectId: 'c03554e26fbbf209dc9bd4f49488e0db', // Replace with your actual WalletConnect project ID from cloud.walletconnect.com
   chains: [mainnet, polygon, optimism, arbitrum, base, sepolia],
+  transports: {
+    [mainnet.id]: http('https://cloudflare-eth.com'),
+  },
   ssr: true, // Next.js SSR compatibility
   wallets: getDefaultWallets().wallets.map((group) => ({
     ...group,
