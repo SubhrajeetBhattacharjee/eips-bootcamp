@@ -138,7 +138,7 @@ export const navLinks = [
 export const footerLinks = {
   joinUs: [
     // Add Discord invite later when specific channel is created.
-    { label: 'Discord', href: '#' },
+    { label: 'Discord', href: '/' },
   ],
   important: [
     { label: 'Dashboard', href: '/dashboard' },
@@ -146,6 +146,7 @@ export const footerLinks = {
     { label: 'My Learning', href: '/dashboard/learning' },
     { label: 'Referrals', href: '/dashboard/referrals' },
     { label: 'About Us', href: '/about' },
+    { label: 'Assets', href: '/assets' },
   ],
   followUs: [
     { label: 'YouTube', href: 'https://www.youtube.com/@etherworldco' },

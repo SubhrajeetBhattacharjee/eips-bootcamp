@@ -58,7 +58,7 @@ export function Footer() {
             <ul className="space-y-3.5">
               {footerLinks.important.map((l) => (
                 <li key={l.label}>
-                  <Link href={l.href} className="text-muted-foreground text-sm hover:text-emerald-400 transition-colors">
+                  <Link href={l.href} className="text-muted-foreground text-sm hover:text-emerald-400 transition-colors flex items-center gap-2">
                     {l.label}
                   </Link>
                 </li>
