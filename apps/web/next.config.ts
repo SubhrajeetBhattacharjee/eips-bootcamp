@@ -1,4 +1,7 @@
 import type { NextConfig } from "next";
+import path from "path";
+
+const asyncStorageShim = path.join(process.cwd(), 'app', 'shims', 'async-storage.ts');
 
 const nextConfig: NextConfig = {
   eslint: {
@@ -11,8 +14,8 @@ const nextConfig: NextConfig = {
   webpack: (config, { webpack }) => {
     config.resolve.fallback = { fs: false, net: false, tls: false };
     config.resolve.alias = {
-      ...config.resolve.alias,
-      '@react-native-async-storage/async-storage': false,
+      ...(config.resolve.alias || {}),
+      '@react-native-async-storage/async-storage': asyncStorageShim,
     };
     config.externals.push('pino-pretty', 'lokijs', 'encoding');
     config.plugins.push(

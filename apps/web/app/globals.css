@@ -58,14 +58,26 @@
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
 
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Typography System */
+  --font-display: "Clash Display", sans-serif;
+  --font-grotesk: var(--font-space-grotesk), sans-serif;
+  --font-body: var(--font-inter), sans-serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), sans-serif;
+  font-weight: 400;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-space-grotesk), sans-serif;
+}
+
+code, pre, .eip-number {
+  font-family: var(--font-jetbrains-mono), monospace;
 }
 
 .scrollbar-hide {

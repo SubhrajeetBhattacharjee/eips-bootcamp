@@ -7,7 +7,7 @@ import { Menu, X, ChevronDown, ArrowRight } from 'lucide-react';
 import { navLinks } from '../../lib/landing-data';
 import { ThemeToggle } from '../ThemeToggle';
 import { ThemedLogoGif } from "@/app/components/ThemedLogoGif";
-
+import { Logo } from '../ui/Logo';
 interface NavbarProps {
   className?: string;
   showNavLinks?: boolean;
@@ -34,13 +34,11 @@ export function Navbar({ className, showNavLinks = true,}: NavbarProps) {
                 height={45}
                 unoptimized
               />
+             
             </div>
             <div>
               <div className="text-foreground font-bold text-2xl leading-none">
-                <span className="text-emerald-400 font-semibold mt-0.5">
-                Eth
-                </span>
-                Shala
+   <Logo/>
               </div>
             </div>
           </Link>

@@ -26,7 +26,7 @@ export default async function AdminEthShalaPage() {
 
   // Fetch all modules. We pass the admin's userId just to satisfy the endpoint,
   // but we only care about the module data itself.
-  let modules: any[] = [];
+  let modules: any[] = []; // keeping any for now since it comes from untyped API helper
   try {
     modules = await apiFetch(`/bootcamp/modules/${userId}`);
   } catch (error) {

@@ -168,7 +168,7 @@ export function HeroSection() {
               Understand Ethereum. Shape the Future.
             </p>
 
-            <h1 className="text-foreground font-black leading-none mb-6" style={{ fontSize: 'clamp(2.8rem, 5vw, 4.2rem)', letterSpacing: '-0.03em', lineHeight: 1.02 }}>
+            <h1 className="font-grotesk font-black leading-none mb-6" style={{ fontSize: 'clamp(2.8rem, 5vw, 4.2rem)', letterSpacing: '-0.03em', lineHeight: 1.02 }}>
               Learn Ethereum.<br />
               Understand <span className="text-emerald-400">EIPs</span>.<br />
               Build the Future.

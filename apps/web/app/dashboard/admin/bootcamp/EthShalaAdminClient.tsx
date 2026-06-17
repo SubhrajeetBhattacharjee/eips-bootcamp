@@ -5,6 +5,14 @@ import { Plus, Video, Image as ImageIcon, BookOpen, Clock, Tag, Trash2, ChevronD
 import { createModule, createLesson, deleteModule, deleteLesson, editModule, editLesson } from "./actions";
 import { useRouter } from "next/navigation";
 
+type Lesson = {
+  id: string;
+  title: string;
+  description: string;
+  duration: string;
+  [key: string]: any;
+};
+
 export default function EthShalaAdminClient({ initialModules }: { initialModules: any[] }) {
   const router = useRouter();
   const [isCreatingModule, setIsCreatingModule] = useState(false);
@@ -278,7 +286,7 @@ export default function EthShalaAdminClient({ initialModules }: { initialModules
 
                 {module.mappedLessons && module.mappedLessons.length > 0 ? (
                   <div className="grid gap-3">
-                    {module.mappedLessons.map((lesson: any) => (
+                    {module.mappedLessons.map((lesson: Lesson) => (
                       <div key={lesson.id} className="flex items-center justify-between p-3 rounded-lg bg-card border border-white/[0.04] hover:bg-accent hover:border-emerald-500/20 transition-all group">
                         <div className="flex items-center gap-3">
                           <BookOpen size={16} className="text-emerald-500/50" />

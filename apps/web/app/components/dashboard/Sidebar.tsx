@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession } from '@/app/lib/auth-client';
-import { ThemedLogoGif } from "@/app/components/ThemedLogoGif";
+import { ThemedLogoGif } from '@/app/components/ThemedLogoGif';
+import { Logo } from '../ui/Logo';
 
 import {
   LayoutDashboard,
@@ -156,84 +157,47 @@ export function Sidebar({ mobileOpen, onMobileClose, collapsed, toggleSidebar, }
           ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
 
-        <div className="px-4 py-5 border-b border-border space-y-3">
+        <div className={`px-4 py-6 border-b border-border transition-all duration-300 ${collapsed ? 'flex flex-col items-center gap-4' : 'flex items-center justify-between'}`}>
+          
+          {/* Brand Area */}
+          <Link href="/" className={`flex items-center transition-all duration-300 ${collapsed ? 'justify-center' : 'gap-2.5'}`}>
+            <div className="relative shrink-0" >
+              <ThemedLogoGif
+                alt="EthShala"
+                width={collapsed ? 32 : 36}
+                height={collapsed ? 32 : 36}
+                unoptimized
+              />
+            </div>
+            {!collapsed && (
+              <div className="animate-in fade-in slide-in-from-left-2 duration-300">
+                <Logo size="sm" />
+              </div>
+            )}
+          </Link>
 
-          {/* Collapse button */}
+          {/* Collapse toggle */}
           <button
             onClick={toggleSidebar}
-            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            title={collapsed ? "Expand" : "Collapse"}
             className={`
-              w-full
-              flex items-center justify-center
-              ${collapsed ? '' : 'gap-3'}
-              px-3 py-2.5
+              p-1.5 
               rounded-lg
-              text-sm
-              font-medium
               text-muted-foreground
-              border border-border
               hover:text-foreground
               hover:bg-accent
-              transition-all duration-300
-              group
+              border border-transparent
+              hover:border-border
+              transition-all duration-200
+              ${collapsed ? 'mt-2' : ''}
             `}
           >
-            <span className="transition-colors group-hover:text-emerald-400">
-              {collapsed ? (
-                <PanelLeftOpen size={18} />
-              ) : (
-                <PanelLeftClose size={18} />
-              )}
-            </span>
-
-            <span
-              className={`
-                overflow-hidden
-                transition-all duration-300
-                ${
-                  collapsed
-                    ? 'w-0 opacity-0'
-                    : 'w-auto opacity-100'
-                }
-              `}
-            >
-              Collapse
-            </span>
+            {collapsed ? (
+              <PanelLeftOpen size={16} />
+            ) : (
+              <PanelLeftClose size={16} />
+            )}
           </button>
-          
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
-            <div className= {`
-              flex items-center
-              transition-all duration-300
-              ${collapsed ? 'justify-center w-full' : 'gap-3'}
-              `}
-              >
-              {/* EthShala Logo Added */}
-                <div className="relative bottom-1.5" >
-                  <ThemedLogoGif
-                    alt="EthShala"
-                    width={45}
-                    height={45}
-                    unoptimized
-                  />
-                </div>
-                <div
-                    className={`
-                      overflow-hidden transition-all duration-300
-                      ${collapsed ? 'w-0 opacity-0' : 'w-auto opacity-100'}
-                    `}
-                    >
-                    <div className="text-foreground font-bold text-2xl leading-none">
-                      <span className="text-emerald-400 font-semibold mt-0.5">
-                      Eth
-                      </span>
-                      Shala
-                    </div>
-                </div>
-            </div>
-          </Link>
-          
         </div>
         
 
