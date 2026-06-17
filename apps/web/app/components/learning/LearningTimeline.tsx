@@ -6,7 +6,7 @@ export const LearningTimeline = ({ timeline }: { timeline?: any[] }) => {
   const steps = timeline || [];
 
   return (
-    <div className="bg-card border border-border rounded-2xl p-6 flex flex-col h-full hover:border-emerald-500/20 transition-all duration-300">
+    <Card className="flex flex-col h-full">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-foreground font-bold text-base">EthShala Timeline</h3>
         <Link href="/dashboard/bootcamp">
@@ -35,14 +35,14 @@ export const LearningTimeline = ({ timeline }: { timeline?: any[] }) => {
                     {isCompleted ? <CheckCircle size={14} /> : <Circle size={14} />}
                   </div>
 
-                  {/* Card */}
+                  {/* Card wrapper */}
                   <div className="w-[calc(100%-2.5rem)] md:w-[calc(50%-1.5rem)] p-4 rounded-xl border border-border bg-white/[0.02] hover:bg-white/[0.04] transition-colors z-10">
                     <div className="flex items-center justify-between mb-1">
                       <h4 className={`text-sm font-bold ${isLocked ? 'text-muted-foreground' : 'text-foreground'}`}>{step.title}</h4>
                       {!isLocked && (
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isCompleted ? 'bg-emerald-500/10 text-emerald-400' : 'bg-blue-500/10 text-blue-400'}`}>
+                        <Badge variant={isCompleted ? 'success' : 'info'} dot>
                           {isCompleted ? 'Done' : 'Active'}
-                        </span>
+                        </Badge>
                       )}
                     </div>
                     <p className={`text-xs line-clamp-2 ${isLocked ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
@@ -55,6 +55,6 @@ export const LearningTimeline = ({ timeline }: { timeline?: any[] }) => {
           </div>
         )}
       </div>
-    </div>
-  );
-};
+    </Card>
+    );
+    };

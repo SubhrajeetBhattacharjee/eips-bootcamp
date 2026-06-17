@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { Copy, Check, Share2 } from 'lucide-react';
+import { Card } from '../ui/Card';
+import { Button } from '../ui/Button';
 
 type ReferralCardProps = {
   referralsCount: number;
@@ -30,9 +32,7 @@ export function ReferralCard({ referralsCount, xp, referralCode }: ReferralCardP
   };
 
   return (
-    <div className="bg-gradient-to-br from-slate-100/90 via-slate-200/70 to-slate-300/50
-      dark:from-slate-800/80 dark:via-slate-900/60 dark:to-slate-900/40 
-      border border-border rounded-2xl p-5 flex flex-col h-full">
+    <Card className="flex flex-col h-full !p-5">
       <div className="mb-4">
         <h3 className="text-foreground font-bold text-base">Your Referral Code</h3>
         <p className="text-muted-foreground text-xs mt-0.5">Share your code and earn XP</p>
@@ -45,12 +45,14 @@ export function ReferralCard({ referralsCount, xp, referralCode }: ReferralCardP
             {referralCode}
           </span>
         </div>
-        <button
+        <Button
+          variant="secondary"
+          size="icon"
           onClick={handleCopy}
-          className="p-2.5 bg-accent hover:bg-accent border border-border rounded-lg transition-all duration-200 text-muted-foreground hover:text-foreground"
+          className="p-2.5 h-auto w-auto"
         >
           {copied ? <Check size={16} className="text-emerald-400" /> : <Copy size={16} />}
-        </button>
+        </Button>
       </div>
 
       {/* Stats row */}
@@ -78,14 +80,14 @@ export function ReferralCard({ referralsCount, xp, referralCode }: ReferralCardP
       </div>
 
       {/* Share CTA */}
-      <button 
+      <Button 
         onClick={handleShare}
-        className="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-sm py-3 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 group mt-auto shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:shadow-[0_0_30px_rgba(16,185,129,0.35)]"
+        className="w-full mt-auto"
+        rightIcon={<Share2 size={15} className="group-hover:rotate-12 transition-transform" />}
       >
-        <Share2 size={15} className="group-hover:rotate-12 transition-transform" />
         {copied ? "Link Copied!" : "Share Referral Link"}
-      </button>
-    </div>
+      </Button>
+    </Card>
   );
 }
 

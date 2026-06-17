@@ -21,9 +21,10 @@ This document provides a comprehensive analysis of the EthShala project, identif
 
 ## 2. UX/UI Inconsistencies
 
-### 🎨 Design System Gaps
-- **Atomic Components:** The project lacks a centralized UI library (Button, Input, Badge, etc.). Tailwind classes are redefined in every component, leading to "visual drift."
-- **Action:** Extract common patterns into `apps/web/app/components/ui`.
+### ✅ Atomic Components (IN PROGRESS)
+- **Shared Library:** Created `Button.tsx`, `Badge.tsx`, and `Card.tsx` in `apps/web/app/components/ui`.
+- **Implementation:** Refactored `HeroSection`, `LearningTimeline`, and `ReferralCard` to use these components.
+- **Action:** Continue extracting patterns for Inputs, Modals, and Skeletons.
 
 ### 📱 Responsive Design & Polish
 - **Layout Hardcoding:** Some dashboard sections use fixed heights or widths that may break on very small or very large screens.
