@@ -135,15 +135,33 @@ export default function MyModulesPage() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-20 border border-border rounded-xl bg-white/[0.01]">
-                  <BookOpen size={32} className="mx-auto mb-3 text-muted-foreground" />
-                  <h3 className="text-lg font-medium text-foreground mb-1">You haven't subscribed to any modules yet</h3>
-                  <p className="text-muted-foreground text-sm mb-6">Head over to the Marketplace to discover and unlock new content.</p>
-                  <Link href="/dashboard/marketplace">
-                    <button className="flex items-center gap-2 px-6 py-3 mx-auto bg-accent hover:bg-accent text-emerald-400 font-bold rounded-xl border border-emerald-500/30 hover:border-emerald-500/50 transition-all">
-                      Go to Marketplace
+                <div className="text-center py-24 border border-border/50 rounded-2xl bg-accent/5 backdrop-blur-sm">
+                  <div className="w-16 h-16 rounded-full bg-accent/50 flex items-center justify-center mx-auto mb-6 border border-border">
+                    <Layers size={32} className="text-muted-foreground" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-foreground mb-2">
+                    {searchQuery ? "No modules found" : "No active modules"}
+                  </h3>
+                  <p className="text-muted-foreground text-lg max-w-md mx-auto mb-8">
+                    {searchQuery 
+                      ? `We couldn't find anything matching "${searchQuery}".` 
+                      : "You haven't subscribed to any modules yet. Start your learning journey today!"}
+                  </p>
+                  
+                  {searchQuery ? (
+                    <button 
+                      onClick={() => setSearchQuery('')}
+                      className="text-emerald-400 font-semibold hover:text-emerald-300 transition-colors"
+                    >
+                      Clear Search
                     </button>
-                  </Link>
+                  ) : (
+                    <Link href="/dashboard/marketplace">
+                      <button className="flex items-center gap-2 px-8 py-3 mx-auto bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-xl transition-all shadow-[0_0_30px_rgba(16,185,129,0.2)]">
+                        Browse Marketplace
+                      </button>
+                    </Link>
+                  )}
                 </div>
               )}
             </div>

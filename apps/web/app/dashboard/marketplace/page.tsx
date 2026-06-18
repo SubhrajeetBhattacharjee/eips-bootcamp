@@ -140,10 +140,26 @@ export default function MarketplacePage() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-20 border border-border rounded-xl bg-white/[0.01]">
-                <Search size={32} className="mx-auto mb-3 text-muted-foreground" />
-                <h3 className="text-lg font-medium text-foreground mb-1">No modules found</h3>
-                <p className="text-muted-foreground text-sm">Try adjusting your search query.</p>
+              <div className="text-center py-24 border border-border/50 rounded-2xl bg-accent/5 backdrop-blur-sm">
+                <div className="w-16 h-16 rounded-full bg-accent/50 flex items-center justify-center mx-auto mb-6 border border-border">
+                  <BookOpen size={32} className="text-muted-foreground" />
+                </div>
+                <h3 className="text-2xl font-bold text-foreground mb-2">
+                  {searchQuery ? "No modules found" : "Marketplace is empty"}
+                </h3>
+                <p className="text-muted-foreground text-lg max-w-md mx-auto">
+                  {searchQuery 
+                    ? `We couldn't find anything matching "${searchQuery}". Try a different search term.` 
+                    : "We're currently updating our curriculum. Check back soon for new Ethereum and Web3 modules!"}
+                </p>
+                {searchQuery && (
+                  <button 
+                    onClick={() => setSearchQuery('')}
+                    className="mt-6 text-emerald-400 font-semibold hover:text-emerald-300 transition-colors"
+                  >
+                    Clear Search
+                  </button>
+                )}
               </div>
             )}
           </div>

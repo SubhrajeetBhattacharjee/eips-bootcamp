@@ -14,6 +14,7 @@ import { LearningProgress } from '@/app/components/dashboard/LearningProgress';
 import { UpcomingEventsWidget } from '@/app/components/dashboard/UpcomingEventsWidget';
 import { EventsCard } from '@/app/components/dashboard/EventsCard';
 import { ProgressWidget } from '@/app/components/dashboard/ProgressWidget';
+import { linkReferral } from '@/app/actions/referrals';
 import type { DashboardData } from '@/app/lib/dashboard';
 
 export default function DashboardPage() {
@@ -44,6 +45,7 @@ export default function DashboardPage() {
       setLoading(true);
 
       try {
+        await linkReferral();
         const res = await fetch(`/api/dashboard?userId=${encodeURIComponent(userId)}`, {
           cache: 'no-store',
         });

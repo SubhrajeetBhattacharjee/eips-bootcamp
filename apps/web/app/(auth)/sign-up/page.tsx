@@ -5,6 +5,7 @@ import { signUp, signIn } from '@/app/lib/auth-client';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Mail, Lock, User } from "lucide-react";
+import { linkReferral } from '@/app/actions/referrals';
 
 export default function SignUp() {
   const [email, setEmail] = useState('');
@@ -37,6 +38,8 @@ export default function SignUp() {
       if (result.error) {
         setError(result.error.message || 'Failed to sign up');
       } else {
+        // Link referral if cookie exists
+        await linkReferral();
         router.push('/dashboard');
       }
     } catch (err: any) {
