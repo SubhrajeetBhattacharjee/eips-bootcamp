@@ -1,6 +1,8 @@
 import React from 'react';
 import { CheckCircle, Circle, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { Card } from '../ui/Card';
+import { Badge } from "../ui/Badge";
 
 export const LearningTimeline = ({ timeline }: { timeline?: any[] }) => {
   const steps = timeline || [];

@@ -5,9 +5,10 @@ import React from 'react';
 interface LogoProps {
   variant?: 'wordmark' | 'symbol';
   size?: 'sm' | 'md' | 'lg';
+  shalaColor?: string;
 }
 
-export function Logo({ variant = 'wordmark', size = 'md' }: LogoProps) {
+export function Logo({ variant = 'wordmark', size = 'md', shalaColor, }: LogoProps) {
   const fontSizes = {
     sm: { wordmark: '1.1rem', symbol: '1.2rem' },
     md: { wordmark: '1.5rem', symbol: '1.6rem' },
@@ -41,7 +42,7 @@ export function Logo({ variant = 'wordmark', size = 'md' }: LogoProps) {
         style={{
           fontFamily: "'Space Grotesk', sans-serif",
           fontWeight: 300,
-          color: 'var(--foreground)',
+          color: shalaColor || 'var(--foreground)',
           letterSpacing: '-0.5px',
           fontSize: currentSize.wordmark,
         }}

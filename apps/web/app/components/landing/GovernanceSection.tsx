@@ -9,6 +9,12 @@ import {
   FileCheck,
 } from 'lucide-react';
 
+type SelectedContent = {
+  label: string;
+  title: string;
+  description: string;
+};
+
 type GovernanceIcon = 'vote' | 'merge' | 'scale' | 'review';
 
 type GovernanceCard = {
@@ -45,7 +51,7 @@ const governanceCards: GovernanceCard[] = [
     icon: 'review',
     title: 'Proposal Lifecycle',
     description:
-      'Understand how proposals move from Draft → Review → Final → Adoption.',
+      'Understand how EIPs progress through Draft → Review → Last Call → Final.',
   },
 ];
 
@@ -59,50 +65,77 @@ const iconMap: Record<GovernanceIcon, React.ReactNode> = {
 const stages = [
   {
     number: '1',
-    title: 'Idea',
+    title: 'Draft',
     overview:
-      'A problem, improvement, or proposal is introduced by contributors. Discussion begins informally across forums and community channels.',
+      'The first formally tracked stage of an EIP. Once properly formatted and accepted by an EIP Editor, the proposal enters active development.',
   },
   {
     number: '2',
-    title: 'Draft',
+    title: 'Review',
     overview:
-      'The proposal is documented formally as an EIP with specification details, motivation, and implementation considerations.',
+      'The author requests peer review. Contributors and experts evaluate the specification and provide feedback.',
   },
   {
     number: '3',
-    title: 'Discussion',
+    title: 'Last Call',
     overview:
-      'Community members, researchers, and maintainers evaluate tradeoffs, challenge assumptions, and refine the proposal.',
+      'The final review period before Final status. The specification is considered stable and open for final ecosystem feedback.',
   },
   {
     number: '4',
-    title: 'Review',
-    overview:
-      'Editors and contributors validate completeness, readiness, and ecosystem alignment before finalization.',
-  },
-  {
-    number: '5',
     title: 'Final',
     overview:
-      'The proposal becomes finalized and may eventually be implemented across Ethereum clients and infrastructure.',
+      'The EIP has reached finality and represents an accepted standard for the Ethereum ecosystem.',
+  },
+];
+
+const specialStatuses = [
+  {
+    title: 'Stagnant',
+    description:
+      'Inactive for six months or more. Can be revived and returned to active development.',
+  },
+  {
+    title: 'Withdrawn',
+    description:
+      'The author has withdrawn the proposal. This status is permanent.',
+  },
+  {
+    title: 'Living',
+    description:
+      'Continuously updated EIPs that are not intended to reach finality.',
   },
 ];
 
 export function GovernanceSection() {
     const [activeStage, setActiveStage] = useState(0);
     const [paused, setPaused] = useState(false);
+    const [overrideContent, setOverrideContent] = useState<null | {
+      label: string;
+      title: string;
+      description: string;
+    }>(null);
+
+    const displayContent = overrideContent ?? {
+      label: `Stage ${stages[activeStage].number}`,
+      title: stages[activeStage].title,
+      description: stages[activeStage].overview,
+    };
 
     // Auto loop
     useEffect(() => {
-    if (paused) return;
+      if (paused || overrideContent) return;
 
-    const interval = setInterval(() => {
-        setActiveStage((prev) => (prev + 1) % stages.length);
-    }, 2500);
+      const interval = setInterval(() => {
+        setActiveStage((prev) => {
+          const next = (prev + 1) % stages.length;
 
-    return () => clearInterval(interval);
-    }, [paused]);
+          return next;
+        });
+      }, 2500);
+
+      return () => clearInterval(interval);
+    }, [paused, overrideContent]);
 
   return (
     <section
@@ -111,142 +144,192 @@ export function GovernanceSection() {
     >
       <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[600px] h-[300px] bg-emerald-500/4 blur-3xl pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        <div className="max-w-2xl mb-12">
-          <p className="text-emerald-400 text-sm font-semibold tracking-wide mb-3">
-            Governance
-          </p>
+          <div className="max-w-2xl mb-12">
+            <p className="text-emerald-400 text-sm font-semibold tracking-wide mb-3">
+              Governance
+            </p>
 
-          <h2 className="text-foreground font-black text-3xl sm:text-4xl leading-tight">
-            Understand how Ethereum makes decisions
-          </h2>
+            <h2 className="text-foreground font-black text-3xl sm:text-4xl leading-tight">
+              Understand how Ethereum makes decisions
+            </h2>
 
-          <p className="text-muted-foreground mt-3">
-            Governance in Ethereum happens through open discussion,
-            proposal review, and rough consensus - not centralized control.
-          </p>
-        </div>
+            <p className="text-muted-foreground mt-3">
+              Governance in Ethereum happens through open discussion,
+              proposal review, and rough consensus - not centralized control.
+            </p>
+          </div>
 
-        <div className="grid lg:grid-cols-[1.3fr_1fr] gap-10">
+          <div className="grid lg:grid-cols-[1.3fr_1fr] gap-10">
+            <div className="rounded-2xl border border-border bg-card p-8 relative overflow-hidden min-h-[420px]">
 
-          
-          <div className="rounded-2xl border border-border bg-card p-8 relative overflow-hidden min-h-[420px]">
+              <div className="absolute right-0 top-0 w-56 h-56 bg-emerald-500/5 blur-3xl pointer-events-none" />
 
-      <div className="absolute right-0 top-0 w-56 h-56 bg-emerald-500/5 blur-3xl pointer-events-none" />
+              {/* Timeline */}
+              <div className="flex flex-wrap items-center gap-4"
+                onMouseEnter={() => setPaused(true)}
+                onMouseLeave={() => setPaused(false)}>
 
-      {/* Timeline */}
-      <div className="flex flex-wrap items-center gap-4"
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}>
+                {stages.map((stage, idx) => (
+                  <div
+                    key={stage.number}
+                    className="flex items-center flex-1 min-w-[90px]"
+                  >
+                    <div
+                      onMouseEnter={() => {
+                        setActiveStage(idx);
+                        // setSelectedContent({
+                        //   label: `Stage ${stage.number}`,
+                        //   title: stage.title,
+                        //   description: stage.overview,
+                        // });
+                      }}
+                      onFocus={() => {
+                        setActiveStage(idx);
+                        // setSelectedContent({
+                        //   label: `Stage ${stage.number}`,
+                        //   title: stage.title,
+                        //   description: stage.overview,
+                        // });
+                      }}
+                      className="group cursor-pointer flex flex-col items-center w-[100px] p-2 rounded-xl"
+                    >
+                      <div
+                        className={`
+                          w-16 h-16 rounded-xl
+                          border
+                          flex items-center justify-center
+                          font-bold text-xl
+                          transition-all duration-300
+                          ${
+                            activeStage === idx
+                              ? 'bg-emerald-500/15 border-emerald-500 text-emerald-400 shadow-[0_0_25px_rgba(16,185,129,.15)]'
+                              : 'bg-emerald-500/5 border-emerald-500/20 text-emerald-300'
+                          }
+                        `}
+                      >
+                        {stage.number}
+                      </div>
 
-        {stages.map((stage, idx) => (
-          <div
-            key={stage.number}
-            className="flex items-center flex-1 min-w-[90px]"
-          >
-            <div
-              onMouseEnter={() => setActiveStage(idx)}
-              onFocus={() => setActiveStage(idx)}
-              onClick={() => setActiveStage(idx)}
-              className="group cursor-pointer flex flex-col items-center w-[100px] p-2 rounded-xl"
-            >
-              <div
-                className={`
-                  w-16 h-16 rounded-xl
-                  border
-                  flex items-center justify-center
-                  font-bold text-xl
-                  transition-all duration-300
-                  ${
-                    activeStage === idx
-                      ? 'bg-emerald-500/15 border-emerald-500 text-emerald-400 shadow-[0_0_25px_rgba(16,185,129,.15)]'
-                      : 'bg-emerald-500/5 border-emerald-500/20 text-emerald-300'
-                  }
-                `}
-              >
-                {stage.number}
+                      <span
+                        className={`
+                          mt-4 text-lg transition-colors
+                          ${
+                            activeStage === idx
+                              ? 'text-emerald-500'
+                              : 'text-muted-foreground'
+                          }
+                        `}
+                      >
+                        {stage.title}
+                      </span>
+                    </div>
+
+                    {idx < stages.length - 1 && (
+                      <div className="hidden sm:block flex-1 h-px mx-4 bg-gradient-to-r from-emerald-500/40 to-transparent" />
+                    )}
+                  </div>
+                ))}
               </div>
 
-              <span
-                className={`
-                  mt-4 text-lg transition-colors
-                  ${
-                    activeStage === idx
-                      ? 'text-white'
-                      : 'text-muted-foreground'
-                  }
-                `}
-              >
-                {stage.title}
-              </span>
-            </div>
+              {/* Dynamic Overview Panel */}
 
-            {idx < stages.length - 1 && (
-              <div className="hidden sm:block flex-1 h-px mx-4 bg-gradient-to-r from-emerald-500/40 to-transparent" />
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* Dynamic Overview Panel */}
-
-      <div
-        className="
-          mt-14
-          rounded-xl
-          border
-          border-emerald-500/10
-          bg-white/[0.02]
-          p-6
-          transition-all
-          duration-300
-          min-h-[180px]
-        "
-      >
-        <div className="text-emerald-400 text-xs font-semibold uppercase tracking-wide mb-3">
-          Stage {stages[activeStage].number}
-        </div>
-
-        <h3 className="text-2xl font-bold text-foreground mb-4">
-          {stages[activeStage].title}
-        </h3>
-
-        <p className="text-muted-foreground leading-8 max-w-2xl">
-          {stages[activeStage].overview}
-        </p>
-      </div>
-
-    </div>
-
-          {/* Governance Cards */}
-          <div className="grid gap-4">
-            {governanceCards.map((card) => (
               <div
-                key={card.id}
-                className="rounded-2xl border border-border bg-card p-5"
+                className="
+                  mt-14
+                  rounded-xl
+                  border
+                  border-emerald-500/10
+                  bg-white/[0.02]
+                  p-6
+                  transition-all
+                  duration-300
+                  min-h-[180px]
+                "
               >
-                <div className="flex gap-3">
-                  <div className="w-11 h-11 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-                    {iconMap[card.icon]}
+                <div className="text-emerald-400 text-xs font-semibold uppercase tracking-wide mb-3">
+                  <div className="text-emerald-400 text-xs font-semibold uppercase tracking-wide mb-3">
+                    {displayContent.label}
                   </div>
 
-                  <div>
-                    <h3 className="font-bold text-foreground">
-                      {card.title}
-                    </h3>
+                  <h3 className="text-2xl font-bold text-foreground mb-4">
+                    {displayContent.title}
+                  </h3>
 
-                    <p className="text-sm text-muted-foreground mt-2">
-                      {card.description}
-                    </p>
-                  </div>
+                  <p className="text-muted-foreground leading-8 max-w-2xl min-h-16">
+                    {displayContent.description}
+                  </p>
+                </div>
+
+              </div>
+        
+              {/* Special Statuses */}
+              <div className="mt-8 border-t border-border pt-6">
+                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-4 text-center">
+                  Special Statuses
+                </p>
+
+                <div className="flex flex-wrap justify-center gap-3">
+                  {specialStatuses.map((status) => (
+                    <button
+                      key={status.title}
+                      onMouseEnter={() =>
+                        setOverrideContent({
+                          label: "Special Status",
+                          title: status.title,
+                          description: status.description,
+                        })
+                      }
+                      onMouseLeave={() => setOverrideContent(null)}
+                      className="
+                        px-4 py-2
+                        rounded-lg
+                        border border-border
+                        bg-background/50
+                        text-sm font-medium
+                        text-foreground
+                        hover:text-emerald-500
+                        hover:border-emerald-500/30
+                        transition-colors
+                      "
+                    >
+                      {status.title}
+                    </button>
+                  ))}
                 </div>
               </div>
-            ))}
-          </div>
 
+            </div>
+
+            {/* Governance Cards */}
+            <div className="grid gap-4">
+              {governanceCards.map((card) => (
+                <div
+                  key={card.id}
+                  className="rounded-2xl border border-border bg-card p-5"
+                >
+                  <div className="flex gap-3">
+                    <div className="w-11 h-11 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                      {iconMap[card.icon]}
+                    </div>
+
+                    <div>
+                      <h3 className="font-bold text-foreground">
+                        {card.title}
+                      </h3>
+
+                      <p className="text-sm text-muted-foreground mt-2">
+                        {card.description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+          </div>
         </div>
-      </div>
     </section>
   );
 }

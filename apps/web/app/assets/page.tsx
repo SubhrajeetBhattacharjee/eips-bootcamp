@@ -73,7 +73,7 @@ export default function AssetsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <Card className="flex flex-col !p-0 overflow-hidden border-border bg-white">
               <div className="p-4 border-b border-border">
-                <Badge variant="neutral" className="text-slate-900 border-slate-200 bg-slate-50">Light Theme Usage</Badge>
+                <Badge variant="neutral" className="text-slate-900 !border !border-border bg-slate-50 dark:bg-white/5 dark:text-white">Light Theme Usage</Badge>
               </div>
               <div className="h-40 flex items-center justify-center bg-slate-50">
                 <div className="flex items-center gap-3 scale-125 pointer-events-none">
@@ -87,7 +87,7 @@ export default function AssetsPage() {
                       darkSrc="/brand/ethshala_logo_black.svg"
                     />
                   </div>
-                  <Logo />
+                  <Logo shalaColor="#0a0c0b" />
                 </div>
               </div>
               <div className="p-6">
@@ -97,9 +97,9 @@ export default function AssetsPage() {
               </div>
             </Card>
 
-            <Card className="flex flex-col !p-0 overflow-hidden border-white/5 bg-[#0a0c0b]">
+            <Card className="flex flex-col !p-0 overflow-hidden border-border bg-[#0a0c0b]">
               <div className="p-4 border-b border-white/5">
-                <Badge variant="neutral" className="text-white border-white/10 bg-white/5">Dark Theme Usage</Badge>
+                <Badge variant="neutral" className="bg-slate-50 text-slate-900 !border !border-border dark:text-white dark:bg-white/5">Dark Theme Usage</Badge>
               </div>
               <div className="h-40 flex items-center justify-center bg-[#121413]">
                 <div className="flex items-center gap-3 scale-125 pointer-events-none">
@@ -113,7 +113,7 @@ export default function AssetsPage() {
                       darkSrc="/brand/ethshala_logo_white.svg"
                     />
                   </div>
-                  <Logo />
+                  <Logo shalaColor="#ffffff" />
                 </div>
               </div>
               <div className="p-6">
