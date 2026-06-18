@@ -45,7 +45,7 @@ const governanceCards: GovernanceCard[] = [
     icon: 'review',
     title: 'Proposal Lifecycle',
     description:
-      'Understand how proposals move from Draft → Review → Final → Adoption.',
+      'Understand how EIPs progress through Draft → Review → Last Call → Final.',
   },
 ];
 
@@ -59,33 +59,45 @@ const iconMap: Record<GovernanceIcon, React.ReactNode> = {
 const stages = [
   {
     number: '1',
-    title: 'Idea',
+    title: 'Draft',
     overview:
-      'A problem, improvement, or proposal is introduced by contributors. Discussion begins informally across forums and community channels.',
+      'The first formally tracked stage of an EIP. Once properly formatted and accepted by an EIP Editor, the proposal enters active development.',
   },
   {
     number: '2',
-    title: 'Draft',
+    title: 'Review',
     overview:
-      'The proposal is documented formally as an EIP with specification details, motivation, and implementation considerations.',
+      'The author requests peer review. Contributors and experts evaluate the specification and provide feedback.',
   },
   {
     number: '3',
-    title: 'Discussion',
+    title: 'Last Call',
     overview:
-      'Community members, researchers, and maintainers evaluate tradeoffs, challenge assumptions, and refine the proposal.',
+      'The final review period before Final status. The specification is considered stable and open for final ecosystem feedback.',
   },
   {
     number: '4',
-    title: 'Review',
-    overview:
-      'Editors and contributors validate completeness, readiness, and ecosystem alignment before finalization.',
-  },
-  {
-    number: '5',
     title: 'Final',
     overview:
-      'The proposal becomes finalized and may eventually be implemented across Ethereum clients and infrastructure.',
+      'The EIP has reached finality and represents an accepted standard for the Ethereum ecosystem.',
+  },
+];
+
+const specialStatuses = [
+  {
+    title: 'Stagnant',
+    description:
+      'Inactive for six months or more. Can be revived and returned to active development.',
+  },
+  {
+    title: 'Withdrawn',
+    description:
+      'The author has withdrawn the proposal. This status is permanent.',
+  },
+  {
+    title: 'Living',
+    description:
+      'Continuously updated EIPs that are not intended to reach finality.',
   },
 ];
 
@@ -173,7 +185,7 @@ export function GovernanceSection() {
                   mt-4 text-lg transition-colors
                   ${
                     activeStage === idx
-                      ? 'text-white'
+                      ? 'text-emerald-500'
                       : 'text-muted-foreground'
                   }
                 `}
@@ -215,6 +227,38 @@ export function GovernanceSection() {
         <p className="text-muted-foreground leading-8 max-w-2xl">
           {stages[activeStage].overview}
         </p>
+      </div>
+      
+      {/* Special Statuses */}
+      <div className="mt-6">
+        <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3">
+          Special Statuses
+        </p>
+
+        <div className="flex flex-wrap gap-2 justify-center">
+          {specialStatuses.map((status) => (
+            <div
+              key={status.title}
+              className="
+                relative
+                px-3 py-2
+                rounded-lg
+                border border-border
+                bg-background/50
+                group
+                cursor-default
+              "
+            >
+              <span className="text-sm font-medium text-foreground hover:text-emerald-500">
+                {status.title}
+              </span>
+
+              <p className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-10 w-64 rounded-lg border border-border bg-card p-3 text-xs text-muted-foreground shadow-lg">
+                {status.description}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
 
     </div>
