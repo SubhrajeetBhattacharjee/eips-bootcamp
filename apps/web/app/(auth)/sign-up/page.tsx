@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Mail, Lock, User } from "lucide-react";
 import { linkReferral } from '@/app/actions/referrals';
+import { toast } from 'sonner';
 
 export default function SignUp() {
   const [email, setEmail] = useState('');
@@ -37,13 +38,16 @@ export default function SignUp() {
       });
       if (result.error) {
         setError(result.error.message || 'Failed to sign up');
+        toast.error(result.error.message || 'Failed to sign up');
       } else {
+        toast.success('Account created successfully!');
         // Link referral if cookie exists
         await linkReferral();
         router.push('/dashboard');
       }
     } catch (err: any) {
       setError(err.message || 'Failed to sign up');
+      toast.error(err.message || 'An unexpected error occurred');
     } finally {
       setLoading(false);
     }

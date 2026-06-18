@@ -1,4 +1,11 @@
 import React from 'react';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "About Us",
+  description: "Learn about the mission, the team, and the story behind EthShala - your gateway to mastering Ethereum Improvement Proposals.",
+};
+
 import { Navbar } from '../components/landing/Navbar';
 import { Footer } from '../components/landing/Footer';
 import TeamCard from '../components/about/TeamCard';

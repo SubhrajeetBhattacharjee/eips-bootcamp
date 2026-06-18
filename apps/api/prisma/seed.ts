@@ -13,7 +13,7 @@ const modules = [
     orderIndex: 1,
     category: 'Beginner',
     isPremium: false,
-    thumbnailUrl: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=2832&auto=format&fit=crop',
+    thumbnailUrl: '/brand/ethshala_logo.svg',
     lessons: [
       { id: '1.1', title: 'What is an EIP?', duration: '12 min', description: 'Understand the definition and purpose of Ethereum Improvement Proposals', orderIndex: 1 },
       { id: '1.2', title: 'EIP Categories and Types', duration: '15 min', description: 'Explore different types of EIPs: Core, Networking, Interface, etc.', orderIndex: 2 },

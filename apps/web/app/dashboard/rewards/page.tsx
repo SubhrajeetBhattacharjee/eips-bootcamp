@@ -13,6 +13,7 @@ import { EarnXPCard } from '@/app/components/rewards/EarnXPCard';
 import { RewardsHistoryCard } from '@/app/components/rewards/RewardsHistoryCard';
 import { RewardCategory, Reward, UserReward } from '@/app/lib/rewards';
 import { useSession } from '@/app/lib/auth-client';
+import { toast } from 'sonner';
 
 export default function RewardsPage() {
   const { data: session } = useSession();
@@ -75,14 +76,15 @@ export default function RewardsPage() {
         body: JSON.stringify({ userId: user.id, rewardId }),
       });
       if (response.ok) {
+        toast.success('Reward redeemed successfully!');
         await refreshRewardsData(); // Refresh everything
       } else {
         const err = await response.json();
-        alert(err.message || 'Failed to redeem reward');
+        toast.error(err.message || 'Failed to redeem reward');
       }
     } catch (error) {
       console.error('Failed to redeem reward:', error);
-      alert('Failed to redeem reward');
+      toast.error('An unexpected error occurred');
     }
   };
 
