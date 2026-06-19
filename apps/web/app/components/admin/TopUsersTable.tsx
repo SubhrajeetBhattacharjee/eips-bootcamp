@@ -115,7 +115,7 @@ export function TopUsersTable({ users }: TopUsersTableProps) {
               <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">Rank</th>
               <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">User</th>
               <th className="px-6 py-4 text-right text-xs font-semibold text-muted-foreground uppercase tracking-wide">XP Earned</th>
-              <th className="px-6 py-4 text-right text-xs font-semibold text-muted-foreground uppercase tracking-wide">Lessons Completed</th>
+              <th className="px-6 py-4 text-right text-xs font-semibold text-muted-foreground uppercase tracking-wide">Modules Completed</th>
               <th className="px-6 py-4 text-right text-xs font-semibold text-muted-foreground uppercase tracking-wide">Streak</th>
               <th className="px-6 py-4 text-right text-xs font-semibold text-muted-foreground uppercase tracking-wide">Joined</th>
             </tr>

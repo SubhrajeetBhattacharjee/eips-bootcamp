@@ -163,16 +163,72 @@ export class ReferralsService {
         capApplication: true,
         xpTransactions: true,
         lessonProgress: true,
+        assignmentSubmissions: true,
         referralCode: {
           include: { referrals: true },
         },
       },
     });
 
+    const [allModules, allAssignments] = await Promise.all([
+      this.prisma.module.findMany({
+        include: {
+          lessons: true
+        }
+      }),
+
+      this.prisma.assignment.findMany()
+    ]);
+
     const leaderboard = users.map((user) => {
       const xp = user.xpTransactions.reduce((sum, tx) => sum + tx.amount, 0);
       const referralsCount = user.referralCode?.referrals?.length || 0;
-      const completedLessons = user.lessonProgress.length;
+      const completedLessonIds = new Set(
+        user.lessonProgress.map(lp => lp.lessonId)
+      );
+
+      let modulesCompleted = 0;
+
+      for (const mod of allModules) {
+        const modAssignments = allAssignments.filter(
+          a => a.module === mod.id
+        );
+
+
+        const totalItems =
+          mod.lessons.length + modAssignments.length;
+
+
+        if (totalItems === 0) continue;
+
+
+        let completedItems = 0;
+
+
+        for (const lesson of mod.lessons) {
+          if (completedLessonIds.has(lesson.id)) {
+            completedItems++;
+          }
+        }
+
+
+        for (const assignment of modAssignments) {
+          const submission = user.assignmentSubmissions.find(
+            s => s.assignmentId === assignment.id
+          );
+
+          if (submission?.status === 'COMPLETED') {
+            completedItems++;
+          }
+        }
+
+
+        if (completedItems === totalItems) {
+          modulesCompleted++;
+        }
+      }
+
+
       return {
         userId: user.id,
         name:
@@ -186,7 +242,7 @@ export class ReferralsService {
         referrals: referralsCount,
         capStatus: user.capApplication?.status || 'None',
         streak: 0,
-        modulesCompleted: completedLessons,
+        modulesCompleted,
         createdAt: user.createdAt,
       };
     });
