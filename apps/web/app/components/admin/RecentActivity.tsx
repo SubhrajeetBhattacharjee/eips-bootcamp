@@ -69,7 +69,7 @@ function formatTime(date: Date) {
 
 export function RecentActivity({ activities }: RecentActivityProps) {
   return (
-    <div className="rounded-xl border border-emerald-500/20 bg-background/40 backdrop-blur-xl overflow-hidden shadow-lg shadow-emerald-500/10 h-fit">
+    <div className="rounded-xl border border-emerald-500/20 bg-background/40 backdrop-blur-xl overflow-hidden shadow-lg shadow-emerald-500/10 h-[400px] flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between p-6 border-b border-emerald-500/10">
         <h3 className="text-foreground font-semibold text-lg">Recent Activity</h3>
@@ -83,7 +83,7 @@ export function RecentActivity({ activities }: RecentActivityProps) {
       </div>
 
       {/* Activity List */}
-      <div className="divide-y divide-emerald-500/10 max-h-[500px] overflow-y-auto">
+      <div className="flex-1 divide-y divide-emerald-500/10 overflow-y-auto">
         {activities.map((activity, index) => (
           <div
             key={activity.id}
@@ -121,7 +121,7 @@ export function RecentActivity({ activities }: RecentActivityProps) {
       </div>
 
       {/* Footer with fade gradient */}
-      <div className="h-8 bg-gradient-to-b from-transparent to-black/20" />
+      <div className="h-2 bg-gradient-to-b from-transparent to-black/20" />
     </div>
   );
 }
