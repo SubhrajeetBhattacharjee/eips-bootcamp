@@ -68,9 +68,9 @@ export class CapService {
         track: 'Smart Contract',
         batch: `Batch ${app.graduationYear}`,
         status: app.status.toLowerCase(),
-        appliedDate: app.createdAt.toISOString().split('T')[0],
+        appliedDate: app.createdAt.toISOString(),
         avatar:
-          user.profile?.avatarUrl ||
+          user.profile?.avatarUrl || user.image ||
           `https://api.dicebear.com/7.x/avataaars/svg?seed=${app.fullName}`,
         referralCount,
         xp,

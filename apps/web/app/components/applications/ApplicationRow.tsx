@@ -6,9 +6,6 @@ import { getStatusColor, getTrackColor, getStatusIcon } from '@/app/lib/applicat
 import type { Application } from '@/app/lib/applications';
 
 function Avatar({ name, avatar, className }: { name: string; avatar?: string; className?: string }) {
-  // if (avatarUrl && avatarUrl.trim() !== '') {
-  //   return <img src={avatarUrl} alt={name} className={className} />;
-  // }
   const initials = name.replace(/[^a-zA-Z]/g, '').slice(0, 2).toUpperCase() || 'U';
   const colors = ['bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300', 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300', 'bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300', 'bg-pink-100 text-pink-800 dark:bg-pink-900/50 dark:text-pink-300', 'bg-orange-100 text-orange-800 dark:bg-orange-900/50 dark:text-orange-300'];
   const idx = name.charCodeAt(0) % colors.length;
