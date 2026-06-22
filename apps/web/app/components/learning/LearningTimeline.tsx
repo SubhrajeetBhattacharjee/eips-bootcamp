@@ -39,13 +39,32 @@ export const LearningTimeline = ({ timeline }: { timeline?: any[] }) => {
 
                   {/* Card wrapper */}
                   <div className="w-[calc(100%-2.5rem)] md:w-[calc(50%-1.5rem)] p-4 rounded-xl border border-border bg-white/[0.02] hover:bg-white/[0.04] transition-colors z-10">
-                    <div className="flex items-center justify-between mb-1">
-                      <h4 className={`text-sm font-bold ${isLocked ? 'text-muted-foreground' : 'text-foreground'}`}>{step.title}</h4>
-                      {!isLocked && (
-                        <Badge variant={isCompleted ? 'success' : 'info'} dot>
-                          {isCompleted ? 'Done' : 'Active'}
-                        </Badge>
-                      )}
+                    <div className="mb-1">
+                      <div className="hidden md:block mb-2">
+                        {!isLocked && (
+                          <Badge variant={isCompleted ? 'success' : 'info'} dot>
+                            {isCompleted ? 'Done' : 'Active'}
+                          </Badge>
+                        )}
+                      </div>
+
+                      <div className="flex items-center justify-between md:block">
+                        <h4
+                          className={`text-sm font-bold ${
+                            isLocked ? 'text-muted-foreground' : 'text-foreground'
+                          }`}
+                        >
+                          {step.title}
+                        </h4>
+
+                        <div className="md:hidden">
+                          {!isLocked && (
+                            <Badge variant={isCompleted ? 'success' : 'info'} dot>
+                              {isCompleted ? 'Done' : 'Active'}
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
                     </div>
                     <p className={`text-xs line-clamp-2 ${isLocked ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
                       {step.description}
