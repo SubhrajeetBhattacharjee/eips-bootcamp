@@ -121,7 +121,7 @@ export function Sidebar({ mobileOpen, onMobileClose, collapsed, toggleSidebar, }
   const [showUpgradeCTA, setShowUpgradeCTA] = useState(true);
   // Added the CTA state and effect
   useEffect(() => {
-    const isDismissed = localStorage.getItem('upgrade-cta-dismissed');
+    const isDismissed = sessionStorage.getItem('upgrade-cta-dismissed');
 
     if (isDismissed === 'true') {
       setShowUpgradeCTA(false);
@@ -129,7 +129,7 @@ export function Sidebar({ mobileOpen, onMobileClose, collapsed, toggleSidebar, }
   }, []);
   // Add the CTA dismiss handler
   const dismissUpgradeCTA = () => {
-  localStorage.setItem('upgrade-cta-dismissed', 'true');
+  sessionStorage.setItem('upgrade-cta-dismissed', 'true');
   setShowUpgradeCTA(false);
 };
 
