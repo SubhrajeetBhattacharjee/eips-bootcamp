@@ -119,17 +119,32 @@ export function Sidebar({ mobileOpen, onMobileClose, collapsed, toggleSidebar, }
   const pathname = usePathname() || '';
 
   const [showUpgradeCTA, setShowUpgradeCTA] = useState(true);
-  // Added the CTA state and effect
+  // Check if the upgrade CTA was previously dismissed and whether the dismissal period is still active
   useEffect(() => {
-    const isDismissed = sessionStorage.getItem('upgrade-cta-dismissed');
+  const dismissedAt = localStorage.getItem("upgrade-cta-dismissed");
 
-    if (isDismissed === 'true') {
+  if (dismissedAt) {
+    const expiry = Number(dismissedAt);
+    
+    // Hide CTA if the user dismissed it within the last 7 days
+    if (Date.now() < expiry) {
       setShowUpgradeCTA(false);
+    } else {
+      // Remove expired dismissal so the CTA can be shown again
+      localStorage.removeItem("upgrade-cta-dismissed");
     }
-  }, []);
-  // Add the CTA dismiss handler
+  }
+}, []);
+
+  // Store CTA dismissal timestamp with a 7-day expiry and hide the CTA immediately
   const dismissUpgradeCTA = () => {
-  sessionStorage.setItem('upgrade-cta-dismissed', 'true');
+  const sevenDays = 7 * 24 * 60 * 60 * 1000;
+
+  localStorage.setItem(
+    "upgrade-cta-dismissed",
+    String(Date.now() + sevenDays)
+  );
+
   setShowUpgradeCTA(false);
 };
 
