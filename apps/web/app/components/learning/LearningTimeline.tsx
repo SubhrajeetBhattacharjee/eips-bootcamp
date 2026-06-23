@@ -11,7 +11,7 @@ export const LearningTimeline = ({ timeline }: { timeline?: any[] }) => {
     <Card className="flex flex-col h-full">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-foreground font-bold text-base">ETHShala Timeline</h3>
-        <Link href="/dashboard/bootcamp">
+        <Link href="/dashboard/my-modules">
           <button className="text-emerald-400 text-xs font-semibold hover:text-emerald-300 transition-colors flex items-center gap-1">
             View All <ArrowRight size={12} />
           </button>
@@ -39,13 +39,32 @@ export const LearningTimeline = ({ timeline }: { timeline?: any[] }) => {
 
                   {/* Card wrapper */}
                   <div className="w-[calc(100%-2.5rem)] md:w-[calc(50%-1.5rem)] p-4 rounded-xl border border-border bg-white/[0.02] hover:bg-white/[0.04] transition-colors z-10">
-                    <div className="flex items-center justify-between mb-1">
-                      <h4 className={`text-sm font-bold ${isLocked ? 'text-muted-foreground' : 'text-foreground'}`}>{step.title}</h4>
-                      {!isLocked && (
-                        <Badge variant={isCompleted ? 'success' : 'info'} dot>
-                          {isCompleted ? 'Done' : 'Active'}
-                        </Badge>
-                      )}
+                    <div className="mb-1">
+                      <div className="hidden md:block mb-2">
+                        {!isLocked && (
+                          <Badge variant={isCompleted ? 'success' : 'info'} dot>
+                            {isCompleted ? 'Done' : 'Active'}
+                          </Badge>
+                        )}
+                      </div>
+
+                      <div className="flex items-center justify-between md:block">
+                        <h4
+                          className={`text-sm font-bold ${
+                            isLocked ? 'text-muted-foreground' : 'text-foreground'
+                          }`}
+                        >
+                          {step.title}
+                        </h4>
+
+                        <div className="md:hidden">
+                          {!isLocked && (
+                            <Badge variant={isCompleted ? 'success' : 'info'} dot>
+                              {isCompleted ? 'Done' : 'Active'}
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
                     </div>
                     <p className={`text-xs line-clamp-2 ${isLocked ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
                       {step.description}

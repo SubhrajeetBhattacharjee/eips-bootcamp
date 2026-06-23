@@ -22,25 +22,35 @@ export const LearningStreak = ({ streakData }: { streakData?: any[] }) => {
   );
 
   /**
-   * Generate FULL 1-year GitHub-style grid (no breaking change to logic)
-   */
+ * Generate GitHub-style 1 year grid
+ * Always keeps full 7-day columns
+ */
   const ensureData = () => {
     const data: any[] = [];
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    for (let i = 364; i >= 0; i--) {
-      const date = new Date(today);
-      date.setDate(date.getDate() - i);
+    // Start 1 year ago
+    const startDate = new Date(today);
+    startDate.setDate(startDate.getDate() - 364);
 
-      const key = date.toDateString();
+    // Align start to Sunday (GitHub style)
+    startDate.setDate(startDate.getDate() - startDate.getDay());
+
+    const current = new Date(startDate);
+
+    while (current <= today) {
+      const key = current.toDateString();
 
       data.push({
-        date,
+        date: new Date(current),
         intensity: intensityMap.get(key) || 0,
       });
+
+      current.setDate(current.getDate() + 1);
     }
 
+    // Always remove incomplete last week padding
     return data;
   };
 
@@ -83,7 +93,7 @@ export const LearningStreak = ({ streakData }: { streakData?: any[] }) => {
   }
 
   /**
-   * FIXED: GitHub-style weekly grouping (no more 7-day bug)
+   * GitHub style weekly columns
    */
   const weeks: any[][] = [];
   let currentWeek: any[] = [];
@@ -91,13 +101,14 @@ export const LearningStreak = ({ streakData }: { streakData?: any[] }) => {
   finalData.forEach((day) => {
     currentWeek.push(day);
 
-    const dayOfWeek = new Date(day.date).getDay(); // 0 = Sunday
-
-    if (dayOfWeek === 6) {
+    if (currentWeek.length === 7) {
       weeks.push(currentWeek);
       currentWeek = [];
     }
   });
+  
+  // Added weekday labels
+  const weekdays = ['Mon', 'Wed', 'Fri'];
 
   if (currentWeek.length) weeks.push(currentWeek);
 
@@ -168,41 +179,98 @@ export const LearningStreak = ({ streakData }: { streakData?: any[] }) => {
           </div>
 
           {/* Heatmap */}
-          <div className="pt-2 pl-4 custom-scrollbar">
-            <div className="flex gap-1.5 mb-4 min-w-max">
+          <div className="pt-4 flex justify-center overflow-visible">
+            <div className="flex">
 
-              {weeks.map((week, weekIndex) => (
-                <div key={weekIndex} className="flex flex-col gap-1.5">
+              {/* Weekday labels */}
+              <div className="flex flex-col gap-2 mr-3 pt-5 text-xs text-muted-foreground">
+                <span className="h-4"></span>
+                <span className="h-4">Mon</span>
+                <span className="h-3.5"></span>
+                <span className="h-4">Wed</span>
+                <span className="h-3"></span>
+                <span className="h-4">Fri</span>
+              </div>
 
-                  {week.map((day, dayIndex) => {
-                    const dateObj = new Date(day.date);
+              <div>
+
+                {/* Month labels */}
+                <div className="flex gap-1.5 mb-2 h-4">
+                  {weeks.map((week, index) => {
+                    const date = new Date(week[0].date);
+
+                    const currentMonth = date.getMonth();
+
+                    const previousMonth =
+                      index > 0
+                        ? new Date(weeks[index - 1][0].date).getMonth()
+                        : null;
+
+                    const showMonth =
+                      index === 0 || currentMonth !== previousMonth;
+
 
                     return (
                       <div
-                        key={dayIndex}
-                        className={`w-4 h-4 rounded-sm border transition-all duration-200 hover:ring-2 hover:ring-emerald-400/50 cursor-pointer group/day relative ${getColor(
-                          day.intensity
-                        )}`}
+                        key={index}
+                        className="w-4 text-[11px] text-muted-foreground"
                       >
-                        {/* Tooltip */}
-                        <div className="absolute z-50 left-1/2 -translate-x-1/2 bottom-full mb-2 px-2 py-1 rounded-md text-[11px] leading-tight text-white bg-black/90 backdrop-blur-md border border-white/10 shadow-xl whitespace-nowrap pointer-events-none opacity-0 group-hover/day:opacity-100 transition-opacity duration-150">
-                          {dateObj.toLocaleDateString(undefined, {
-                            month: 'short',
-                            day: 'numeric',
-                            year: 'numeric',
-                          })}
-                          <div className="text-[10px] text-white/70 mt-0.5">
-                            {day.intensity > 0
-                              ? `Activity level ${day.intensity}`
-                              : 'No activity'}
-                          </div>
-                        </div>
+                        {showMonth
+                          ? date.toLocaleString('default', {
+                              month: 'short',
+                            })
+                          : ''}
                       </div>
                     );
                   })}
+                </div>
+
+
+                {/* Heatmap columns */}
+                <div className="flex gap-1.5">
+
+                  {weeks.map((week, weekIndex) => (
+                    <div
+                      key={weekIndex}
+                      className="flex flex-col gap-1.5"
+                    >
+
+                      {week.map((day, dayIndex) => {
+                        const dateObj = new Date(day.date);
+
+                        return (
+                          <div
+                            key={dayIndex}
+                            className={`w-4 h-4 rounded-sm border transition-all duration-200 hover:ring-2 hover:ring-emerald-400/50 cursor-pointer group/day relative ${getColor(
+                              day.intensity
+                            )}`}
+                          >
+
+                            {/* Tooltip */}
+                            <div className="absolute z-50 left-1/2 -translate-x-1/2 bottom-full mb-2 px-2 py-1 rounded-md text-[11px] leading-tight text-white bg-black/90 backdrop-blur-md border border-white/10 shadow-xl whitespace-nowrap pointer-events-none opacity-0 group-hover/day:opacity-100 transition-opacity duration-150">
+                              {dateObj.toLocaleDateString(undefined, {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric',
+                              })}
+
+                              <div className="text-[10px] text-white/70 mt-0.5">
+                                {day.intensity > 0
+                                  ? `Activity level ${day.intensity}`
+                                  : 'No activity'}
+                              </div>
+                            </div>
+
+                          </div>
+                        );
+                      })}
+
+                    </div>
+                  ))}
 
                 </div>
-              ))}
+
+              </div>
 
             </div>
           </div>
