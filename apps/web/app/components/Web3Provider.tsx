@@ -34,11 +34,7 @@ const config = getDefaultConfig({
   transports: {
     [mainnet.id]: http('https://cloudflare-eth.com'),
   },
-  ssr: true, // Next.js SSR compatibility
-  wallets: getDefaultWallets().wallets.map((group) => ({
-    ...group,
-    wallets: group.wallets.filter((wallet) => wallet.name !== 'MetaMask'),
-  })),
+  ssr: false, // Next.js SSR compatibility disabled to prevent context issues
 });
 
 export function Web3Provider({ children }: { children: React.ReactNode }) {

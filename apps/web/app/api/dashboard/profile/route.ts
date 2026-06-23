@@ -38,7 +38,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { name, image, college, hobbies, bio, city, country, twitter, github, linkedin } = body;
+    const { name, image, college, hobbies, bio, city, country, twitter, github, linkedin, walletAddress } = body;
 
     // Update user in DB (handled by BetterAuth mostly, but we can do it here too just in case)
     const updatedUser = await prisma.user.update({
@@ -46,6 +46,7 @@ export async function POST(req: Request) {
       data: {
         name,
         image,
+        walletAddress,
         profile: {
           upsert: {
             create: {

@@ -2,7 +2,7 @@ import { auth } from '@/app/lib/auth';
 import { headers } from 'next/headers';;
 import { NextResponse } from 'next/server';
 
-const API_BASE = 'http://127.0.0.1:4000';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL || 'http://127.0.0.1:4000';
 
 function formatDate(dateInput: string | Date) {
   return new Intl.DateTimeFormat('en-US', {
@@ -58,7 +58,7 @@ export async function POST(request: Request) {
 
   const existing = await fetch(`${API_BASE}/cap/status/${resolvedUser.id}`, {
     cache: 'no-store',
-      headers: { 'x-api-key': 'dev-secret-key' },
+      headers: { 'x-api-key': process.env.INTERNAL_API_KEY || 'dev-secret-key'},
   });
 
   if (existing.ok) {
@@ -70,7 +70,7 @@ export async function POST(request: Request) {
 
   const res = await fetch(`${API_BASE}/cap/apply`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-api-key': 'dev-secret-key' },
+    headers: { 'Content-Type': 'application/json', 'x-api-key': process.env.INTERNAL_API_KEY || 'dev-secret-key'},
     body: JSON.stringify({
       userId: resolvedUser.id,
       graduationYear: Number(graduationYear),

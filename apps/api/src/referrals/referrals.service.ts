@@ -173,37 +173,32 @@ export class ReferralsService {
     const [allModules, allAssignments] = await Promise.all([
       this.prisma.module.findMany({
         include: {
-          lessons: true
-        }
+          lessons: true,
+        },
       }),
 
-      this.prisma.assignment.findMany()
+      this.prisma.assignment.findMany(),
     ]);
 
     const leaderboard = users.map((user) => {
       const xp = user.xpTransactions.reduce((sum, tx) => sum + tx.amount, 0);
       const referralsCount = user.referralCode?.referrals?.length || 0;
       const completedLessonIds = new Set(
-        user.lessonProgress.map(lp => lp.lessonId)
+        user.lessonProgress.map((lp) => lp.lessonId),
       );
 
       let modulesCompleted = 0;
 
       for (const mod of allModules) {
         const modAssignments = allAssignments.filter(
-          a => a.module === mod.id
+          (a) => a.module === mod.id,
         );
 
-
-        const totalItems =
-          mod.lessons.length + modAssignments.length;
-
+        const totalItems = mod.lessons.length + modAssignments.length;
 
         if (totalItems === 0) continue;
 
-
         let completedItems = 0;
-
 
         for (const lesson of mod.lessons) {
           if (completedLessonIds.has(lesson.id)) {
@@ -211,10 +206,9 @@ export class ReferralsService {
           }
         }
 
-
         for (const assignment of modAssignments) {
           const submission = user.assignmentSubmissions.find(
-            s => s.assignmentId === assignment.id
+            (s) => s.assignmentId === assignment.id,
           );
 
           if (submission?.status === 'COMPLETED') {
@@ -222,12 +216,10 @@ export class ReferralsService {
           }
         }
 
-
         if (completedItems === totalItems) {
           modulesCompleted++;
         }
       }
-
 
       return {
         userId: user.id,

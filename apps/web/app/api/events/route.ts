@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 
-const API_BASE = 'http://127.0.0.1:4000';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL || 'http://127.0.0.1:4000';
 
 export async function GET() {
   try {
     const res = await fetch(`${API_BASE}/events`, {
       cache: 'no-store',
-      headers: { 'x-api-key': 'dev-secret-key' },
+      headers: { 'x-api-key': process.env.INTERNAL_API_KEY || 'dev-secret-key'},
     });
 
     if (!res.ok) {
@@ -27,8 +27,7 @@ export async function POST(request: Request) {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
-        'x-api-key': 'dev-secret-key' 
-      },
+        'x-api-key': process.env.INTERNAL_API_KEY || 'dev-secret-key'},
       body: JSON.stringify(body)
     });
 

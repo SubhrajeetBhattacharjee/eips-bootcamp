@@ -70,7 +70,8 @@ export class CapService {
         status: app.status.toLowerCase(),
         appliedDate: app.createdAt.toISOString(),
         avatar:
-          user.profile?.avatarUrl || user.image ||
+          user.profile?.avatarUrl ||
+          user.image ||
           `https://api.dicebear.com/7.x/avataaars/svg?seed=${app.fullName}`,
         referralCount,
         xp,

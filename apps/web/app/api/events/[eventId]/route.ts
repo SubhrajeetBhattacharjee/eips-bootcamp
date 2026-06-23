@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-const API_BASE = 'http://127.0.0.1:4000';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL || 'http://127.0.0.1:4000';
 
 export async function DELETE(
   request: Request,
@@ -10,7 +10,7 @@ export async function DELETE(
   try {
     const res = await fetch(`${API_BASE}/events/${resolvedParams.eventId}`, {
       method: 'DELETE',
-      headers: { 'x-api-key': 'dev-secret-key' },
+      headers: { 'x-api-key': process.env.INTERNAL_API_KEY || 'dev-secret-key'},
     });
 
     if (!res.ok) {
