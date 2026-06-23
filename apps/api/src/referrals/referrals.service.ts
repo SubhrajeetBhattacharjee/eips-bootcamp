@@ -5,6 +5,9 @@ import { UseReferralDto } from './dto/use-referral.dto';
 
 @Injectable()
 export class ReferralsService {
+  private cachedLeaderboard: any = null;
+  private cacheExpiresAt = 0;
+
   constructor(private prisma: PrismaService) {}
 
   async generate(generateReferralDto: GenerateReferralDto) {
@@ -157,6 +160,11 @@ export class ReferralsService {
   }
 
   async getLeaderboard() {
+    const now = Date.now();
+    if (this.cachedLeaderboard && now < this.cacheExpiresAt) {
+      return this.cachedLeaderboard;
+    }
+
     const users = await this.prisma.user.findMany({
       include: {
         profile: true,
@@ -241,9 +249,14 @@ export class ReferralsService {
 
     leaderboard.sort((a, b) => b.xp - a.xp);
 
-    return leaderboard.map((entry, index) => ({
+    const result = leaderboard.map((entry, index) => ({
       ...entry,
       rank: index + 1,
     }));
+
+    this.cachedLeaderboard = result;
+    this.cacheExpiresAt = now + 5 * 60 * 1000; // 5 minutes TTL
+
+    return result;
   }
 }

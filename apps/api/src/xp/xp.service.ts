@@ -31,16 +31,20 @@ export class XpService {
   }
 
   async getUserXp(userId: string) {
-    const transactions = await this.prisma.xPTransaction.findMany({
-      where: { userId },
-      orderBy: { createdAt: 'desc' },
-    });
-
-    const totalXp = transactions.reduce((acc, curr) => acc + curr.amount, 0);
+    const [aggregate, transactions] = await Promise.all([
+      this.prisma.xPTransaction.aggregate({
+        where: { userId },
+        _sum: { amount: true },
+      }),
+      this.prisma.xPTransaction.findMany({
+        where: { userId },
+        orderBy: { createdAt: 'desc' },
+      }),
+    ]);
 
     return {
       userId,
-      totalXp,
+      totalXp: aggregate._sum.amount ?? 0,
       transactions,
     };
   }
