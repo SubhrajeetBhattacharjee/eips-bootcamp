@@ -6,6 +6,7 @@ import { DashboardShell } from '@/app/components/dashboard/DashboardShell';
 import LoadingScreen from '@/app/components/ui/LoadingScreen';
 import { Camera, MapPin, Briefcase, Link as LinkIcon, User, Save, Globe, Code, BadgeCheck, Wallet } from 'lucide-react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useAccount } from 'wagmi';
 
 export default function ProfilePage() {
   const { data: session, isPending: isLoading } = useSession();
@@ -21,6 +22,7 @@ export default function ProfilePage() {
   const [twitter, setTwitter] = useState('');
   const [github, setGithub] = useState('');
   const [linkedin, setLinkedin] = useState('');
+  const [walletAddress, setWalletAddress] = useState('');
 
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
@@ -37,6 +39,7 @@ export default function ProfilePage() {
           const data = await res.json();
           if (data.name) setName(data.name);
           if (data.image) setImage(data.image);
+          if (data.walletAddress) setWalletAddress(data.walletAddress);
           if (data.profile) {
             setCollege(data.profile.college || '');
             setCity(data.profile.city || '');
@@ -58,6 +61,8 @@ export default function ProfilePage() {
     fetchProfile();
   }, [user]);
 
+  const { address } = useAccount();
+
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -71,7 +76,19 @@ export default function ProfilePage() {
       const res = await fetch('/api/dashboard/profile', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, image, college, city, country, bio, hobbies, twitter, github, linkedin }),
+        body: JSON.stringify({
+          name,
+          image,
+          college,
+          city,
+          country,
+          bio,
+          hobbies,
+          twitter,
+          github,
+          linkedin,
+          walletAddress: address || null,
+        }),
       });
       
       if (res.ok) {
@@ -231,12 +248,59 @@ export default function ProfilePage() {
                   <Wallet size={18} className="text-emerald-400" />
                   Web3 Wallet
                 </h3>
-                <div className="p-4 bg-accent/50 border border-border rounded-xl flex items-center justify-between">
+                <div className="p-4 bg-accent/50 border border-border rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
                     <h4 className="text-sm font-medium text-foreground mb-1">Connected Wallet</h4>
-                    <p className="text-xs text-muted-foreground">Link your wallet to participate in on-chain activities.</p>
+                    {walletAddress ? (
+                      <p className="text-xs text-emerald-400 font-mono">Linked: {walletAddress}</p>
+                    ) : address ? (
+                      <p className="text-xs text-amber-400 font-mono">Connected (unsaved): {address}</p>
+                    ) : (
+                      <p className="text-xs text-muted-foreground">Link your wallet to participate in on-chain activities.</p>
+                    )}
                   </div>
-                  <div>
+                  <div className="flex items-center gap-3">
+                    {address && address !== walletAddress && (
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          try {
+                            setLoading(true);
+                            const res = await fetch('/api/dashboard/profile', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({
+                                name,
+                                image,
+                                college,
+                                city,
+                                country,
+                                bio,
+                                hobbies,
+                                twitter,
+                                github,
+                                linkedin,
+                                walletAddress: address,
+                              }),
+                            });
+                            if (res.ok) {
+                              setWalletAddress(address);
+                              setMessage('Wallet linked successfully!');
+                            } else {
+                              setMessage('Failed to link wallet');
+                            }
+                          } catch {
+                            setMessage('Failed to link wallet');
+                          } finally {
+                            setLoading(false);
+                            setTimeout(() => setMessage(''), 3000);
+                          }
+                        }}
+                        className="text-xs bg-emerald-500 hover:bg-emerald-400 text-black font-bold px-3 py-2 rounded-lg transition-colors cursor-pointer"
+                      >
+                        Link Wallet
+                      </button>
+                    )}
                     <ConnectButton />
                   </div>
                 </div>

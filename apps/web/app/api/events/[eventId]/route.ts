@@ -10,7 +10,7 @@ export async function DELETE(
   try {
     const res = await fetch(`${API_BASE}/events/${resolvedParams.eventId}`, {
       method: 'DELETE',
-      headers: { 'x-api-key': 'dev-secret-key' },
+      headers: { 'x-api-key': process.env.INTERNAL_API_KEY || 'dev-secret-key'},
     });
 
     if (!res.ok) {

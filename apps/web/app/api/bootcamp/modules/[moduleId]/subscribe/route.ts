@@ -30,8 +30,7 @@ export async function POST(
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
-        'x-api-key': 'dev-secret-key' 
-      },
+        'x-api-key': process.env.INTERNAL_API_KEY || 'dev-secret-key'},
       body: JSON.stringify({ userId: userId })
     });
 

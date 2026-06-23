@@ -24,7 +24,7 @@ export async function POST(request: Request) {
   try {
     const res = await fetch(`${API_BASE}/bootcamp/modules/${lessonId}/complete`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': 'dev-secret-key' },
+      headers: { 'Content-Type': 'application/json', 'x-api-key': process.env.INTERNAL_API_KEY || 'dev-secret-key'},
       body: JSON.stringify({ userId: userId }),
     });
 

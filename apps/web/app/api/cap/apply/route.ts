@@ -58,7 +58,7 @@ export async function POST(request: Request) {
 
   const existing = await fetch(`${API_BASE}/cap/status/${resolvedUser.id}`, {
     cache: 'no-store',
-      headers: { 'x-api-key': 'dev-secret-key' },
+      headers: { 'x-api-key': process.env.INTERNAL_API_KEY || 'dev-secret-key'},
   });
 
   if (existing.ok) {
@@ -70,7 +70,7 @@ export async function POST(request: Request) {
 
   const res = await fetch(`${API_BASE}/cap/apply`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-api-key': 'dev-secret-key' },
+    headers: { 'Content-Type': 'application/json', 'x-api-key': process.env.INTERNAL_API_KEY || 'dev-secret-key'},
     body: JSON.stringify({
       userId: resolvedUser.id,
       graduationYear: Number(graduationYear),

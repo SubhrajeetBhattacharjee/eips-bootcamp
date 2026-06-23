@@ -24,7 +24,7 @@ export async function GET(request: Request) {
   try {
     const res = await fetch(`${API_BASE}/rewards/${userId}`, {
       cache: 'no-store',
-      headers: { 'x-api-key': 'dev-secret-key' },
+      headers: { 'x-api-key': process.env.INTERNAL_API_KEY || 'dev-secret-key'},
     });
 
     if (!res.ok) {

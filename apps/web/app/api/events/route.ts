@@ -6,7 +6,7 @@ export async function GET() {
   try {
     const res = await fetch(`${API_BASE}/events`, {
       cache: 'no-store',
-      headers: { 'x-api-key': 'dev-secret-key' },
+      headers: { 'x-api-key': process.env.INTERNAL_API_KEY || 'dev-secret-key'},
     });
 
     if (!res.ok) {
@@ -27,8 +27,7 @@ export async function POST(request: Request) {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
-        'x-api-key': 'dev-secret-key' 
-      },
+        'x-api-key': process.env.INTERNAL_API_KEY || 'dev-secret-key'},
       body: JSON.stringify(body)
     });
 
