@@ -151,7 +151,7 @@ export const footerLinks = {
   followUs: [
     { label: 'YouTube', href: 'https://www.youtube.com/@etherworldco' },
     { label: 'LinkedIn', href: 'https://www.linkedin.com/company/ethshala/' },
-    { label: 'X', href: 'https://x.com/ethsh_ala' },
+    { label: 'X', href: 'https://x.com/Its_EthShala' },
     { label: 'EtherWorld', href: 'https://etherworld.co/' },
   ],
 };
