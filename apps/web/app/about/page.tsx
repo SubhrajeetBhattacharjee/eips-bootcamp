@@ -149,42 +149,26 @@ export default function AboutPage() {
 
             {/* Placeholder 2 */}
             <TeamCard
-              name="Yash Kamal Chaturvedi"
-              role="Operations Lead"
-              focus="Operations and delivery"
-              description="Keeps programs, coordination, and day-to-day execution moving across research, platform work, and partnerships."
-              imageSrc="/team/yash.jpg"
+              name="Rajdeep Chakraborty"
+              role="Full Stack Intern"
+              focus="Full stack implementation"
+              description="Contributes across frontend and backend work to support feature delivery and improve the platform experience."
+              imageSrc="/team/rajdeep.jpg"
               socials={[
                 {
+                  label: "GitHub",
+                  href: "https://github.com/rajdeepchakraborty-rc",
+                  icon: <GithubIcon className="w-3 h-3" />,
+                },
+                {
                   label: "LinkedIn",
-                  href: "https://www.linkedin.com/in/yash-kamal-chaturvedi/",
+                  href: "https://www.linkedin.com/in/rajdeepchakraborty69/",
                   icon: <LinkedInIcon className="w-3 h-3" />,
                 },
               ]}
             />
             
             {/* Placeholder 3 */}
-            <TeamCard
-              name="Dhanush Naik"
-              role="Full Stack Engineer"
-              focus="Platform engineering"
-              description="Builds the product surface, analytics experience, and internal systems that turn raw governance data into usable tooling."
-              imageSrc="/team/Dhanush.jpg"
-              socials={[
-                {
-                  label: "GitHub",
-                  href: "https://github.com/dhanushlnaik",
-                  icon: <GithubIcon className="w-3 h-3" />,
-                },
-                {
-                  label: "LinkedIn",
-                  href: "https://www.linkedin.com/in/dhanushlnaik/",
-                  icon: <LinkedInIcon className="w-3 h-3" />,
-                },
-              ]}
-            />
-
-            {/* Placeholder 4 */}
             <TeamCard
               name="Subhrajeet Bhattacharjee"
               role="Full Stack Intern"
@@ -205,26 +189,42 @@ export default function AboutPage() {
               ]}
             />
 
-            {/* Placeholder 5 */}
+            {/* Placeholder 4 */}
             <TeamCard
-              name="Rajdeep Chakraborty"
-              role="Full Stack Intern"
-              focus="Full stack implementation"
-              description="Contributes across frontend and backend work to support feature delivery and improve the platform experience."
-              imageSrc="/team/rajdeep.jpg"
+              name="Yash Kamal Chaturvedi"
+              role="Operations Lead"
+              focus="Operations and delivery"
+              description="Keeps programs, coordination, and day-to-day execution moving across research, platform work, and partnerships."
+              imageSrc="/team/yash.jpg"
               socials={[
                 {
-                  label: "GitHub",
-                  href: "https://github.com/rajdeepchakraborty-rc",
-                  icon: <GithubIcon className="w-3 h-3" />,
-                },
-                {
                   label: "LinkedIn",
-                  href: "https://www.linkedin.com/in/rajdeepchakraborty69/",
+                  href: "https://www.linkedin.com/in/yash-kamal-chaturvedi/",
                   icon: <LinkedInIcon className="w-3 h-3" />,
                 },
               ]}
             />
+
+            {/* Placeholder 5 */}
+            <TeamCard
+              name="Dhanush Naik"
+              role="Full Stack Engineer"
+              focus="Platform engineering"
+              description="Builds the product surface, analytics experience, and internal systems that turn raw governance data into usable tooling."
+              imageSrc="/team/Dhanush.jpg"
+              socials={[
+                {
+                  label: "GitHub",
+                  href: "https://github.com/dhanushlnaik",
+                  icon: <GithubIcon className="w-3 h-3" />,
+                },
+                {
+                  label: "LinkedIn",
+                  href: "https://www.linkedin.com/in/dhanushlnaik/",
+                  icon: <LinkedInIcon className="w-3 h-3" />,
+                },
+              ]}
+            />            
           </div>
         </div>
 
