@@ -149,9 +149,9 @@ export const footerLinks = {
     { label: 'Assets', href: '/assets' },
   ],
   followUs: [
-    { label: 'YouTube', href: 'https://www.youtube.com/@etherworldco' },
-    { label: 'LinkedIn', href: 'https://www.linkedin.com/company/ethshala/' },
+    // { label: 'YouTube', href: 'https://www.youtube.com/@etherworldco' },
     { label: 'X', href: 'https://x.com/Its_EthShala' },
-    { label: 'EtherWorld', href: 'https://etherworld.co/' },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/company/ethshala/' },
+    // { label: 'EtherWorld', href: 'https://etherworld.co/' },
   ],
 };
