@@ -232,28 +232,28 @@ export default function AboutPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="p-8 rounded-3xl bg-muted/20 border border-border">
             <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">Values</h3>
-            <h2 className="text-3xl font-grotesk font-medium mb-8">The product is opinionated about clarity.</h2>
+            <h2 className="text-3xl font-grotesk font-medium mb-8">Learning should lead to building and contributing.</h2>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="p-5 rounded-2xl bg-muted/40 border border-border">
                 <Shield className="w-5 h-5 text-primary mb-3" />
-                <h4 className="font-bold text-sm mb-2">Transparency</h4>
-                <p className="text-xs text-muted-foreground">Data should be inspectable, explainable, and tied back to real public sources.</p>
+                <h4 className="font-bold text-sm mb-2">Open Learning</h4>
+                <p className="text-xs text-muted-foreground">Ethereum knowledge should be accessible, practical, and open to anyone willing to learn.</p>
               </div>
               <div className="p-5 rounded-2xl bg-muted/40 border border-border">
                 <Activity className="w-5 h-5 text-primary mb-3" />
-                <h4 className="font-bold text-sm mb-2">Operational clarity</h4>
-                <p className="text-xs text-muted-foreground">Tooling should help people decide and act, not just display information.</p>
+                <h4 className="font-bold text-sm mb-2">Learn by Doing</h4>
+                <p className="text-xs text-muted-foreground">Concepts become meaningful when learners can experiment, build, and apply what they learn.</p>
               </div>
               <div className="p-5 rounded-2xl bg-muted/40 border border-border">
                 <Globe className="w-5 h-5 text-primary mb-3" />
-                <h4 className="font-bold text-sm mb-2">Accessibility</h4>
-                <p className="text-xs text-muted-foreground">The platform has to work for newcomers, builders, and researchers without flattening complexity.</p>
+                <h4 className="font-bold text-sm mb-2">Community</h4>
+                <p className="text-xs text-muted-foreground">Learning grows through collaboration, peer support, shared experiences, and conversations.</p>
               </div>
               <div className="p-5 rounded-2xl bg-muted/40 border border-border">
                 <GitBranch className="w-5 h-5 text-primary mb-3" />
-                <h4 className="font-bold text-sm mb-2">Iteration</h4>
-                <p className="text-xs text-muted-foreground">We ship, evaluate, and refine quickly so the product stays aligned with how governance behaves.</p>
+                <h4 className="font-bold text-sm mb-2">Contribute</h4>
+                <p className="text-xs text-muted-foreground">We help learners move beyond understanding Ethereum to participating in its ecosystem.</p>
               </div>
             </div>
           </div>
@@ -266,8 +266,8 @@ export default function AboutPage() {
                   <Search className="w-4 h-4 text-primary" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold">Search and proposal context</h4>
-                  <p className="text-xs text-muted-foreground">Find proposals, statuses, authors without jumping across sources.</p>
+                  <h4 className="text-sm font-bold">Learn Ethereum</h4>
+                  <p className="text-xs text-muted-foreground">Build a strong foundation in Ethereum through structured modules, guided lessons, and learning paths.</p>
                 </div>
               </div>
               <div className="p-4 rounded-xl border border-border flex gap-4 items-center">
@@ -275,8 +275,8 @@ export default function AboutPage() {
                   <BarChart2 className="w-4 h-4 text-primary" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold">Dashboards and analytics</h4>
-                  <p className="text-xs text-muted-foreground">Read standards activity through structured analytics views.</p>
+                  <h4 className="text-sm font-bold">Build and Experiment</h4>
+                  <p className="text-xs text-muted-foreground">Turn concepts into practice through hands-on activities, smart contract experiments, and real-world projects.</p>
                 </div>
               </div>
               <div className="p-4 rounded-xl border border-border flex gap-4 items-center">
@@ -284,8 +284,8 @@ export default function AboutPage() {
                   <FileText className="w-4 h-4 text-primary" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold">Tooling for active work</h4>
-                  <p className="text-xs text-muted-foreground">Use builders, boards, trackers, and graphs when moving from reading to doing.</p>
+                  <h4 className="text-sm font-bold">Explore and Contribute</h4>
+                  <p className="text-xs text-muted-foreground">Discover EIPs, participate in the Ethereum community, and take your first steps toward contributing to the ecosystem.</p>
                 </div>
               </div>
             </div>
