@@ -133,6 +133,7 @@ export const navLinks = [
   { label: 'Governance', href: '/#governance' },
   { label: 'Community', href: '/#community' },
   { label: 'About', href: '/about' },
+  { label: 'Impact', href: '/impact' },
 ];
 
 export const footerLinks = {
