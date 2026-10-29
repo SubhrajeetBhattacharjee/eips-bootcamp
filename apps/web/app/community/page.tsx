@@ -6,110 +6,109 @@ import { Navbar } from '../components/landing/Navbar';
 import { Footer } from '../components/landing/Footer';
 import { CommunityHero } from '../components/community/CommunityHero';
 import { EventsSection } from '../components/community/EventsSection';
-import { MediaSection } from '../components/community/MediaSection';
 import { SocialSection } from '../components/community/SocialSection';
 import { EventImageShowcase } from '../components/community/EventImageShowcase';
 import { CampusNetworkSection } from '../components/community/CampusNetworkSection';
-import { ArrowDownRight, Globe, Users } from 'lucide-react';
 
 export default function CommunityPage() {
+  return (
+    <div className="min-h-screen bg-[#fcfbf7] text-[#171a18] font-sans selection:bg-[#61d9b9] selection:text-black">
+      <style dangerouslySetInnerHTML={{__html: `@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap');`}} />
+      <Navbar
+        className="dark bg-background/90 backdrop-blur-xl border-b border-border"
+        showThemeToggle={false}
+      />
+      
+      <main className="mt-16 relative">
+        {/* 1. Hero Section (LIGHT) */}
+        <section className="relative bg-[#fcfbf7] text-[#171a18] pt-12 pb-32 sm:pt-16 sm:pb-40 overflow-hidden">
+          <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12">
+            <CommunityHero />
+          </div>
 
-    return (
-        <div className="min-h-screen overflow-hidden bg-background text-foreground">
-            <Navbar />
-            <main className="relative mx-auto max-w-7xl px-4 pt-24 pb-24 font-body sm:px-6 lg:px-8">
-            <div className="pointer-events-none absolute -right-40 top-24 h-96 w-96 rounded-full bg-emerald-400/10 blur-3xl" />
-            <div className="pointer-events-none absolute left-0 top-[34rem] h-80 w-80 rounded-full bg-cyan-400/5 blur-3xl" />
-            <div className="relative space-y-20">
-                {/* ===== HERO SECTION ===== */}
-                <section className="pt-8">
-                    <CommunityHero />
-                </section>
+          {/* Organic wavy transition into dark section */}
+          <svg 
+            className="absolute bottom-0 left-0 w-full h-[60px] md:h-[110px] text-[#0d1f1a] translate-y-[1px] pointer-events-none" 
+            viewBox="0 0 1440 120" 
+            fill="currentColor" 
+            preserveAspectRatio="none"
+          >
+            <path d="M0,80 C480,-40 960,200 1440,80 L1440,120 L0,120 Z" />
+          </svg>
+        </section>
 
-                {/* Decorative divider */}
-                {/* <div className="flex items-center gap-4 text-xs uppercase tracking-[0.24em] text-emerald-400/70"><span className="h-px flex-1 bg-emerald-400/20" /><span>Explore the network</span><ArrowDownRight size={14} /><span className="h-px flex-1 bg-emerald-400/20" /></div> */}
+        {/* 2. College Events & Workshops Section (DARK) */}
+        <section id="events" className="relative bg-[#0d1f1a] text-white pt-20 pb-32 sm:pt-28 sm:pb-40 scroll-mt-20 overflow-hidden">
+          <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12">
+            <EventsSection />
+          </div>
 
-                {/* ===== COMMUNITY ACTIVITIES SECTION ===== */}
-                <section className="relative">
-                    {/* <div className="mb-8 max-w-xl">
-                        <div className="flex items-center gap-3 mb-2">
-                            <div className="p-2 rounded-lg bg-emerald-500/20 border border-emerald-500/30">
-                                <Users size={20} className="text-emerald-400" />
-                            </div>
-                            <div>
-                                <h2 className="text-3xl font-bold tracking-tight text-foreground">Community activities</h2>
-                                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Events, media coverage, and social impact from the people moving Ethereum forward.</p>
-                            </div>
-                        </div>
-                    </div> */}
+          {/* Organic wavy transition into light section */}
+          <svg 
+            className="absolute bottom-0 left-0 w-full h-[60px] md:h-[110px] text-[#fcfbf7] translate-y-[1px] pointer-events-none" 
+            viewBox="0 0 1440 120" 
+            fill="currentColor" 
+            preserveAspectRatio="none"
+          >
+            <path d="M0,0 C480,120 960,-40 1440,60 L1440,120 L0,120 Z" />
+          </svg>
+        </section>
 
-                    <div className="grid grid-cols-1 gap-18 lg:grid-cols-1">
-                        {/* Events Section */}
-                        <div className="relative group">
-                            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                            <div className="relative">
-                                <EventsSection />
-                            </div>
-                        </div>
+        {/* 3. Latest Buzz / Community Social Feed Section (LIGHT) */}
+        <section id="social" className="relative bg-[#fcfbf7] text-[#171a18] pt-20 pb-32 sm:pt-28 sm:pb-40 scroll-mt-20 overflow-hidden">
+          <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12">
+            <SocialSection />
+          </div>
 
-                        {/* Media Section */}
-                        {/* <div className="relative group">
-                            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                            <div className="relative">
-                                <MediaSection />
-                            </div>
-                        </div> */}
+          {/* Organic wavy transition into dark section */}
+          <svg 
+            className="absolute bottom-0 left-0 w-full h-[60px] md:h-[110px] text-[#06100e] translate-y-[1px] pointer-events-none" 
+            viewBox="0 0 1440 120" 
+            fill="currentColor" 
+            preserveAspectRatio="none"
+          >
+            <path d="M0,80 C480,-40 960,200 1440,80 L1440,120 L0,120 Z" />
+          </svg>
+        </section>
 
-                        {/* Social Section */}
-                        <div className="relative group">
-                            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                            <div className="relative">
-                                <SocialSection />
-                            </div>
-                        </div>
-                    </div>
-                </section>
+        {/* 4. Event Gallery & Panoramic Showcase Section (DARK) */}
+        <section id="gallery" className="relative bg-[#06100e] text-white pt-20 pb-32 sm:pt-28 sm:pb-40 scroll-mt-20 overflow-hidden">
+          <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12">
+            <EventImageShowcase />
+          </div>
 
-                {/* Decorative divider */}
-                {/* <div className="h-px bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent" /> */}
+          {/* Organic wavy transition into light section */}
+          <svg 
+            className="absolute bottom-0 left-0 w-full h-[60px] md:h-[110px] text-[#fcfbf7] translate-y-[1px] pointer-events-none" 
+            viewBox="0 0 1440 120" 
+            fill="currentColor" 
+            preserveAspectRatio="none"
+          >
+            <path d="M0,0 C480,120 960,-40 1440,60 L1440,120 L0,120 Z" />
+          </svg>
+        </section>
 
-                {/* ===== EVENT IMAGE SHOWCASE ===== */}
-                <EventImageShowcase />
+        {/* 5. Campus Network & College Partnerships Section (LIGHT) */}
+        <section id="campus-network" className="relative bg-[#fcfbf7] text-[#171a18] pt-20 pb-36 sm:pt-28 sm:pb-48 scroll-mt-20 overflow-hidden">
+          <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12">
+            <CampusNetworkSection />
+          </div>
 
-                {/* Decorative divider */}
-                {/* <div className="h-px bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent" /> */}
+          {/* Organic wavy transition into dark footer */}
+          <svg 
+            className="absolute bottom-0 left-0 w-full h-[60px] md:h-[110px] text-[#080808] translate-y-[1px] pointer-events-none" 
+            viewBox="0 0 1440 120" 
+            fill="currentColor" 
+            preserveAspectRatio="none"
+          >
+            <path d="M0,80 C480,-40 960,200 1440,80 L1440,120 L0,120 Z" />
+          </svg>
+        </section>
+      </main>
 
-                {/* ===== CAMPUS NETWORK SECTION ===== */}
-                <section className="relative">
-                    <div className="mb-8 max-w-xl">
-                        {/* <div className="flex items-center gap-3 mb-2">
-                            <div className="p-2 rounded-lg bg-emerald-500/20 border border-emerald-500/30">
-                                <Globe size={20} className="text-emerald-400" />
-                            </div>
-                            <div>
-                                <h2 className="text-3xl font-bold tracking-tight text-foreground">Campus network</h2>
-                                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">The colleges, clubs, and partners turning curiosity into practical contribution.</p>
-                            </div>
-                        </div> */}
-                    </div>
-
-                    <div className="relative group">
-                        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                        <div className="relative">
-                            <CampusNetworkSection />
-                        </div>
-                    </div>
-                </section>
-
-                {/* Decorative divider */}
-                {/* <div className="h-px bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent" /> */}
-
-                {/* Bottom spacing */}
-                {/* <div className="h-8" /> */}
-            </div>
-
-            </main>
-            <Footer />
-        </div>
-    );
+      <div className="dark">
+        <Footer />
+      </div>
+    </div>
+  );
 }

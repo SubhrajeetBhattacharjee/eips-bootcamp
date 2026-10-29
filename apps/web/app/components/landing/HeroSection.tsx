@@ -158,7 +158,14 @@ export function HeroSection() {
               
               {/* Main Image */}
               <div className="absolute inset-0 bg-[#e3dfd3] border-[8px] border-white shadow-xl transform rotate-[2deg] flex items-center justify-center overflow-hidden">
-                <img src="/events/event_images/IMG_4213.png" alt="Main Event" className="w-full h-full object-cover" />
+                <img 
+                  src="/events/event_images/IMG_4213.webp" 
+                  alt="Main Event" 
+                  className="w-full h-full object-cover"
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
+                />
               </div>
               
               {/* Tape piece top left */}
@@ -169,7 +176,14 @@ export function HeroSection() {
 
               {/* Overlapping small B&W photo */}
               <div className="absolute top-[25%] -right-8 w-[240px] h-[140px] bg-[#cfccc2] border-[6px] border-white shadow-2xl transform rotate-[-6deg] hidden xl:flex items-center justify-center z-10 overflow-hidden">
-                <img src="/events/event_images/IMG_4217.png" alt="EIP Session" className="w-full h-full object-cover grayscale sepia-[0.3]" />
+                <img 
+                  src="/events/event_images/IMG_4217.webp" 
+                  alt="EIP Session" 
+                  className="w-full h-full object-cover grayscale sepia-[0.3]"
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
+                />
               </div>
 
               {/* Event Cards Overlapping Bottom Right */}

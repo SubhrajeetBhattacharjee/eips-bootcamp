@@ -1,409 +1,852 @@
+// apps/web/app/about/page.tsx
+
 import React from 'react';
 import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: "About Us",
-  description: "Learn about the mission, the team, and the story behind ETHShala - your gateway to mastering Ethereum Improvement Proposals.",
-};
+import Image from 'next/image';
+import Link from 'next/link';
+import {
+  Search,
+  BarChart2,
+  GitBranch,
+  Shield,
+  ExternalLink,
+  ArrowRight,
+  Sparkles,
+  BookOpen,
+  Terminal,
+  Laptop,
+  Flame,
+  Award,
+  Users,
+  Compass,
+  Mail,
+} from 'lucide-react';
 
 import { Navbar } from '../components/landing/Navbar';
 import { Footer } from '../components/landing/Footer';
 import TeamCard from '../components/about/TeamCard';
-import { Logo } from '../components/ui/Logo';
-import Image from 'next/image';
-import Link from 'next/link';
-import { Search, BarChart2, GitBranch, FileText, Shield, Activity, Globe, MessageSquare, Heart, Mail, ExternalLink, ArrowRight } from 'lucide-react';
+import { ContributorFlywheel } from '../components/about/ContributorFlywheel';
+import { AboutHeroMetrics } from '../components/about/AboutHeroMetrics';
+import { GithubIcon, LinkedInIcon, DiscordIcon } from '../components/about/social_icons';
 
-const GithubIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" {...props}>
-    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-  </svg>
-);
-
-const LinkedInIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" {...props}>
-    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-  </svg>
-);
-
-const DiscordIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" {...props}>
-    <path d="M20.317 4.369A19.791 19.791 0 0 0 15.885 3c-.191.328-.403.768-.553 1.11a18.27 18.27 0 0 0-5.29 0A11.64 11.64 0 0 0 9.49 3a19.736 19.736 0 0 0-4.435 1.371C2.249 8.57 1.484 12.663 1.866 16.699a19.9 19.9 0 0 0 5.993 3.028c.48-.654.908-1.346 1.276-2.07a12.93 12.93 0 0 1-2.008-.964c.169-.124.334-.253.494-.386 3.874 1.82 8.08 1.82 11.908 0 .162.133.327.262.496.386a12.89 12.89 0 0 1-2.011.965c.368.723.796 1.415 1.276 2.068a19.86 19.86 0 0 0 5.996-3.028c.448-4.678-.765-8.734-3.969-12.329ZM8.02 14.247c-1.182 0-2.151-1.085-2.151-2.419 0-1.333.95-2.418 2.151-2.418 1.211 0 2.17 1.094 2.151 2.418 0 1.334-.95 2.419-2.151 2.419Zm7.96 0c-1.182 0-2.151-1.085-2.151-2.419 0-1.333.95-2.418 2.151-2.418 1.211 0 2.17 1.094 2.151 2.418 0 1.334-.94 2.419-2.151 2.419Z" />
-  </svg>
-);
+export const metadata: Metadata = {
+  title: "About Us | ETHShala",
+  description: "Learn about the mission, the team, and the story behind ETHShala — demystifying Ethereum protocol governance and EIPs for the next generation of builders.",
+};
 
 export default function AboutPage() {
+  const teamMembers = [
+    {
+      name: "Pooja Ranjan",
+      role: "Founder",
+      focus: "Ecosystem Strategy & Protocol Research",
+      description: "Shapes the long-range direction of ETHShala, leads research initiatives, and keeps the work deeply anchored to real Ethereum governance needs.",
+      imageSrc: "/team/pooja_ranjan.webp",
+      status: "Founder",
+      socials: [
+        {
+          label: "GitHub",
+          href: "https://github.com/poojaranjan",
+          icon: <GithubIcon className="w-3.5 h-3.5" />,
+        },
+        {
+          label: "LinkedIn",
+          href: "https://www.linkedin.com/in/pooja-r-072899114/",
+          icon: <LinkedInIcon className="w-3.5 h-3.5" />,
+        },
+      ],
+    },
+    {
+      name: "Subhrajeet Bhattacharjee",
+      role: "Full Stack Lead",
+      focus: "Platform Architecture & Dev Lead",
+      description: "Drives full-stack engineering, core learning module architecture, interactive quizzes, and seamless developer onboarding across web systems.",
+      imageSrc: "/team/SubhrajeetBhattacharjee.webp",
+      status: "Core Dev",
+      socials: [
+        {
+          label: "GitHub",
+          href: "https://github.com/SubhrajeetBhattacharjee",
+          icon: <GithubIcon className="w-3.5 h-3.5" />,
+        },
+        {
+          label: "LinkedIn",
+          href: "https://www.linkedin.com/in/subhrajeet-bhattacharjee/",
+          icon: <LinkedInIcon className="w-3.5 h-3.5" />,
+        },
+      ],
+    },
+    {
+      name: "Rajdeep Chakraborty",
+      role: "Full Stack Engineer",
+      focus: "UI/UX & Interactive Systems",
+      description: "Builds high-performance interactive interfaces, animated community feeds, and learning experiences that make complex protocol mechanics intuitive.",
+      imageSrc: "/team/rajdeep.webp",
+      status: "Core Dev",
+      socials: [
+        {
+          label: "GitHub",
+          href: "https://github.com/rajdeepchakraborty-rc",
+          icon: <GithubIcon className="w-3.5 h-3.5" />,
+        },
+        {
+          label: "LinkedIn",
+          href: "https://www.linkedin.com/in/rajdeepchakraborty69/",
+          icon: <LinkedInIcon className="w-3.5 h-3.5" />,
+        },
+      ],
+    },
+    {
+      name: "Dhanush Naik",
+      role: "Full Stack Engineer",
+      focus: "Platform Systems & Analytics",
+      description: "Architects the product analytics, storage layers, and backend infrastructure that turn complex protocol data into actionable student tooling.",
+      imageSrc: "/team/Dhanush.webp",
+      status: "Core Dev",
+      socials: [
+        {
+          label: "GitHub",
+          href: "https://github.com/dhanushlnaik",
+          icon: <GithubIcon className="w-3.5 h-3.5" />,
+        },
+        {
+          label: "LinkedIn",
+          href: "https://www.linkedin.com/in/dhanushlnaik/",
+          icon: <LinkedInIcon className="w-3.5 h-3.5" />,
+        },
+      ],
+    },
+    {
+      name: "Yash Kamal Chaturvedi",
+      role: "Operations Lead",
+      focus: "Community Delivery & Partnerships",
+      description: "Spearheads campus programs, hackathon operations, and cross-university coordination to bring developer workshops straight to students.",
+      imageSrc: "/team/yash.webp",
+      status: "Operations",
+      socials: [
+        {
+          label: "LinkedIn",
+          href: "https://www.linkedin.com/in/yash-kamal-chaturvedi/",
+          icon: <LinkedInIcon className="w-3.5 h-3.5" />,
+        },
+      ],
+    },
+  ];
+
+  const pillars = [
+    {
+      icon: Compass,
+      title: "Our Mission",
+      badge: "Purpose",
+      badgeColor: "bg-[#075945] text-white",
+      description: "Make Ethereum standards, EIPs, and client upgrades legible, transparent, and operationally accessible to student developers worldwide.",
+    },
+    {
+      icon: BookOpen,
+      title: "What We Teach",
+      badge: "Curriculum",
+      badgeColor: "bg-[#f8bd36] text-black",
+      description: "From Ethereum fundamentals and EVM mechanics to consensus upgrades, live EIP proposal tracking, and core contributor review paths.",
+    },
+    {
+      icon: Shield,
+      title: "Built by Avarch",
+      badge: "Roots",
+      badgeColor: "bg-black text-white",
+      description: "Crafted by Avarch with deep ecosystem collaboration alongside Ethereum researchers, client developers, and standards coordinators.",
+    },
+  ];
+
+  const coreValues = [
+    {
+      icon: Shield,
+      title: "Open Learning",
+      subtitle: "100% Free Forever",
+      description: "No paywalls, no gatekeeping. Protocol education should be universally accessible to anyone with curiosity and code.",
+    },
+    {
+      icon: Terminal,
+      title: "Learn by Doing",
+      subtitle: "Hands-on First",
+      description: "Concepts become tangible when learners write smart contracts, interact with testnets, and dissect actual EIP pull requests.",
+    },
+    {
+      icon: Users,
+      title: "Grassroots Community",
+      subtitle: "Student-Led Chapters",
+      description: "Peer mentorship on campus accelerates technical mastery faster than isolated study ever could.",
+    },
+    {
+      icon: GitBranch,
+      title: "Direct Contribution",
+      subtitle: "Bridging to Core",
+      description: "We don't stop at teaching syntax; we guide builders toward authoring ERCs, participating in ACD calls, and shipping open-source code.",
+    },
+  ];
+
+  const capabilities = [
+    {
+      icon: Search,
+      tag: "Structured Learning",
+      title: "Step-by-Step EIP Pathways",
+      description: "Guided modules that break down complex protocol standards — from ERC-20 and ERC-721 to account abstraction (ERC-4337) and blob transactions (EIP-4844).",
+    },
+    {
+      icon: BarChart2,
+      tag: "Interactive Verification",
+      title: "Practical Labs & Knowledge Checks",
+      description: "Validate your protocol understanding through interactive quizzes, contract sandbox challenges, and real-world deployment assignments.",
+    },
+    {
+      icon: GitBranch,
+      tag: "Contributor On-Ramp",
+      title: "Live Governance Tracking & Sprints",
+      description: "Stay ahead of Ethereum upgrades with normalized proposal status trackers, ACD summaries, and direct avenues to review active pull requests.",
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <Navbar />
-      <main className="mt-24 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16 pb-24">
-        
-        {/* Header Block */}
-        <div className="p-8 md:p-12 rounded-3xl bg-muted/20 border border-border">
-          <div className="inline-block px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold tracking-widest uppercase mb-6">
-            About
-          </div>
-          <h1 className="text-4xl md:text-5xl font-grotesk font-medium mb-6 leading-tight">
-            ETHShala makes Ethereum protocol governance accessible to everyone.
-          </h1>
-          <p className="text-lg text-muted-foreground mb-12 max-w-3xl">
-            We build an educational platform, structured pathways, and governance movement trackers so builders, researchers, and newcomers can understand what is changing and why.
-          </p>
+    <div className="min-h-screen bg-[#fcfbf7] text-[#171a18] font-sans selection:bg-[#61d9b9] selection:text-black">
+      <style dangerouslySetInnerHTML={{ __html: `@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap');` }} />
+      
+      {/* Navbar with dark backdrop */}
+      <Navbar
+        className="dark bg-background/90 backdrop-blur-xl border-b border-border"
+        showThemeToggle={false}
+      />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="p-6 rounded-2xl bg-muted/40 border border-border">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">Mission</h3>
-              <p className="text-sm">Make Ethereum standards and governance legible, explorable, and operationally useful for newcomers.</p>
-            </div>
-            <div className="p-6 rounded-2xl bg-muted/40 border border-border">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">What We Teach</h3>
-              <p className="text-sm">Ethereum fundamentals, EIPs, governance workflows, protocol research, and contributor paths.</p>
-            </div>
-            <div className="p-6 rounded-2xl bg-muted/40 border border-border">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">Built By</h3>
-              <p className="text-sm">Avarch with support from the Ethereum ecosystem and partners close to standards operations.</p>
-            </div>
-          </div>
-        </div>
+      <main className="mt-16 relative">
 
-        {/* Why / How Split */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8">
-          <div>
-            <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">Why We Built This</h3>
-            <h2 className="text-3xl font-grotesk font-medium mb-6">
-              Standards and governance should not require institutional memory to follow.
-            </h2>
-            <div className="space-y-4 text-muted-foreground text-sm">
-              <p>Ethereum governance happens across repositories, pull requests, review queues, forum threads, upgrades, and informal coordination. The data is public, but the workflow is still hard to inspect as a system.</p>
-              <p>ETHShala exists to reduce that gap. We curate the moving parts, normalize them into structured education, and help people answer practical questions: what changed, what is stuck, who is active, what upgrade work depends on what, and where to go next.</p>
-              <p>The goal is not just more documentation. The goal is operational clarity for anyone trying to understand or participate in Ethereum standards.</p>
-            </div>
-          </div>
+        {/* 1. HERO SECTION: Grand Masthead (LIGHT) */}
+        <section className="relative bg-[#fcfbf7] text-[#171a18] pt-12 pb-32 sm:pt-20 sm:pb-40 overflow-hidden">
+          {/* Subtle ambient lighting */}
+          <div className="pointer-events-none absolute -top-20 left-1/2 -translate-x-1/2 h-[500px] w-[800px] rounded-full bg-[#075945]/10 blur-[160px]" />
+          <div className="pointer-events-none absolute top-40 right-10 h-80 w-80 rounded-full bg-[#f8bd36]/10 blur-[150px]" />
 
-          <div className="p-8 rounded-3xl bg-muted/20 border border-border space-y-6">
-            <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-6">How People Use It</h3>
+          <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12 relative z-10">
             
-            <div className="space-y-4">
-              <div className="p-5 rounded-2xl bg-muted/40 border border-border flex gap-4">
-                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                <Search className="w-4 h-4 text-primary" />
-                </div>
-                <div>
-                  <h4 className="font-medium text-sm mb-1">Structured Learning</h4>
-                  <p className="text-xs text-muted-foreground">Follow curated modules from fundamentals to advanced protocol research instead of manual repository digging.</p>
-                </div>
+            {/* Centered Masthead Header */}
+            <div className="mx-auto max-w-4xl text-center">
+              {/* Pulse Badge */}
+              <div className="inline-flex items-center gap-2.5 rounded-full border border-[#075945]/20 bg-[#075945]/10 px-4 py-1.5 backdrop-blur-md mb-6 shadow-sm">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#075945] opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-[#075945]" />
+                </span>
+                <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#075945]">
+                  About ETHShala
+                </span>
+                <span className="text-[#333]/30 text-xs">·</span>
+                <span className="text-[11px] font-semibold text-[#444]">
+                  Open Ethereum Governance &amp; Education
+                </span>
               </div>
-              <div className="p-5 rounded-2xl bg-muted/40 border border-border flex gap-4">
-                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                <BarChart2 className="w-4 h-4 text-primary" />
-                </div>
-                <div>
-                  <h4 className="font-medium text-sm mb-1">Progress Tracking</h4>
-                  <p className="text-xs text-muted-foreground">Track your learning journey, earn XP, and measure your readiness to contribute.</p>
-                </div>
-              </div>
-              <div className="p-5 rounded-2xl bg-muted/40 border border-border flex gap-4">
-                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                <GitBranch className="w-4 h-4 text-primary" />
-                </div>
-                <div>
-                  <h4 className="font-medium text-sm mb-1">Contributor Tooling</h4>
-                  <p className="text-xs text-muted-foreground">Transition from reading governance to working with it through hands-on assignments.</p>
-                </div>
+
+              {/* Bold Headline */}
+              <h1 className="font-sans text-[clamp(2.75rem,5.5vw,5rem)] font-black leading-[0.98] tracking-tight text-[#111]">
+                Demystifying Ethereum protocol governance{' '}
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#075945] via-[#0e7955] to-[#d97706] mt-1">
+                  for everyone.
+                </span>
+              </h1>
+
+              {/* Subtitle */}
+              <p className="mt-6 text-[17px] sm:text-[20px] font-medium leading-[1.5] text-[#333] max-w-2xl mx-auto">
+                We build open-source educational pathways, governance movement trackers, and campus networks so builders, researchers, and newcomers can understand what is changing in Ethereum and why.
+              </p>
+
+              {/* Action Buttons */}
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+                <a
+                  href="#why-we-built-this"
+                  className="group inline-flex min-h-[50px] items-center gap-3 rounded-xl bg-[#0a1a16] px-7 text-[15px] font-black text-white transition-all hover:bg-[#15382f] hover:shadow-lg hover:shadow-[#0a1a16]/25 hover:-translate-y-0.5"
+                >
+                  Our Story &amp; Vision
+                  <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+                </a>
+                <a
+                  href="#team"
+                  className="inline-flex min-h-[50px] items-center gap-2 rounded-xl border-2 border-[#e5e7eb] bg-white px-6 text-[15px] font-semibold text-[#111] transition-all hover:border-[#d1d5db] hover:bg-[#f9fafb]"
+                >
+                  Meet the Team
+                </a>
               </div>
             </div>
+
+            {/* 3 Pillar Cards Mosaic */}
+            <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+              {pillars.map((pillar) => {
+                const Icon = pillar.icon;
+                return (
+                  <article
+                    key={pillar.title}
+                    className="group relative flex flex-col justify-between rounded-2xl border border-gray-200 bg-white p-7 shadow-lg transition-all duration-300 hover:-translate-y-1.5 hover:border-[#075945]/40 hover:shadow-2xl hover:shadow-[#075945]/15"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between gap-3 mb-5">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#075945]/10 text-[#075945] border border-[#075945]/20">
+                          <Icon size={22} />
+                        </div>
+                        <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider ${pillar.badgeColor} shadow-md`}>
+                          {pillar.badge}
+                        </span>
+                      </div>
+                      <h3 className="font-sans text-xl font-bold text-[#111] group-hover:text-[#075945] transition-colors leading-snug">
+                        {pillar.title}
+                      </h3>
+                      <p className="mt-3 text-sm text-[#555] leading-relaxed">
+                        {pillar.description}
+                      </p>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+
+            {/* Impact Metric Bar with GSAP animated counter */}
+            <AboutHeroMetrics />
+
           </div>
-        </div>
 
-        {/* Team Section */}
-        <div className="p-8 md:p-12 rounded-3xl bg-muted/20 border border-border">
-          <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">Team</h3>
-          <h2 className="text-3xl font-grotesk font-medium mb-4">
-            A compact team working across strategy, operations, engineering, and product systems.
-          </h2>
-          <p className="text-sm text-muted-foreground mb-12">
-            We are not a giant organization. The product is shaped by a small group with distinct responsibilities, which is exactly why role clarity matters here.
-          </p>
+          {/* Organic wavy transition into dark section */}
+          <svg 
+            className="absolute bottom-0 left-0 w-full h-[60px] md:h-[110px] text-[#0d1f1a] translate-y-[1px] pointer-events-none" 
+            viewBox="0 0 1440 120" 
+            fill="currentColor" 
+            preserveAspectRatio="none"
+          >
+            <path d="M0,80 C480,-40 960,200 1440,80 L1440,120 L0,120 Z" />
+          </svg>
+        </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Placeholder 1 */}
-            <TeamCard
-              name="Pooja Ranjan"
-              role="Founder"
-              focus="Ecosystem strategy"
-              description="Shapes the long-range direction of ETHShala and keeps the work anchored to Ethereum governance needs."
-              imageSrc="/team/pooja_ranjan.jpg"
-              socials={[
-                {
-                  label: "GitHub",
-                  href: "https://github.com/poojaranjan",
-                  icon: <GithubIcon className="w-3 h-3" />,
-                },
-                {
-                  label: "LinkedIn",
-                  href: "https://www.linkedin.com/in/pooja-r-072899114/",
-                  icon: <LinkedInIcon className="w-3 h-3" />,
-                },
-              ]}
-            />
-
-            {/* Placeholder 2 */}
-            <TeamCard
-              name="Rajdeep Chakraborty"
-              role="Full Stack Intern"
-              focus="Full stack implementation"
-              description="Contributes across frontend and backend work to support feature delivery and improve the platform experience."
-              imageSrc="/team/rajdeep.jpg"
-              socials={[
-                {
-                  label: "GitHub",
-                  href: "https://github.com/rajdeepchakraborty-rc",
-                  icon: <GithubIcon className="w-3 h-3" />,
-                },
-                {
-                  label: "LinkedIn",
-                  href: "https://www.linkedin.com/in/rajdeepchakraborty69/",
-                  icon: <LinkedInIcon className="w-3 h-3" />,
-                },
-              ]}
-            />
+        {/* 2. THE PROBLEM & VISION SECTION (DARK) */}
+        <section id="why-we-built-this" className="relative bg-[#0d1f1a] text-white pt-20 pb-32 sm:pt-28 sm:pb-40 overflow-hidden">
+          <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12 relative z-10">
             
-            {/* Placeholder 3 */}
-            <TeamCard
-              name="Subhrajeet Bhattacharjee"
-              role="Full Stack Intern"
-              focus="Full stack implementation"
-              description="Contributes across frontend and backend work to support feature delivery and improve the platform experience."
-              imageSrc="/team/SubhrajeetBhattacharjee.webp"
-              socials={[
-                {
-                  label: "GitHub",
-                  href: "https://github.com/SubhrajeetBhattacharjee",
-                  icon: <GithubIcon className="w-3 h-3" />,
-                },
-                {
-                  label: "LinkedIn",
-                  href: "https://www.linkedin.com/in/subhrajeet-bhattacharjee/",
-                  icon: <LinkedInIcon className="w-3 h-3" />,
-                },
-              ]}
-            />
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+              
+              {/* Left Column: Narrative */}
+              <div className="lg:col-span-7">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#075945]/40 text-[#61d9b9] border border-[#61d9b9]/30">
+                    <Flame size={15} />
+                  </span>
+                  <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#61d9b9]">
+                    The Challenge
+                  </span>
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#f8bd36]" />
+                  <span
+                    className="font-caveat text-[#f8bd36] text-[20px] font-bold transform -rotate-1 hidden sm:inline-block leading-none"
+                    style={{ fontFamily: '"Caveat", cursive' }}
+                  >
+                    ~ bridge the institutional knowledge gap
+                  </span>
+                </div>
 
-            {/* Placeholder 4 */}
-            <TeamCard
-              name="Yash Kamal Chaturvedi"
-              role="Operations Lead"
-              focus="Operations and delivery"
-              description="Keeps programs, coordination, and day-to-day execution moving across research, platform work, and partnerships."
-              imageSrc="/team/yash.jpg"
-              socials={[
-                {
-                  label: "LinkedIn",
-                  href: "https://www.linkedin.com/in/yash-kamal-chaturvedi/",
-                  icon: <LinkedInIcon className="w-3 h-3" />,
-                },
-              ]}
-            />
+                <h2 className="font-sans text-[clamp(2.5rem,4.5vw,3.75rem)] font-black leading-[1.02] tracking-tight text-white">
+                  Standards and governance shouldn't require institutional memory.
+                </h2>
 
-            {/* Placeholder 5 */}
-            <TeamCard
-              name="Dhanush Naik"
-              role="Full Stack Engineer"
-              focus="Platform engineering"
-              description="Builds the product surface, analytics experience, and internal systems that turn raw governance data into usable tooling."
-              imageSrc="/team/Dhanush.jpg"
-              socials={[
-                {
-                  label: "GitHub",
-                  href: "https://github.com/dhanushlnaik",
-                  icon: <GithubIcon className="w-3 h-3" />,
-                },
-                {
-                  label: "LinkedIn",
-                  href: "https://www.linkedin.com/in/dhanushlnaik/",
-                  icon: <LinkedInIcon className="w-3 h-3" />,
-                },
-              ]}
-            />            
+                <div className="mt-6 space-y-4 text-base sm:text-lg text-white/75 font-medium leading-relaxed">
+                  <p>
+                    Ethereum governance is decentralized and open, yet sprawling across repositories, AllCoreDevs transcripts, Discord channels, and review queues. For a newcomer or student builder, understanding the lifecycle of a protocol change can feel like decrypting an insider's handbook.
+                  </p>
+                  <p>
+                    ETHShala was born to dismantle that barrier. We curate the moving parts, normalize the standards, and provide clear operational paths: what changed, why it matters, which proposals are active, and how aspiring engineers can participate.
+                  </p>
+                  <p>
+                    Our goal is not just more documentation. Our goal is operational clarity so anyone can evolve from passive observer to active Ethereum protocol contributor.
+                  </p>
+                </div>
+
+                <div className="mt-8 flex flex-wrap gap-4 pt-4 border-t border-white/10">
+                  <div className="flex items-center gap-2.5 text-xs font-semibold text-white/80">
+                    <span className="h-2 w-2 rounded-full bg-[#61d9b9]" />
+                    Zero Paywalls
+                  </div>
+                  <div className="flex items-center gap-2.5 text-xs font-semibold text-white/80">
+                    <span className="h-2 w-2 rounded-full bg-[#ffd359]" />
+                    Developer-First Curricula
+                  </div>
+                  <div className="flex items-center gap-2.5 text-xs font-semibold text-white/80">
+                    <span className="h-2 w-2 rounded-full bg-[#61d9b9]" />
+                    Real Campus Mentorship
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Interactive Flywheel Carousel */}
+              <div className="lg:col-span-5">
+                <ContributorFlywheel />
+              </div>
+
+            </div>
+
           </div>
-        </div>
 
-        {/* Values Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="p-8 rounded-3xl bg-muted/20 border border-border">
-            <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">Values</h3>
-            <h2 className="text-3xl font-grotesk font-medium mb-8">Learning should lead to building and contributing.</h2>
+          {/* Organic wavy transition into light section */}
+          <svg 
+            className="absolute bottom-0 left-0 w-full h-[60px] md:h-[110px] text-[#fcfbf7] translate-y-[1px] pointer-events-none" 
+            viewBox="0 0 1440 120" 
+            fill="currentColor" 
+            preserveAspectRatio="none"
+          >
+            <path d="M0,0 C480,120 960,-40 1440,60 L1440,120 L0,120 Z" />
+          </svg>
+        </section>
+
+        {/* 3. PLATFORM CAPABILITIES SECTION (LIGHT) */}
+        <section id="platform-capabilities" className="relative bg-[#fcfbf7] text-[#171a18] pt-20 pb-32 sm:pt-28 sm:pb-40 overflow-hidden">
+          <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12 relative z-10">
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="p-5 rounded-2xl bg-muted/40 border border-border">
-                <Shield className="w-5 h-5 text-primary mb-3" />
-                <h4 className="font-bold text-sm mb-2">Open Learning</h4>
-                <p className="text-xs text-muted-foreground">Ethereum knowledge should be accessible, practical, and open to anyone willing to learn.</p>
+            {/* Header */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-gray-200">
+              <div className="max-w-2xl">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#075945]/10 text-[#075945] border border-[#075945]/20">
+                    <Laptop size={15} />
+                  </span>
+                  <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#075945]">
+                    Platform Features
+                  </span>
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#f8bd36]" />
+                  <span
+                    className="font-caveat text-[#f8bd36] text-[20px] font-bold transform -rotate-1 hidden sm:inline-block leading-none"
+                    style={{ fontFamily: '"Caveat", cursive' }}
+                  >
+                    ~ built for active builders
+                  </span>
+                </div>
+
+                <h2 className="font-sans text-[clamp(2.5rem,4.5vw,3.75rem)] font-black leading-[1.02] tracking-tight text-[#111]">
+                  Engineered for every stage of your Web3 journey.
+                </h2>
               </div>
-              <div className="p-5 rounded-2xl bg-muted/40 border border-border">
-                <Activity className="w-5 h-5 text-primary mb-3" />
-                <h4 className="font-bold text-sm mb-2">Learn by Doing</h4>
-                <p className="text-xs text-muted-foreground">Concepts become meaningful when learners can experiment, build, and apply what they learn.</p>
-              </div>
-              <div className="p-5 rounded-2xl bg-muted/40 border border-border">
-                <Globe className="w-5 h-5 text-primary mb-3" />
-                <h4 className="font-bold text-sm mb-2">Community</h4>
-                <p className="text-xs text-muted-foreground">Learning grows through collaboration, peer support, shared experiences, and conversations.</p>
-              </div>
-              <div className="p-5 rounded-2xl bg-muted/40 border border-border">
-                <GitBranch className="w-5 h-5 text-primary mb-3" />
-                <h4 className="font-bold text-sm mb-2">Contribute</h4>
-                <p className="text-xs text-muted-foreground">We help learners move beyond understanding Ethereum to participating in its ecosystem.</p>
-              </div>
+              <p className="max-w-md text-sm sm:text-base text-[#444] leading-relaxed font-medium">
+                Whether mastering your first smart contract or analyzing live consensus upgrades, ETHShala gives you direct, uncompromised developer tools.
+              </p>
             </div>
+
+            {/* 3 Column Capabilities Grid */}
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+              {capabilities.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <article
+                    key={item.title}
+                    className="group relative flex flex-col justify-between rounded-2xl border border-gray-200 bg-white p-7 sm:p-8 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:border-[#075945]/40 hover:shadow-2xl hover:shadow-[#075945]/15"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-6">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#075945]/10 text-[#075945] border border-[#075945]/20 group-hover:border-[#075945]/40 transition-colors">
+                          <Icon size={22} />
+                        </div>
+                        <span className="text-[10px] font-black uppercase tracking-wider text-[#d97706] px-2.5 py-1 rounded-md bg-[#f8bd36]/15 border border-[#f8bd36]/40">
+                          {item.tag}
+                        </span>
+                      </div>
+                      <h3 className="font-sans text-xl font-bold text-[#111] group-hover:text-[#075945] transition-colors leading-snug">
+                        {item.title}
+                      </h3>
+                      <p className="mt-3 text-sm text-[#555] leading-relaxed">
+                        {item.description}
+                      </p>
+                    </div>
+
+                    <div className="mt-6 pt-4 border-t border-gray-100 flex items-center gap-1.5 text-xs font-bold text-[#075945]">
+                      <span>Explore feature</span>
+                      <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+
           </div>
 
-          <div className="p-8 rounded-3xl bg-muted/20 border border-border flex flex-col justify-center">
-            <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-8">What the platform offers</h3>
-            <div className="space-y-4">
-              <div className="p-4 rounded-xl border border-border flex gap-4 items-center">
-                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                  <Search className="w-4 h-4 text-primary" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold">Learn Ethereum</h4>
-                  <p className="text-xs text-muted-foreground">Build a strong foundation in Ethereum through structured modules, guided lessons, and learning paths.</p>
-                </div>
-              </div>
-              <div className="p-4 rounded-xl border border-border flex gap-4 items-center">
-                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                  <BarChart2 className="w-4 h-4 text-primary" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold">Build and Experiment</h4>
-                  <p className="text-xs text-muted-foreground">Turn concepts into practice through hands-on activities, smart contract experiments, and real-world projects.</p>
-                </div>
-              </div>
-              <div className="p-4 rounded-xl border border-border flex gap-4 items-center">
-                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                  <FileText className="w-4 h-4 text-primary" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold">Explore and Contribute</h4>
-                  <p className="text-xs text-muted-foreground">Discover EIPs, participate in the Ethereum community, and take your first steps toward contributing to the ecosystem.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+          {/* Organic wavy transition into dark section */}
+          <svg 
+            className="absolute bottom-0 left-0 w-full h-[60px] md:h-[110px] text-[#0a1a16] translate-y-[1px] pointer-events-none" 
+            viewBox="0 0 1440 120" 
+            fill="currentColor" 
+            preserveAspectRatio="none"
+          >
+            <path d="M0,80 C480,-40 960,200 1440,80 L1440,120 L0,120 Z" />
+          </svg>
+        </section>
 
-        {/* Footer info Grid */}
-        {/* Support Section commented for future grants and support integrations */}
-        {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> */}
-          {/* <div className="p-8 rounded-3xl bg-muted/20 border border-border">
-            <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">Support</h3>
-            <h2 className="text-2xl font-grotesk font-medium mb-6">Backed by grants, community support, and ecosystem collaboration.</h2>
-            <div className="space-y-4">
-              <div className="p-5 rounded-2xl bg-muted/40 border border-border">
-                <h4 className="font-bold text-sm mb-2">Ecosystem Support Program (EF ESP)</h4>
-                <p className="text-xs text-muted-foreground mb-3">Funds help maintain data pipelines, improve analytics, and keep ETHShala open-source.</p>
-                <div className="flex gap-2">
-                  <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-primary/20 text-primary">Significant</span>
-                  <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border border-border">Infrastructure</span>
+        {/* 4. TEAM SECTION: The Core Builders (DARK) */}
+        <section id="team" className="relative bg-[#0a1a16] text-white pt-20 pb-32 sm:pt-28 sm:pb-40 overflow-hidden">
+          <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12 relative z-10">
+            
+            {/* Header */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-white/10">
+              <div className="max-w-2xl">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#075945]/40 text-[#61d9b9] border border-[#61d9b9]/30">
+                    <Award size={15} />
+                  </span>
+                  <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#61d9b9]">
+                    The Team
+                  </span>
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#f8bd36]" />
+                  <span
+                    className="font-caveat text-[#f8bd36] text-[20px] font-bold transform -rotate-1 hidden sm:inline-block leading-none"
+                    style={{ fontFamily: '"Caveat", cursive' }}
+                  >
+                    ~ built by builders, for the ecosystem
+                  </span>
                 </div>
-              </div>
-            </div>
-          </div> */}
 
-          <div className="p-8 rounded-3xl bg-muted/20 border border-border">
-            <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">Partners</h3>
-            <h2 className="text-2xl font-grotesk font-medium mb-6">Working alongside ecosystem operators.</h2>
-            <div className="space-y-4">
-              <div className="p-5 rounded-2xl bg-muted/40 border border-border hover:border-primary/40">
-                <Link target="_blank" className="flex items-center gap-6" href="https://etherworld.co/">
-                <div className="relative h-20 w-40 shrink-0">
-                  <Image
-                    src="/brand/partners/EtherWorld-horizontal-dark.png"
-                    alt="EtherWorld"
-                    fill
-                    className="object-cover dark:hidden"
-                  />
-                  <Image
-                    src="/brand/partners/EtherWorld-horizontal-light.png"
-                    alt="EtherWorld"
-                    fill
-                    className="hidden object-cover dark:block"
-                  />
-                </div>
-                <div>
-                  <h4 className="font-bold text-sm mb-1">EtherWorld</h4>
-                  <p className="text-xs text-muted-foreground">Media and ecosystem amplification.</p>
-                </div>
-                <ExternalLink className="w-4 h-4 text-muted-foreground" />
-                </Link>
+                <h2 className="font-sans text-[clamp(2.5rem,4.5vw,3.75rem)] font-black leading-[1.02] tracking-tight text-white">
+                  A compact team working across strategy, engineering, and delivery.
+                </h2>
               </div>
-              {/* <div className="p-5 rounded-2xl bg-muted/40 border border-border hover:border-primary/40">
-                <Link target="_blank" className="flex items-center gap-6" href="https://www.ethcatherders.com/">
-                <div className="w-16 h-16 rounded-full bg-muted border border-border shrink-0 overflow-hidden relative">
-                <Image
-                  src="/brand/partners/ech.png"
-                  alt="Profile"
-                  fill
-                  className="object-cover"
+              <p className="max-w-md text-sm sm:text-base text-white/70 leading-relaxed font-medium">
+                We are not a bloated organization. ETHShala is designed and maintained by a tight-knit group with distinct domain focus and deep commitment to open-source developer empowerment.
+              </p>
+            </div>
+
+            {/* Team Grid */}
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+              {teamMembers.map((member) => (
+                <TeamCard
+                  key={member.name}
+                  name={member.name}
+                  role={member.role}
+                  focus={member.focus}
+                  description={member.description}
+                  imageSrc={member.imageSrc}
+                  status={member.status}
+                  socials={member.socials}
                 />
+              ))}
+            </div>
+
+          </div>
+
+          {/* Organic wavy transition into light section */}
+          <svg 
+            className="absolute bottom-0 left-0 w-full h-[60px] md:h-[110px] text-[#fcfbf7] translate-y-[1px] pointer-events-none" 
+            viewBox="0 0 1440 120" 
+            fill="currentColor" 
+            preserveAspectRatio="none"
+          >
+            <path d="M0,0 C480,120 960,-40 1440,60 L1440,120 L0,120 Z" />
+          </svg>
+        </section>
+
+        {/* 5. GUIDING PRINCIPLES & VALUES SECTION (LIGHT) */}
+        <section id="values" className="relative bg-[#fcfbf7] text-[#171a18] pt-20 pb-32 sm:pt-28 sm:pb-40 overflow-hidden">
+          <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12 relative z-10">
+            
+            {/* Values Header */}
+            <div className="text-center max-w-2xl mx-auto mb-14">
+              <div className="inline-flex items-center gap-2 mb-3">
+                <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#075945]/10 text-[#075945] border border-[#075945]/20">
+                  <Shield size={13} />
+                </span>
+                <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#075945]">
+                  Guiding Principles
+                </span>
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#f8bd36]" />
+                <span
+                  className="font-caveat text-[#f8bd36] text-[19px] font-bold transform -rotate-1 hidden sm:inline-block leading-none"
+                  style={{ fontFamily: '"Caveat", cursive' }}
+                >
+                  ~ how we build &amp; teach
+                </span>
+              </div>
+
+              <h2 className="font-sans text-[clamp(2.5rem,4.5vw,3.75rem)] font-black leading-[1.02] tracking-tight text-[#111]">
+                Learning should lead to building and contributing.
+              </h2>
+              <p className="mt-4 text-[#555] text-base leading-relaxed">
+                Our principles define how we teach, how we coordinate campus workshops, and how we build our software.
+              </p>
+            </div>
+
+            {/* 4 Values Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {coreValues.map((val) => {
+                const Icon = val.icon;
+                return (
+                  <div
+                    key={val.title}
+                    className="group rounded-2xl border border-gray-200 bg-white p-6 shadow-md transition-all duration-300 hover:-translate-y-1.5 hover:border-[#075945]/40 hover:shadow-xl flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#075945]/10 text-[#075945] border border-[#075945]/20 mb-5 group-hover:border-[#075945]/40 transition-colors">
+                        <Icon size={22} />
+                      </div>
+                      <h4 className="font-sans text-lg font-bold text-[#111] group-hover:text-[#075945] transition-colors">
+                        {val.title}
+                      </h4>
+                      <p className="text-[11px] font-semibold text-[#d97706] mt-0.5">
+                        {val.subtitle}
+                      </p>
+                      <p className="mt-3 text-xs sm:text-sm text-[#555] leading-relaxed">
+                        {val.description}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+          </div>
+
+          {/* Organic wavy transition into dark section */}
+          <svg 
+            className="absolute bottom-0 left-0 w-full h-[60px] md:h-[110px] text-[#0d1f1a] translate-y-[1px] pointer-events-none" 
+            viewBox="0 0 1440 120" 
+            fill="currentColor" 
+            preserveAspectRatio="none"
+          >
+            <path d="M0,80 C480,-40 960,200 1440,80 L1440,120 L0,120 Z" />
+          </svg>
+        </section>
+
+        {/* 6. ECOSYSTEM COLLABORATION & PARTNERS SECTION (DARK) */}
+        <section id="partners" className="relative bg-[#0d1f1a] text-white pt-20 pb-32 sm:pt-28 sm:pb-40 overflow-hidden">
+          <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12 relative z-10">
+            
+            {/* Header */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-white/10">
+              <div className="max-w-2xl">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#075945]/40 text-[#61d9b9] border border-[#61d9b9]/30">
+                    <Users size={15} />
+                  </span>
+                  <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#61d9b9]">
+                    Ecosystem Collaboration
+                  </span>
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#f8bd36]" />
+                  <span
+                    className="font-caveat text-[#f8bd36] text-[20px] font-bold transform -rotate-1 hidden sm:inline-block leading-none"
+                    style={{ fontFamily: '"Caveat", cursive' }}
+                  >
+                    ~ working together for builders
+                  </span>
                 </div>
-                <div>
-                  <h4 className="font-bold text-sm mb-1">ECH (Ethereum Cat Herders)</h4>
-                  <p className="text-xs text-muted-foreground">Operational support around standards.</p>
-                </div>
-                <ExternalLink className="w-4 h-4 text-muted-foreground" />
+
+                <h2 className="font-sans text-[clamp(2.5rem,4.5vw,3.75rem)] font-black leading-[1.02] tracking-tight text-white">
+                  Working alongside ecosystem operators.
+                </h2>
+              </div>
+              <p className="max-w-md text-sm sm:text-base text-white/70 leading-relaxed font-medium">
+                From protocol research desks to active university builder chapters, our partners help amplify free, accessible Ethereum education.
+              </p>
+            </div>
+
+            {/* 3 Partner Cards on Dark Theme */}
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+              {/* EtherWorld */}
+              <div className="group rounded-2xl border border-white/10 bg-[#0a1a15]/80 p-7 shadow-xl transition-all duration-300 hover:-translate-y-1.5 hover:border-[#61d9b9]/40 hover:bg-[#0e241e]">
+                <Link target="_blank" href="https://etherworld.co/" className="block">
+                  <div className="relative h-16 w-36 bg-white/10 rounded-xl border border-white/15 p-2 group-hover:border-[#61d9b9]/40 transition-colors flex items-center justify-center overflow-hidden mb-5">
+                    <Image
+                      src="/brand/partners/EtherWorld-horizontal-dark.png"
+                      alt="EtherWorld Logo"
+                      width={120}
+                      height={40}
+                      className="object-contain invert brightness-200"
+                    />
+                  </div>
+                  <h4 className="font-sans text-lg font-bold text-white group-hover:text-[#61d9b9] transition-colors flex items-center gap-1.5">
+                    EtherWorld
+                    <ExternalLink size={14} className="text-white/50" />
+                  </h4>
+                  <p className="text-xs sm:text-sm text-white/70 mt-2 leading-relaxed">
+                    Media &amp; ecosystem amplification. Research insights into consensus upgrades, EIP roadmaps, and AllCoreDevs coverage.
+                  </p>
                 </Link>
-              </div> */}
-            </div>
-          </div>
-        {/* </div> */}
+              </div>
 
-        {/* Bottom CTA Block */}
-        <div className="p-8 md:p-12 rounded-3xl bg-muted/20 border border-border">
-          <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">Get Involved</h3>
-          <h2 className="text-2xl font-grotesk font-medium mb-4">Support the platform, contribute feedback, or build on top of the work.</h2>
-          <p className="text-sm text-muted-foreground mb-8 max-w-2xl">
-            ETHShala is a community resource. If you want to help, the best paths are straightforward: use it, critique it, contribute to it, or support the infrastructure behind it.
-          </p>
-          <div className="flex flex-wrap gap-4">
-            <Link target="_blank" href="https://github.com/AvarchLLC/eips-bootcamp">
-            <button className="flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-xl border border-border hover:bg-muted transition-colors"><GithubIcon className="w-4 h-4"/> GitHub</button>
-            </Link>
-            <Link target="_blank" href="https://discord.com/invite/tUXgfV822C">
-            <button className="flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-xl border border-border hover:bg-muted transition-colors"><DiscordIcon className="w-4 h-4"/> Discord</button>
-            </Link>
-            <Link target="_blank" href="/">
-            <button className="flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-xl border border-border hover:bg-muted transition-colors"><Heart className="w-4 h-4"/> Donate</button>
-            </Link>
-            <Link target="_blank" href="mailto:dev@avarch.com">
-            <button className="flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-xl border border-border hover:bg-muted transition-colors"><Mail className="w-4 h-4"/> Contact</button>
-            </Link>
-          </div>
-        </div>
+              {/* Hooghly Engineering */}
+              <div className="group rounded-2xl border border-white/10 bg-[#0a1a15]/80 p-7 shadow-xl transition-all duration-300 hover:-translate-y-1.5 hover:border-[#61d9b9]/40 hover:bg-[#0e241e]">
+                <Link target="_blank" href="https://www.hetc.ac.in/" className="block">
+                  <div className="relative h-16 w-16 bg-white/10 rounded-xl border border-white/15 p-2 group-hover:border-[#61d9b9]/40 transition-colors flex items-center justify-center overflow-hidden mb-5">
+                    <Image
+                      src="/brand/partners/hetc.png"
+                      alt="HETC Logo"
+                      width={48}
+                      height={48}
+                      className="object-contain"
+                    />
+                  </div>
+                  <h4 className="font-sans text-lg font-bold text-white group-hover:text-[#61d9b9] transition-colors flex items-center gap-1.5">
+                    HETC Chapter
+                    <ExternalLink size={14} className="text-white/50" />
+                  </h4>
+                  <p className="text-xs sm:text-sm text-white/70 mt-2 leading-relaxed">
+                    Active student builder hub. Conducted our debut offline hands-on bootcamp with 25+ developers deploying live smart contracts.
+                  </p>
+                </Link>
+              </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="p-8 rounded-3xl bg-muted/20 border border-border">
-            <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">Policy</h3>
-            <h2 className="text-xl font-grotesk font-medium mb-4">Legal and privacy</h2>
-            <p className="text-xs text-muted-foreground mb-6">We keep the legal and privacy layer explicit. Use these documents when you need the operational details behind account, data, and platform usage.</p>
-            <div className="flex gap-4">
-              <button className="flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-lg bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-colors">Privacy Policy <ArrowRight className="w-3 h-3"/></button>
-              <button className="flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-lg border border-border hover:bg-muted transition-colors">Terms of Service <ArrowRight className="w-3 h-3"/></button>
+              {/* MCKV Institute */}
+              <div className="group rounded-2xl border border-white/10 bg-[#0a1a15]/80 p-7 shadow-xl transition-all duration-300 hover:-translate-y-1.5 hover:border-[#61d9b9]/40 hover:bg-[#0e241e]">
+                <Link target="_blank" href="https://www.mckvie.edu.in/" className="block">
+                  <div className="relative h-16 w-16 bg-white/10 rounded-xl border border-white/15 p-2 group-hover:border-[#61d9b9]/40 transition-colors flex items-center justify-center overflow-hidden mb-5">
+                    <Image
+                      src="/brand/partners/mckvie.jpg"
+                      alt="MCKVIE Logo"
+                      width={48}
+                      height={48}
+                      className="object-contain rounded-lg"
+                    />
+                  </div>
+                  <h4 className="font-sans text-lg font-bold text-white group-hover:text-[#61d9b9] transition-colors flex items-center gap-1.5">
+                    MCKV Institute
+                    <ExternalLink size={14} className="text-white/50" />
+                  </h4>
+                  <p className="text-xs sm:text-sm text-white/70 mt-2 leading-relaxed">
+                    Smart contracts &amp; dev sessions. Hands-on Web3 workshops and EVM architecture deep dives with 40+ engineering students.
+                  </p>
+                </Link>
+              </div>
             </div>
+
           </div>
-          <div className="p-8 rounded-3xl bg-muted/20 border border-border">
-            <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">Contact</h3>
-            <h2 className="text-xl font-grotesk font-medium mb-4">Reach the team</h2>
-            <p className="text-xs text-muted-foreground mb-6">For collaboration, platform questions, or product feedback, contact us directly.</p>
-            <div className="p-4 rounded-xl border border-border bg-muted/30">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Email</p>
-              <a href="mailto:contact@ethshala.com" className="text-sm font-medium text-primary hover:underline flex items-center gap-2">contact@ethshala.com <ArrowRight className="w-3 h-3"/></a>
+
+          {/* Organic wavy transition into light section */}
+          <svg 
+            className="absolute bottom-0 left-0 w-full h-[60px] md:h-[110px] text-[#fdfdfc] translate-y-[1px] pointer-events-none" 
+            viewBox="0 0 1440 120" 
+            fill="currentColor" 
+            preserveAspectRatio="none"
+          >
+            <path d="M0,0 C480,120 960,-40 1440,60 L1440,120 L0,120 Z" />
+          </svg>
+        </section>
+
+        {/* 7. JOIN THE MOVEMENT & PLATFORM TRANSPARENCY SECTION (LIGHT WITH GRID) */}
+        <section id="get-involved" className="relative bg-[#fdfdfc] text-[#111] pt-20 pb-36 sm:pt-28 sm:pb-48 overflow-hidden">
+          {/* Subtle grid background matching Home page partner section */}
+          <div 
+            className="absolute inset-0 opacity-[0.05] pointer-events-none" 
+            style={{ 
+              backgroundImage: 'linear-gradient(#0e7955 1px, transparent 1px), linear-gradient(90deg, #0e7955 1px, transparent 1px)', 
+              backgroundSize: '40px 40px' 
+            }} 
+          />
+
+          <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12 relative z-10">
+            
+            {/* Big Action Callout Card */}
+            <div className="rounded-3xl border border-[#075945]/20 bg-gradient-to-r from-[#075945]/10 via-white to-white p-8 sm:p-14 shadow-xl flex flex-col lg:flex-row items-center justify-between gap-8 relative overflow-hidden">
+              <div className="relative z-10 max-w-2xl">
+                <span className="inline-flex items-center gap-2 rounded-lg bg-[#ffd359] px-3 py-1 text-[11px] font-black uppercase tracking-wider text-black mb-4 shadow-sm">
+                  <Sparkles size={13} />
+                  Join the Movement
+                </span>
+                <h2 className="font-sans text-3xl sm:text-5xl font-black text-[#111] leading-tight">
+                  Support the platform, contribute feedback, or build with us.
+                </h2>
+                <p className="mt-4 text-base sm:text-lg text-[#444] leading-relaxed font-medium">
+                  ETHShala is a public good resource for the global Ethereum ecosystem. Whether submitting code, hosting a campus session, or reviewing new EIP modules, your voice matters.
+                </p>
+                
+                {/* Action Buttons */}
+                <div className="mt-8 flex flex-wrap gap-3.5">
+                  <Link
+                    href="/community#campus-network"
+                    className="inline-flex min-h-[48px] items-center gap-2.5 rounded-xl bg-[#0a1a16] px-6 text-sm font-black text-white hover:bg-[#15382f] hover:shadow-lg transition-all"
+                  >
+                    Bring ETHShala to Your Campus
+                    <ArrowRight size={16} />
+                  </Link>
+
+                  <Link target="_blank" href="https://github.com/AvarchLLC/eips-bootcamp">
+                    <button className="flex items-center gap-2 text-sm font-bold px-5 py-2.5 rounded-xl bg-white border border-gray-300 text-[#111] hover:border-[#075945] hover:text-[#075945] transition-all shadow-sm">
+                      <GithubIcon className="w-4 h-4" />
+                      GitHub Repo
+                    </button>
+                  </Link>
+
+                  <Link target="_blank" href="https://discord.com/invite/tUXgfV822C">
+                    <button className="flex items-center gap-2 text-sm font-bold px-5 py-2.5 rounded-xl bg-white border border-gray-300 text-[#111] hover:border-[#075945] hover:text-[#075945] transition-all shadow-sm">
+                      <DiscordIcon className="w-4 h-4" />
+                      Discord
+                    </button>
+                  </Link>
+                </div>
+              </div>
+
+              {/* Quick Contact Box on Right */}
+              <div className="relative z-10 w-full lg:w-auto shrink-0 flex flex-col gap-4">
+                <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-md max-w-sm">
+                  <p className="text-[11px] font-bold uppercase tracking-widest text-[#075945] mb-1">Direct Inquiries</p>
+                  <h4 className="font-sans text-base font-bold text-[#111]">Host a Campus Workshop</h4>
+                  <p className="text-xs text-[#555] mt-1 leading-relaxed">
+                    Free hands-on workshops, bounties, and guest sessions for your college or club.
+                  </p>
+                  <a
+                    href="mailto:contact@ethshala.com"
+                    className="mt-4 inline-flex items-center gap-2 text-xs font-bold text-[#075945] hover:underline"
+                  >
+                    <Mail size={14} />
+                    contact@ethshala.com
+                    <ArrowRight size={13} />
+                  </a>
+                </div>
+              </div>
             </div>
+
+            {/* Legal & Platform Transparency Footnotes */}
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[#075945] mb-2">Policy &amp; Standards</p>
+                <h4 className="font-sans text-lg font-bold text-[#111] mb-2">Platform Transparency</h4>
+                <p className="text-xs text-[#555] leading-relaxed mb-4">
+                  We believe in explicit privacy and educational integrity. Your account data, quiz telemetry, and platform usage remain secure and transparent.
+                </p>
+                <div className="flex gap-3">
+                  <button className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-200 text-[#333] hover:border-[#075945] hover:text-[#075945] transition-all">
+                    Privacy Policy <ArrowRight size={12} />
+                  </button>
+                  <button className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-200 text-[#333] hover:border-[#075945] hover:text-[#075945] transition-all">
+                    Terms of Service <ArrowRight size={12} />
+                  </button>
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[#d97706] mb-2">Direct Contact</p>
+                <h4 className="font-sans text-lg font-bold text-[#111] mb-2">Reach the Core Team</h4>
+                <p className="text-xs text-[#555] leading-relaxed mb-4">
+                  For university chapter inquiries, research collaboration, grant support, or speaking engagements, reach out directly.
+                </p>
+                <a
+                  href="mailto:contact@ethshala.com"
+                  className="inline-flex items-center gap-2 text-sm font-bold text-[#075945] hover:underline"
+                >
+                  <Mail size={15} />
+                  contact@ethshala.com
+                  <ArrowRight size={14} />
+                </a>
+              </div>
+            </div>
+
           </div>
-        </div>
+
+          {/* Organic wavy transition into dark footer */}
+          <svg 
+            className="absolute bottom-0 left-0 w-full h-[60px] md:h-[110px] text-[#080808] translate-y-[1px] pointer-events-none" 
+            viewBox="0 0 1440 120" 
+            fill="currentColor" 
+            preserveAspectRatio="none"
+          >
+            <path d="M0,80 C480,-40 960,200 1440,80 L1440,120 L0,120 Z" />
+          </svg>
+        </section>
 
       </main>
-      <Footer />
+
+      <div className="dark">
+        <Footer />
+      </div>
     </div>
   );
 }
