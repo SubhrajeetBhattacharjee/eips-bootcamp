@@ -1,5 +1,5 @@
 import { Navbar } from "../components/landing/Navbar";
-import { Zap, TrendingUp, Trophy, BookOpen } from "lucide-react";
+import { WavingStudent } from "../components/auth/WavingStudent";
 
 export default function AuthLayout({
   children,
@@ -7,164 +7,163 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-background">
-      <div
-        className="
-          absolute
-          inset-0
-          bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.18),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(6,182,212,0.15),transparent_40%)]
-        "
+    <div className="min-h-screen bg-[#fcfbf7] text-[#171a18] font-sans selection:bg-[#61d9b9] selection:text-black flex flex-col relative overflow-hidden">
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap');`,
+        }}
       />
-      <Navbar showNavLinks={false} className="bg-gradient-to-b from-background/80 to-background/20 backdrop-blur-md"/>
 
-      {/* Background Orbs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute left-20 top-20 h-72 w-72 rounded-full bg-emerald-500/10 blur-3xl" />
-        <div
-          className="
-            absolute
-            -left-40
-            top-20
-            h-[35rem]
-            w-[35rem]
-            rounded-full
-            bg-emerald-500/20
-            dark:bg-emerald-500/10
-            blur-[150px]
-          "
-        />
+      {/* 1. Subtle Engineering Blueprint Grid matching reference page */}
+      <div 
+        className="pointer-events-none absolute inset-0 opacity-[0.045] z-0" 
+        style={{ 
+          backgroundImage: 'linear-gradient(#075945 1px, transparent 1px), linear-gradient(90deg, #075945 1px, transparent 1px)', 
+          backgroundSize: '36px 36px' 
+        }} 
+      />
 
-        <div
-          className="
-            absolute
-            -right-40
-            bottom-0
-            h-[35rem]
-            w-[35rem]
-            rounded-full
-            bg-cyan-500/20
-            dark:bg-cyan-500/10
-            blur-[150px]
-          "
-        />
+      {/* 2. Soft Ambient Green & Amber Lighting */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden z-0">
+        <div className="absolute -top-24 left-1/3 -translate-x-1/2 h-[550px] w-[850px] rounded-full bg-[#075945]/12 blur-[160px]" />
+        <div className="absolute top-36 right-10 h-80 w-80 rounded-full bg-[#f8bd36]/10 blur-[150px]" />
+        <div className="absolute bottom-32 left-10 h-72 w-72 rounded-full bg-[#61d9b9]/12 blur-[140px]" />
       </div>
-      
-      {/* Main Card */}
-      <div className="relative z-10 pt-16 min-h-screen">
-        <div className="grid min-h-[calc(100vh-4rem)] lg:grid-cols-2">
-          
-          {/* Left Panel */}
-          <div className="hidden lg:flex flex-col justify-center items-center px-16 xl:px-24">
-            {/* EthereumLearningAnimation */}
-            <div className="relative flex flex-col items-center justify-center">
-              {/* Glow effect behind the logo */}
-              <div className="absolute w-32 h-32 bg-emerald-500/20 rounded-full blur-[50px] animate-pulse"></div>
-        
-              {/* Animated Book with Floating Ethereum Logo */}
-              <div className="relative w-40 h-40 mb-8 flex flex-col items-center justify-end">
-          
-                {/* Particles rising from the book */}
-                <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                  <div className="absolute top-1/4 left-1/4 w-1.5 h-1.5 bg-emerald-400 rounded-full animate-[ping_1.5s_ease-in-out_infinite]"></div>
-                  <div className="absolute top-1/3 right-1/4 w-2 h-2 bg-emerald-300 rounded-full animate-[ping_2s_ease-in-out_infinite_0.8s]"></div>
-                  <div className="absolute top-1/2 left-1/2 w-1 h-1 bg-emerald-500 rounded-full animate-[ping_1.2s_ease-in-out_infinite_0.5s]"></div>
-                </div>
 
-                {/* Floating Ethereum Diamond */}
-                <div className="absolute top-2 w-14 h-14 animate-bounce drop-shadow-[0_0_15px_rgba(16,185,129,0.8)] z-10" style={{ animationDuration: '2s' }}>
-                  <svg viewBox="0 0 256 417" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-                    <path fill="#34d399" d="M127.961 0l-2.795 9.5v275.668l2.795 2.79 127.962-75.638z" />
-                    <path fill="#059669" d="M127.962 0L0 212.32l127.962 75.639V154.158z" />
-                    <path fill="#10b981" d="M127.961 312.187l-1.575 1.92v98.199l1.575 4.6L256 236.587z" />
-                    <path fill="#047857" d="M127.962 416.905v-104.72L0 236.585z" />
-                    <path fill="#6ee7b7" d="M127.961 287.958l127.96-75.637-127.96-58.162z" />
-                    <path fill="#a7f3d0" d="M0 212.32l127.96 75.638v-133.8z" />
-                  </svg>
-                </div>
+      {/* Global Navbar */}
+      <Navbar
+        className="dark bg-background/90 backdrop-blur-xl border-b border-border z-50"
+        showNavLinks={false}
+        showThemeToggle={false}
+      />
 
-                {/* Glowing Open Book */}
-                <div className="relative w-24 h-24 text-emerald-600 drop-shadow-[0_0_20px_rgba(16,185,129,0.3)] z-0">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
-                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                    {/* Glowing Pages */}
-                    <path d="M6 8h4" stroke="#34d399" strokeWidth="1" className="animate-pulse"></path>
-                    <path d="M6 12h4" stroke="#34d399" strokeWidth="1" className="animate-pulse" style={{ animationDelay: '0.2s' }}></path>
-                    <path d="M14 8h4" stroke="#34d399" strokeWidth="1" className="animate-pulse" style={{ animationDelay: '0.4s' }}></path>
-                    <path d="M14 12h4" stroke="#34d399" strokeWidth="1" className="animate-pulse" style={{ animationDelay: '0.6s' }}></path>
-                  </svg>
-                </div>
-              </div>
+      {/* Main Content Area */}
+      <main className="mt-16 flex-grow flex flex-col items-center justify-start pt-6 sm:pt-8 lg:pt-10 pb-16 px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+        <div className="w-full max-w-[1120px] mx-auto flex flex-col items-center">
+          
+          {/* Top Header: Clean, Balanced & Formatted on Straight Lines */}
+          <div className="text-center max-w-3xl mb-6 sm:mb-8">
+            
+            {/* Pulse Badge */}
+            <div className="inline-flex items-center gap-2.5 rounded-full border border-[#075945]/20 bg-[#075945]/10 px-4 py-1.5 backdrop-blur-md mb-3 shadow-xs">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#075945] opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-[#075945]" />
+              </span>
+              <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#075945]">
+                Student On-Ramp
+              </span>
+              <span className="text-[#333]/30 text-xs">·</span>
+              <span className="text-[11px] font-semibold text-[#444]">
+                Open Ethereum Education
+              </span>
             </div>
 
-            {/* Heading */}
-            <h1 className="mt-6 text-5xl xl:text-6xl font-bold text-center">
-              Learn.
-              <span className="text-emerald-500"> Build.</span>
-              <br />
-              Grow.
+            {/* Headline formatted neatly */}
+            <h1 className="font-sans text-[clamp(1.85rem,3.4vw,2.75rem)] font-black leading-[1.12] tracking-tight text-[#111]">
+              Demystifying Ethereum governance{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#075945] via-[#0e7955] to-[#d97706]">
+                for student builders.
+              </span>
             </h1>
 
-            {/* Description */}
-            <p className="mt-4 max-w-md text-center text-muted-foreground text-base leading-relaxed">
-              Master Ethereum development through structured learning and real progress tracking.
+            {/* Subtitle */}
+            <p className="mt-2 text-sm sm:text-base text-[#555] font-medium leading-relaxed max-w-2xl mx-auto">
+              Hands-on EIP labs, protocol governance tracks, and campus peers guiding you from your first smart contract to protocol governance.
             </p>
+          </div>
+
+          {/* Unified Divided Box: Form on one side, Waving Student on the other */}
+          <div className="w-full bg-white/95 backdrop-blur-md rounded-3xl border border-gray-200/90 shadow-[0_20px_60px_rgba(7,89,69,0.08)] overflow-hidden grid grid-cols-1 lg:grid-cols-12">
             
-            {/* SaaS cards */}
-            <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl mx-auto">
-  
-              <div className="group flex items-start gap-3 rounded-2xl border border-border/50 bg-background/40 p-4 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-emerald-500/30">
-                <div className="rounded-xl bg-emerald-500/10 p-2 transition-transform duration-300 group-hover:scale-110">
-                  <Zap className="h-4 w-4 text-emerald-500" />
-                </div>
-                <div>
-                  <p className="font-medium">Earn XP</p>
-                  <p className="text-sm text-muted-foreground">Complete tasks and level up</p>
-                </div>
+            {/* Side A: Waving Student & Campus Community Stage */}
+            <div className="lg:col-span-6 bg-gradient-to-b from-[#faf9f5] to-[#f4f2ea] p-6 sm:p-8 flex flex-col justify-between items-center border-b lg:border-b-0 lg:border-r border-gray-200/80 relative">
+              
+              {/* Top tag */}
+              <div className="w-full flex items-center justify-between text-xs font-mono text-[#666] mb-2">
+                <span className="flex items-center gap-1.5 font-bold text-[#075945]">
+                  <span className="w-2 h-2 rounded-full bg-[#27c93f] animate-pulse" />
+                  Live Campus Cohort
+                </span>
+                <span className="text-[11px] text-[#888]">
+                  EVM &amp; EIP Labs
+                </span>
               </div>
 
-              <div className="group flex items-start gap-3 rounded-2xl border border-border/50 bg-background/40 p-4 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-emerald-500/30">
-                <div className="rounded-xl bg-emerald-500/10 p-2 transition-transform duration-300 group-hover:scale-110">
-                  <TrendingUp className="h-4 w-4 text-emerald-500" />
-                </div>
-                <div>
-                  <p className="font-medium">Streak System</p>
-                  <p className="text-sm text-muted-foreground">Stay consistent daily</p>
-                </div>
+              {/* Student Video Animation */}
+              <div className="my-auto py-2 w-full flex justify-center">
+                <WavingStudent />
               </div>
 
-              <div className="group flex items-start gap-3 rounded-2xl border border-border/50 bg-background/40 p-4 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-emerald-500/30">
-                <div className="rounded-xl bg-emerald-500/10 p-2 transition-transform duration-300 group-hover:scale-110">
-                  <Trophy className="h-4 w-4 text-emerald-500" />
+              {/* Bottom Community Perks & Avatars */}
+              <div className="w-full pt-4 border-t border-gray-200/80 space-y-3">
+                <div className="flex flex-wrap justify-center gap-4 text-xs font-semibold text-[#444]">
+                  <div className="flex items-center gap-1.5">
+                    <span className="h-2 w-2 rounded-full bg-[#075945]" />
+                    Zero Paywalls
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="h-2 w-2 rounded-full bg-[#f8bd36]" />
+                    Developer Labs
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="h-2 w-2 rounded-full bg-[#075945]" />
+                    Campus Mentorship
+                  </div>
                 </div>
-                <div>
-                  <p className="font-medium">Leaderboard</p>
-                  <p className="text-sm text-muted-foreground">Compete globally</p>
-                </div>
-              </div>
 
-              <div className="group flex items-start gap-3 rounded-2xl border border-border/50 bg-background/40 p-4 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-emerald-500/30">
-                <div className="rounded-xl bg-emerald-500/10 p-2 transition-transform duration-300 group-hover:scale-110">
-                  <BookOpen className="h-4 w-4 text-emerald-500" />
-                </div>
-                <div>
-                  <p className="font-medium">EIP Explorer</p>
-                  <p className="text-sm text-muted-foreground">Study Ethereum proposals</p>
+                <div className="flex items-center justify-center gap-3">
+                  <div aria-hidden="true" className="flex -space-x-2">
+                    {['Arijit.jpg', 'dhan.jpg', 'rajdeep.jpg', 'Subhadeep.jpeg'].map((avatar) => (
+                      <img
+                        key={avatar}
+                        src={`/avatars/${avatar}`}
+                        alt={avatar.split('.')[0]}
+                        className="h-7 w-7 rounded-full border-2 border-white shadow-xs object-cover"
+                      />
+                    ))}
+                  </div>
+                  <p className="text-[11px] text-[#666] font-medium">
+                    Joined by <span className="font-bold text-[#111]">1,200+ students</span> across 20+ campuses
+                  </p>
                 </div>
               </div>
 
             </div>
 
-          </div> 
+            {/* Side B: Auth Form (Sign In / Sign Up) */}
+            <div className="lg:col-span-6 bg-white p-6 sm:p-8 lg:p-10 flex flex-col justify-center">
+              {children}
+            </div>
 
-          {/* Auth Card */}
-          <div className="flex items-center justify-center p-6">
-            {children}
           </div>
 
         </div>
+      </main>
+
+      {/* Signature Organic Wavy Bottom Transition into Deep Green Strip matching reference */}
+      <div className="relative w-full overflow-hidden leading-none mt-auto z-10 pointer-events-none">
+        <svg 
+          className="relative block w-full h-[40px] sm:h-[65px] text-[#0d1f1a] translate-y-[1px]" 
+          viewBox="0 0 1440 120" 
+          fill="currentColor" 
+          preserveAspectRatio="none"
+        >
+          <path d="M0,80 C480,-40 960,200 1440,80 L1440,120 L0,120 Z" />
+        </svg>
+        <div className="bg-[#0d1f1a] text-white/70 py-3 px-6 border-t border-[#075945]/30">
+          <div className="max-w-[1360px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-mono">
+            <div className="flex items-center gap-2 text-[#61d9b9]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#61d9b9] animate-pulse" />
+              <span>Ethereum Protocol &amp; Governance Education</span>
+            </div>
+            <div className="text-white/40 text-[11px]">
+              ETHShala · Built by Avarch · Sepolia Testnet Ready
+            </div>
+          </div>
+        </div>
       </div>
-      
+
     </div>
   );
 }

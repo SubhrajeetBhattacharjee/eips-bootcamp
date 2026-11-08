@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile } from "fs/promises";
+import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
 import { auth } from '@/app/lib/auth';
-import { headers } from 'next/headers';;
+import { headers } from 'next/headers';
 
 export async function POST(req: NextRequest) {
   try {
@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
 
     // 4. Save to public/uploads
     const uploadDir = join(process.cwd(), "public", "uploads");
+    await mkdir(uploadDir, { recursive: true });
     const filePath = join(uploadDir, finalFilename);
 
     // Note: in a real production app (like Vercel), writing to the filesystem

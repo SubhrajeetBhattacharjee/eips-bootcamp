@@ -36,7 +36,6 @@ export default function FeaturedContributor({ contributor }: Props) {
           <div className="w-24 h-24 rounded-full" style={{ padding: "3px", background: "conic-gradient(from 0deg, #34d399, #059669, #34d399)", boxShadow: "0 0 24px rgba(52,211,153,0.4)" }}>
             <div className="w-full h-full rounded-full overflow-hidden bg-gray-800">
               {avatarUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
                 <img src={avatarUrl} alt={name} className="w-full h-full object-cover" />
               ) : (
                 <AvatarPlaceholder name={name} size={90} />

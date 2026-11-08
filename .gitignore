@@ -11,3 +11,4 @@ turbo
 .turbo/
 /generated/prisma
 GEMINI.md
+.vscode/

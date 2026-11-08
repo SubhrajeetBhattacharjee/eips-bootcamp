@@ -10,7 +10,16 @@ import {
 export class ApiKeyGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
-    const apiKey = request.headers['x-api-key'];
+
+    // Allow root health check endpoint
+    if (request.url === '/' || request.path === '/') {
+      return true;
+    }
+
+    const apiKey =
+      request.headers['x-api-key'] ||
+      request.query?.apiKey ||
+      request.query?.['x-api-key'];
 
     const isProd = process.env.NODE_ENV === 'production';
     const validApiKey = process.env.INTERNAL_API_KEY;

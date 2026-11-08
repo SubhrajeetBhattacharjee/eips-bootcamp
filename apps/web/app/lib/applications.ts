@@ -1,5 +1,3 @@
-import { getApiBaseUrl } from '@/app/lib/api';
-
 // Types and interfaces for Applications Management
 
 export interface Application {
@@ -57,7 +55,7 @@ export interface CountryStats {
 // API Integration
 export async function fetchApplications(): Promise<Application[]> {
   try {
-    const response = await fetch(`${getApiBaseUrl()}/cap/applications`, {
+    const response = await fetch('/api/admin/applications', {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     });
@@ -75,7 +73,7 @@ export async function updateApplicationStatus(
   status: 'approved' | 'rejected'
 ): Promise<boolean> {
   try {
-    const response = await fetch(`${API_BASE}/cap/${applicationId}`, {
+    const response = await fetch(`/api/admin/applications/${applicationId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status: status.toUpperCase() }),
