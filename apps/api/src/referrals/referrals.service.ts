@@ -183,6 +183,7 @@ export class ReferralsService {
         xpTransactions: true,
         lessonProgress: true,
         assignmentSubmissions: true,
+        streak: true,
         referralCode: {
           include: { referrals: true },
         },
@@ -259,7 +260,7 @@ export class ReferralsService {
         xp,
         referrals: referralsCount,
         capStatus: user.capApplication?.status || 'None',
-        streak: 0,
+        streak: user.streak?.currentStreak || 0,
         modulesCompleted,
         createdAt: user.createdAt,
       };

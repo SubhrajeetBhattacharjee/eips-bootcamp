@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { mockLeaderboard } from '../../lib/dashboard-data';
+
 type LeaderboardEntry = {
   rank: number;
   userId: string;
