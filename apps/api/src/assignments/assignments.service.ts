@@ -109,13 +109,15 @@ export class AssignmentsService {
       },
     });
 
-    // Award XP only on the first submission
+    // Award XP only on the first submission (with anti-farming idempotency key)
     if (!existingSubmission) {
       await this.prisma.xPTransaction.create({
         data: {
           userId,
           amount: assignment.xpReward,
           reason: `Submitted Assignment: ${assignment.title}`,
+          category: 'ASSIGNMENT',
+          referenceId: `assignment-${assignmentId}`,
         },
       });
     }

@@ -39,13 +39,26 @@ export class UsersService {
     });
   }
 
-  findOne(id: string) {
-    return this.prisma.user.findUnique({
-      where: { id },
-      include: {
-        profile: true,
-      },
-    });
+  async findOne(id: string) {
+    let user = await this.findOneFull(id);
+    if (!user) return null;
+
+    if (!user.referralCode) {
+      const randomCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+      await this.prisma.referralCode
+        .create({
+          data: {
+            code: randomCode,
+            userId: user.id,
+            clicks: 0,
+          },
+        })
+        .catch(() => null);
+
+      user = await this.findOneFull(id);
+    }
+
+    return user;
   }
 
   update(id: string, updateUserDto: UpdateUserDto) {

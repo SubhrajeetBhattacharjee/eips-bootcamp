@@ -4,30 +4,28 @@ import { User, Users, Star, ShieldCheck } from 'lucide-react';
 const iconConfig: Record<ActivityItem['icon'], { icon: React.ReactNode; bg: string }> = {
   profile: {
     icon: <User size={15} />,
-    bg: 'bg-blue-500/15 text-blue-400 border-blue-500/20',
+    bg: 'bg-[#075945]/10 text-[#075945] border-[#075945]/20',
   },
   referral: {
     icon: <Users size={15} />,
-    bg: 'bg-purple-500/15 text-purple-400 border-purple-500/20',
+    bg: 'bg-[#7c3aed]/10 text-[#7c3aed] border-[#7c3aed]/20',
   },
   xp: {
     icon: <Star size={15} />,
-    bg: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/20',
+    bg: 'bg-[#075945]/10 text-[#075945] border-[#075945]/20',
   },
   cap: {
     icon: <ShieldCheck size={15} />,
-    bg: 'bg-amber-500/15 text-amber-400 border-amber-500/20',
+    bg: 'bg-[#d97706]/10 text-[#d97706] border-[#d97706]/20',
   },
 };
 
 export function ActivityFeed({ activities }: { activities: ActivityItem[] }) {
   return (
-    <div className="bg-gradient-to-br from-slate-100/90 via-slate-200/70 to-slate-300/50
-      dark:from-slate-800/80 dark:via-slate-900/60 dark:to-slate-900/40 
-      border border-border rounded-2xl p-5 flex flex-col h-full">
+    <div className="bg-white/85 backdrop-blur-md border border-[#075945]/15 rounded-2xl p-5 sm:p-6 flex flex-col h-full shadow-xs hover:border-[#075945]/30 transition-all">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-foreground font-bold text-base">Recent Activity</h3>
-        <button className="text-emerald-400 text-xs font-semibold hover:text-emerald-300 transition-colors">
+        <h3 className="text-[#171a18] font-bold text-base">Recent Activity</h3>
+        <button className="text-[#075945] text-xs font-bold hover:underline transition-colors">
           View All
         </button>
       </div>
@@ -43,16 +41,16 @@ export function ActivityFeed({ activities }: { activities: ActivityItem[] }) {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-2">
-                  <p className="text-foreground text-sm font-semibold leading-tight">{item.title}</p>
-                  <span className="text-muted-foreground text-[10px] font-medium flex-shrink-0 mt-0.5">{item.time}</span>
+                  <p className="text-[#171a18] text-sm font-semibold leading-tight">{item.title}</p>
+                  <span className="text-[#6b7280] text-[10px] font-medium flex-shrink-0 mt-0.5">{item.time}</span>
                 </div>
-                <p className="text-muted-foreground text-xs mt-0.5 leading-relaxed">{item.description}</p>
+                <p className="text-[#4b5563] text-xs mt-0.5 leading-relaxed">{item.description}</p>
               </div>
             </li>
           );
         })
         ) : (
-          <li className="text-center text-muted-foreground text-xs py-4">No recent activity</li>
+          <li className="text-center text-[#6b7280] text-xs py-6">No recent activity</li>
         )}
       </ul>
     </div>

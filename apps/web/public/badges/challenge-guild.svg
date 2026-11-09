@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="guildGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34D399" />
+      <stop offset="50%" stop-color="#059669" />
+      <stop offset="100%" stop-color="#064E3B" />
+    </linearGradient>
+    <radialGradient id="guildGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#059669" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#059669" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <circle cx="100" cy="100" r="95" fill="url(#guildGlow)" />
+  <circle cx="100" cy="100" r="82" fill="#091A14" stroke="url(#guildGrad)" stroke-width="3" />
+  <circle cx="100" cy="100" r="74" fill="#06241C" stroke="#34D399" stroke-width="1.5" stroke-dasharray="3 2" />
+  <!-- Shield with Code Brackets -->
+  <path d="M100,55 L135,70 L135,110 C135,135 100,148 100,148 C100,148 65,135 65,110 L65,70 Z" fill="#0A3328" stroke="url(#guildGrad)" stroke-width="2.5" />
+  <text x="100" y="112" font-family="monospace" font-size="28" font-weight="bold" fill="#6EE7B7" text-anchor="middle">&lt;/&gt;</text>
+</svg>
+

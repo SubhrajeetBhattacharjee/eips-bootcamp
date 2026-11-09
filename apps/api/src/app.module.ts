@@ -15,6 +15,14 @@ import { AssignmentsModule } from './assignments/assignments.module';
 import { RewardsModule } from './rewards/rewards.module';
 import { ApiKeyGuard } from './auth/api-key.guard';
 import { EventsModule } from './events/events.module';
+import { LeaguesModule } from './leagues/leagues.module';
+import { CompetitionsModule } from './competitions/competitions.module';
+import { AchievementsModule } from './achievements/achievements.module';
+import { CertificatesModule } from './certificates/certificates.module';
+import { NftRewardsModule } from './nft-rewards/nft-rewards.module';
+import { QuestsModule } from './quests/quests.module';
+import { CommunityChallengesModule } from './community-challenges/community-challenges.module';
+import { SeasonsModule } from './seasons/seasons.module';
 
 @Module({
   imports: [
@@ -35,6 +43,14 @@ import { EventsModule } from './events/events.module';
     AssignmentsModule,
     RewardsModule,
     EventsModule,
+    LeaguesModule,
+    CompetitionsModule,
+    AchievementsModule,
+    CertificatesModule,
+    NftRewardsModule,
+    QuestsModule,
+    CommunityChallengesModule,
+    SeasonsModule,
   ],
   controllers: [AppController],
   providers: [

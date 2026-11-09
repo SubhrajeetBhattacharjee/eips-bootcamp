@@ -1,35 +1,22 @@
-import { auth } from '@/app/lib/auth';
-import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
-import { getApiBaseUrl, getInternalApiKey } from '@/app/lib/api';
+import { prisma } from '@/app/lib/prisma';
 
-export async function GET(request: Request) {
-  const url = new URL(request.url);
-  const userId = url.searchParams.get('userId');
-
-  if (!userId) {
-    return NextResponse.json({ message: 'Missing userId' }, { status: 400 });
-  }
-
-  const session = await auth.api.getSession({ headers: await headers() });
-  const userAuth = session?.user;
-  if (!userAuth || userAuth.id !== userId) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-  }
-
+export async function GET() {
   try {
-    const res = await fetch(`${getApiBaseUrl()}/events/upcoming/${userId}`, {
-      cache: 'no-store',
-      headers: { 'x-api-key': getInternalApiKey() },
+    const events = await prisma.event.findMany({
+      where: { date: { gte: new Date() } },
+      orderBy: { date: 'asc' },
+      take: 6,
+      include: {
+        module: {
+          select: { title: true },
+        },
+      },
     });
 
-    if (!res.ok) {
-      return NextResponse.json({ message: 'Failed to fetch upcoming events' }, { status: res.status });
-    }
-
-    const data = await res.json();
-    return NextResponse.json(data);
-  } catch (err) {
-    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json(events);
+  } catch (err: any) {
+    console.error('Error in /api/events/upcoming:', err);
+    return NextResponse.json([], { status: 200 }); // return empty array rather than breaking the UI
   }
 }

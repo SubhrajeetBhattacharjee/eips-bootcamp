@@ -158,7 +158,7 @@ export default function AuthLayout({
               <span>Ethereum Protocol &amp; Governance Education</span>
             </div>
             <div className="text-white/40 text-[11px]">
-              ETHShala · Built by Avarch · Sepolia Testnet Ready
+              ETHShala · Built by Avarch · Ethereum Education
             </div>
           </div>
         </div>

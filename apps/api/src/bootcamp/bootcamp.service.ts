@@ -86,7 +86,6 @@ export class BootcampService {
           data: {
             id: userId,
             email: `${userId}@placeholder.ethshala.com`,
-            name: 'Learner',
           },
         });
       }
@@ -147,13 +146,15 @@ export class BootcampService {
         },
       });
 
-      // Award piecemeal XP: 50 XP per lesson
+      // Award piecemeal XP: 50 XP per lesson with category and idempotency key
       const lessonXP = 50;
       await tx.xPTransaction.create({
         data: {
           userId,
           amount: lessonXP,
           reason: `Completed Lesson: ${lesson.title}`,
+          category: 'LESSON',
+          referenceId: `lesson-${lessonId}`,
         },
       });
 
@@ -173,7 +174,7 @@ export class BootcampService {
       let awardedModuleXP = 0;
 
       if (completedModuleLessons === allModuleLessons.length) {
-        // Entire module completed, award the module XP bonus
+        // Entire module completed, award the module XP bonus with idempotency key
         awardedModuleXP = lesson.module.xpReward;
         moduleCompleted = true;
         await tx.xPTransaction.create({
@@ -181,6 +182,8 @@ export class BootcampService {
             userId,
             amount: awardedModuleXP,
             reason: `Completed Module: ${lesson.module.title}`,
+            category: 'MODULE',
+            referenceId: `module-${lesson.moduleId}`,
           },
         });
       }

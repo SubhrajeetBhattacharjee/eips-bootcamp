@@ -5,40 +5,34 @@ import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme()
-  const [mounted, setMounted] = React.useState(false)
+  const { theme, resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
 
   // Avoid hydration mismatch
   React.useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
 
   if (!mounted) {
     return (
-      <button className="p-2 rounded-lg bg-accent text-muted-foreground invisible">
-        <Sun size={20} />
-      </button>
-    )
+      <div className="w-9 h-9 rounded-xl border border-border bg-card/60" />
+    );
   }
+
+  const isDark = resolvedTheme === "dark";
 
   return (
     <button
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="p-2 rounded-lg bg-accent hover:bg-accent/80 text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center relative overflow-hidden"
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+      className="w-9 h-9 rounded-xl bg-card hover:bg-accent border border-border text-muted-foreground hover:text-foreground transition-all duration-200 flex items-center justify-center relative shadow-xs cursor-pointer"
       aria-label="Toggle theme"
+      title={isDark ? "Switch to light mode" : "Switch to dark mode"}
     >
-      <div className="relative w-5 h-5 flex items-center justify-center">
-        {/* Sun shows in Dark Mode (target = Light) */}
-        <Sun 
-          size={20} 
-          className="absolute transition-all duration-300 dark:rotate-0 dark:scale-100 dark:opacity-100 -rotate-90 scale-0 opacity-0" 
-        />
-        {/* Moon shows in Light Mode (target = Dark) */}
-        <Moon 
-          size={20} 
-          className="absolute transition-all duration-300 dark:rotate-90 dark:scale-0 dark:opacity-0 rotate-0 scale-100 opacity-100" 
-        />
-      </div>
+      {isDark ? (
+        <Sun size={17} className="text-amber-400 rotate-0 scale-100 transition-all duration-200" />
+      ) : (
+        <Moon size={17} className="text-[#075945] rotate-0 scale-100 transition-all duration-200" />
+      )}
     </button>
-  )
+  );
 }

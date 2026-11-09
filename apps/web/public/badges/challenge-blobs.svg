@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="blobGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="50%" stop-color="#0284C7" />
+      <stop offset="100%" stop-color="#0369A1" />
+    </linearGradient>
+    <radialGradient id="blobGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <circle cx="100" cy="100" r="95" fill="url(#blobGlow)" />
+  <circle cx="100" cy="100" r="82" fill="#091A14" stroke="url(#blobGrad)" stroke-width="3" />
+  <circle cx="100" cy="100" r="74" fill="#0C2028" stroke="#38BDF8" stroke-width="1.5" stroke-dasharray="3 3" />
+  <!-- Three Interconnected Blobs -->
+  <circle cx="100" cy="75" r="26" fill="url(#blobGrad)" opacity="0.85" />
+  <circle cx="75" cy="120" r="22" fill="url(#blobGrad)" opacity="0.75" />
+  <circle cx="125" cy="120" r="22" fill="url(#blobGrad)" opacity="0.75" />
+  <!-- Connecting Links -->
+  <line x1="100" y1="75" x2="75" y2="120" stroke="#E0F2FE" stroke-width="2.5" />
+  <line x1="100" y1="75" x2="125" y2="120" stroke="#E0F2FE" stroke-width="2.5" />
+  <line x1="75" y1="120" x2="125" y2="120" stroke="#E0F2FE" stroke-width="2.5" />
+  <!-- Center EIP Badge -->
+  <polygon points="100,90 108,105 100,112 92,105" fill="#FFFFFF" />
+</svg>
+

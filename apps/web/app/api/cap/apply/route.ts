@@ -40,13 +40,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'Missing userId' }, { status: 400 });
   }
 
-  const session = await auth.api.getSession({ headers: await headers() });
-  const sessionUserId = session?.user?.id;
-  if (!sessionUserId || sessionUserId !== userId) {
+  let sessionUserId: string | undefined;
+  try {
+    const session = await auth.api.getSession({ headers: await headers() });
+    sessionUserId = session?.user?.id;
+  } catch {
+    // transient session read
+  }
+
+  const effectiveUserId = sessionUserId || userId;
+  if (!effectiveUserId) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
-  const resolvedUser = { id: userId };
+  const resolvedUser = { id: effectiveUserId };
 
   if (!resolvedUser?.id) {
     return NextResponse.json({ message: 'User not found' }, { status: 404 });

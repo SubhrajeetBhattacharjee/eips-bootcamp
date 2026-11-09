@@ -90,6 +90,8 @@ export class RewardsService {
           userId,
           amount: -reward.cost,
           reason: `Redeemed ${reward.title}`,
+          category: 'REWARD_REDEMPTION',
+          referenceId: `reward-${redemption.id}`,
         },
       });
 

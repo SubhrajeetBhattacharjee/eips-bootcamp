@@ -32,11 +32,6 @@ export class ReferralsService {
     });
 
     if (!user) throw new BadRequestException('User not found');
-    if (user.role !== 'AMBASSADOR') {
-      throw new BadRequestException(
-        'Only ambassadors can generate referral codes',
-      );
-    }
 
     const existingCode = await this.prisma.referralCode.findUnique({
       where: { userId },
@@ -86,6 +81,8 @@ export class ReferralsService {
         userId: refCode.userId,
         amount: 50,
         reason: 'Referral Joined',
+        category: 'REFERRAL',
+        referenceId: `referral-${newReferral.id}`,
       },
     });
 
@@ -243,14 +240,21 @@ export class ReferralsService {
         }
       }
 
+      const isPlaceholderEmail = user.email && user.email.includes('@placeholder');
+      const resolvedName =
+        (user.name && user.name.toLowerCase() !== 'learner' && user.name.toLowerCase() !== 'explorer' ? user.name : null) ||
+        user.profile?.fullName ||
+        (user.username && user.username.toLowerCase() !== 'learner' && user.username.toLowerCase() !== 'explorer' ? user.username : null) ||
+        (!isPlaceholderEmail && user.email ? user.email.split('@')[0] : 'Student Builder');
+
+      const resolvedHandle = user.username 
+        ? `@${user.username}`
+        : `@${resolvedName.toLowerCase().replace(/\s+/g, '')}`;
+
       return {
         userId: user.id,
-        name:
-          user.name ||
-          user.profile?.fullName ||
-          user.username ||
-          (user.email ? user.email.split('@')[0] : 'Unknown'),
-        handle: `@${user.username || user.id.substring(0, 5)}`,
+        name: resolvedName,
+        handle: resolvedHandle,
         avatarUrl: user.image || user.profile?.avatarUrl,
         xp,
         referrals: referralsCount,

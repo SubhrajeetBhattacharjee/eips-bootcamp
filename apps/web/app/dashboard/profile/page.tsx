@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useSession, authClient } from '@/app/lib/auth-client';
 import { DashboardShell } from '@/app/components/dashboard/DashboardShell';
 import LoadingScreen from '@/app/components/ui/LoadingScreen';
@@ -30,7 +31,8 @@ export default function ProfilePage() {
   const { data: session, isPending: isLoading } = useSession();
   const user = session?.user;
 
-  const [name, setName] = useState(user?.name || '');
+  const initialName = user?.name && user.name.toLowerCase() !== 'learner' && user.name.toLowerCase() !== 'explorer' ? user.name : '';
+  const [name, setName] = useState(initialName);
   const [image, setImage] = useState(user?.image || '');
   const [college, setCollege] = useState('');
   const [city, setCity] = useState('');
@@ -55,7 +57,7 @@ export default function ProfilePage() {
         const res = await fetch('/api/dashboard/profile');
         if (res.ok) {
           const data = await res.json();
-          if (data.name) setName(data.name);
+          if (data.name && data.name.toLowerCase() !== 'learner' && data.name.toLowerCase() !== 'explorer') setName(data.name);
           if (data.image) setImage(data.image);
           if (data.walletAddress) setWalletAddress(data.walletAddress);
           if (data.profile) {
@@ -159,9 +161,27 @@ export default function ProfilePage() {
                 </div>
               </div>
               
-              <div className="flex-1 pb-2">
-                <h2 className="text-2xl font-bold text-foreground">{name || 'Unnamed User'}</h2>
-                <p className="text-emerald-400/80 font-medium">{user?.email}</p>
+              <div className="flex-1 pb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <h2 className="text-2xl font-bold text-foreground">{name || user?.email?.split('@')[0] || 'Student'}</h2>
+                  <p className="text-emerald-400/80 font-medium">{user?.email}</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Link
+                    href="/dashboard/certificates"
+                    className="px-3 py-1.5 rounded-xl bg-card hover:bg-accent border border-border text-foreground text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs"
+                  >
+                    <span>Certificates</span>
+                    <span>📜</span>
+                  </Link>
+                  <Link
+                    href="/dashboard/cap"
+                    className="px-3 py-1.5 rounded-xl bg-card hover:bg-accent border border-border text-foreground text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs"
+                  >
+                    <span>Fellowship</span>
+                    <span>🎓</span>
+                  </Link>
+                </div>
               </div>
             </div>
 

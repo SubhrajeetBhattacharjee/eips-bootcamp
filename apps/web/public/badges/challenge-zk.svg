@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="zkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C084FC" />
+      <stop offset="50%" stop-color="#9333EA" />
+      <stop offset="100%" stop-color="#581C87" />
+    </linearGradient>
+    <radialGradient id="zkGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#9333EA" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#9333EA" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <circle cx="100" cy="100" r="95" fill="url(#zkGlow)" />
+  <circle cx="100" cy="100" r="82" fill="#091A14" stroke="url(#zkGrad)" stroke-width="3" />
+  <circle cx="100" cy="100" r="74" fill="#180C28" stroke="#C084FC" stroke-width="1.5" stroke-dasharray="2 3" />
+  <!-- ZK Eye / Crucible Geometry -->
+  <polygon points="100,50 140,100 100,150 60,100" fill="none" stroke="url(#zkGrad)" stroke-width="3" />
+  <circle cx="100" cy="100" r="18" fill="url(#zkGrad)" />
+  <circle cx="100" cy="100" r="8" fill="#FFFFFF" />
+  <line x1="60" y1="100" x2="140" y2="100" stroke="#E9D5FF" stroke-width="1.5" stroke-dasharray="2 2" />
+</svg>
+

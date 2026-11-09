@@ -113,6 +113,8 @@ export class CapService {
           userId: application.userId,
           amount: 500,
           reason: 'CAP Application Approved',
+          category: 'CAP',
+          referenceId: `cap-${application.id}`,
         },
       });
     }

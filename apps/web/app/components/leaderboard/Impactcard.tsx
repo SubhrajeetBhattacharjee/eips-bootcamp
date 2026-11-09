@@ -1,7 +1,8 @@
 "use client";
+
 import React from "react";
-import XPInfoCard from "./Xpinfocard";
 import { ImpactStats } from "@/app/lib/leaderboard";
+import { Users, Award, Globe } from "lucide-react";
 
 interface Props {
   impact: ImpactStats;
@@ -9,33 +10,38 @@ interface Props {
 
 export default function ImpactCard({ impact }: Props) {
   return (
-    <div className="rounded-xl p-4 border border-border
-    bg-gradient-to-br from-slate-100/90 via-slate-200/70 to-slate-300/50
-    dark:from-slate-800/80 dark:via-slate-900/60 dark:to-slate-900/40" 
-    >
-      <h3 className="text-sm font-semibold text-foreground/90 mb-2">Community Impact</h3>
-      <div className="grid grid-cols-3 gap-3 mb-3 text-center">
+    <div className="rounded-2xl p-5 border border-border/80 bg-card/95 backdrop-blur-md shadow-xs space-y-4">
+      <div className="flex items-center justify-between">
+        <h3 className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+          Ecosystem Impact
+        </h3>
+        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+      </div>
+
+      <div className="grid grid-cols-3 gap-3 text-center divide-x divide-border/60">
         <div>
-          <div className="text-lg font-bold">{impact.activeLearners.toLocaleString()}</div>
-          <div className="text-xs text-foreground/40">Learners</div>
-          <div className="text-xs mt-1">
-            <span className="text-emerald-400">▲ {impact.activeLearnersDelta}%</span>
-          </div>
+          <p className="text-xl font-black text-foreground tracking-tight">
+            {impact.activeLearners.toLocaleString()}
+          </p>
+          <p className="text-[11px] text-muted-foreground font-medium mt-0.5">Learners</p>
         </div>
-        <div>
-          <div className="text-lg font-bold">{impact.campusAmbassadors.toLocaleString()}</div>
-          <div className="text-xs text-foreground/40">Ambassadors</div>
-          <div className="text-xs mt-1"><span className="text-emerald-400">▲ {impact.campusAmbassadorsDelta}%</span></div>
+
+        <div className="pl-3">
+          <p className="text-xl font-black text-primary dark:text-emerald-400 tracking-tight">
+            {impact.campusAmbassadors.toLocaleString()}
+          </p>
+          <p className="text-[11px] text-muted-foreground font-medium mt-0.5">Fellows</p>
         </div>
-        <div>
-          <div className="text-lg font-bold">{impact.communities.toLocaleString()}</div>
-          <div className="text-xs text-foreground/40">Communities</div>
-          <div className="text-xs mt-1"><span className="text-emerald-400">▲ {impact.communitiesDelta}%</span></div>
+
+        <div className="pl-3">
+          <p className="text-xl font-black text-foreground tracking-tight">
+            {impact.communities.toLocaleString()}
+          </p>
+          <p className="text-[11px] text-muted-foreground font-medium mt-0.5">Chapters</p>
         </div>
       </div>
-      {/* <div className="mt-3">
-        <XPInfoCard compact />
-      </div> */}
     </div>
   );
 }
+
+export { ImpactCard };

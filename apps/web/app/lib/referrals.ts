@@ -54,15 +54,22 @@ export async function fetchReferralStats(userId: string): Promise<ReferralStats 
   if (!code) return null;
 
   const totalReferrals = code.referrals.length;
-  const successfulSignups = code.referrals.filter(r => r.status === 'ONBOARDED').length;
-  const pendingJoins = totalReferrals - successfulSignups;
+  const successfulSignups = code.referrals.filter(
+    (r) => r.status === 'JOINED' || r.status === 'ONBOARDED',
+  ).length;
+  const pendingJoins = Math.max(0, code.clicks - totalReferrals);
   
-  // Calculate XP earned from these referrals (500 per ONBOARDED as defined in admin.ts)
+  // Calculate XP earned from these referrals (500 per join)
   const xpEarned = successfulSignups * 500;
+
+  const baseUrl =
+    typeof window !== 'undefined'
+      ? window.location.origin
+      : process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
   return {
     referralCode: code.code,
-    referralLink: `https://ethshala.com/join?ref=${code.code}`,
+    referralLink: `${baseUrl}/ref/${code.code}`,
     totalClicks: code.clicks,
     totalReferrals,
     pendingJoins,

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="silverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="50%" stop-color="#CBD5E1" />
+      <stop offset="100%" stop-color="#64748B" />
+    </linearGradient>
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#0284C7" />
+    </linearGradient>
+    <radialGradient id="silverGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <circle cx="100" cy="100" r="95" fill="url(#silverGlow)" />
+  <circle cx="100" cy="100" r="82" fill="#091A14" stroke="url(#silverGrad)" stroke-width="4" />
+  <circle cx="100" cy="100" r="74" fill="#0F2420" stroke="#38BDF8" stroke-width="1.5" stroke-dasharray="3 3" />
+  <!-- Podium Ethereum Geometry -->
+  <polygon points="100,50 125,90 100,105 75,90" fill="url(#silverGrad)" opacity="0.95" />
+  <polygon points="100,50 75,90 100,105" fill="#FFFFFF" opacity="0.7" />
+  <polygon points="100,113 125,98 100,140 75,98" fill="url(#silverGrad)" opacity="0.85" />
+  <!-- Stars -->
+  <polygon points="100,154 102,160 108,160 103,164 105,170 100,166 95,170 97,164 92,160 98,160" fill="url(#cyanGrad)" />
+</svg>
+

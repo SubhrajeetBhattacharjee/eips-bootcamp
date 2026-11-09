@@ -1,125 +1,114 @@
 "use client";
-// apps/web/app/dashboard/leaderboard/page.tsx
 
 import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { useSession } from '@/app/lib/auth-client';
-
 import {
-  fetchLeaderboard,
-  fetchDBUser,
-  fetchImpactStats,
-  getFeaturedContributor,
+  fetchLeaderboardData,
   FilterPeriod,
   LeaderboardUser,
   FeaturedContributor as FC,
   ImpactStats,
-  DBUser,
 } from "@/app/lib/leaderboard";
 
-import LeaderboardHero from "@/app/components/leaderboard/Leaderboardhero";
+import { LeaderboardHero } from "@/app/components/leaderboard/Leaderboardhero";
 import FeaturedContributor from "@/app/components/leaderboard/FeaturedContributor";
 import LeaderboardTable from "@/app/components/leaderboard/Leaderboardtable";
-import XPInfoCard from "@/app/components/leaderboard/Xpinfocard";
 import ImpactCard from "@/app/components/leaderboard/Impactcard";
 import RankProgressCard from "@/app/components/leaderboard/Rankprogresscard";
 import { DashboardShell } from '@/app/components/dashboard/DashboardShell';
-
-// ─── Page ─────────────────────────────────────────────────────────────────────
+import { Users, ArrowRight } from "lucide-react";
 
 export default function LeaderboardPage() {
-  const { data: session, isPending } = useSession();
-  const currentUser = session?.user;
+  const { data: session } = useSession();
+  const sessionUser = session?.user;
 
   const [filter, setFilter] = useState<FilterPeriod>("all");
   const [leaderboard, setLeaderboard] = useState<LeaderboardUser[]>([]);
   const [featured, setFeatured] = useState<FC | null>(null);
   const [impact, setImpact] = useState<ImpactStats | null>(null);
-  const [dbUser, setDbUser] = useState<DBUser | null>(null);
+  const [currentUser, setCurrentUser] = useState<LeaderboardUser | null>(null);
   const [loading, setLoading] = useState(true);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // ── Fetch all data ──────────────────────────────────────────────────────────
-  const loadData = useCallback(async () => {
+  const loadData = useCallback(async (selectedFilter: FilterPeriod) => {
     setLoading(true);
-    const [lb, imp] = await Promise.all([
-      fetchLeaderboard(filter),
-      fetchImpactStats(),
-    ]);
-    setLeaderboard(lb);
-    setFeatured(getFeaturedContributor(lb));
-    setImpact(imp);
+    const data = await fetchLeaderboardData(selectedFilter);
+    setLeaderboard(data.leaderboard);
+    setFeatured(data.featured);
+    setImpact(data.impact);
+    setCurrentUser(data.currentUser);
     setLoading(false);
-  }, [filter]);
+  }, []);
 
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    loadData(filter);
+  }, [filter, loadData]);
 
-  // ── Resolve DB user ──────────────────────────────────────────────
-  useEffect(() => {
-    if (isPending || !currentUser) return;
-    fetchDBUser(currentUser.id).then(setDbUser);
-  }, [isPending, currentUser]);
+  const currentRank = currentUser?.rank ?? 0;
+  const currentXp = currentUser?.xp ?? 0;
+  const percentile = (currentRank > 0 && leaderboard.length > 0)
+    ? Math.max(1, Math.round((currentRank / leaderboard.length) * 100))
+    : 10;
 
-  // ── Mark current user row ───────────────────────────────────────────────────
-  const currentUserId = dbUser?.id;
-  const rowsWithCurrent = leaderboard.map((r) =>
-    r.userId === currentUserId ? { ...r, isCurrentUser: true } : r
-  );
-
-  // ── Rank progress ───────────────────────────────────────────────────────────
-  const currentUserRow = rowsWithCurrent.find((r) => r.isCurrentUser);
-  const percentile = (currentUserRow && leaderboard.length > 0)
-    ? Math.round((currentUserRow.rank / leaderboard.length) * 100)
-    : 100;
+  const displayName = sessionUser?.name || currentUser?.name || (sessionUser?.email ? sessionUser.email.split('@')[0] : 'Student Builder');
 
   return (
     <DashboardShell>
-      <LeaderboardHero filter={filter} onFilterChange={setFilter} />
+      <div className="space-y-6">
+        <LeaderboardHero
+          filter={filter}
+          onFilterChange={setFilter}
+          totalBuilders={leaderboard.length}
+        />
 
-      <div className="px-6 py-6">
-        <div className="max-w-[1200px] mx-auto">
+        <div className="pt-2 pb-12">
           {loading ? (
             <LoadingSkeleton />
           ) : (
-            <div className="flex gap-6 items-start">
-              {/* ── Center column ─────────────────────────────── */}
-              <div className="flex-1 min-w-0 space-y-5">
-                {/* Featured */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+              {/* Center Column: Top Contributor + Leaderboard Table */}
+              <div className="lg:col-span-8 space-y-6">
                 {featured && <FeaturedContributor contributor={featured} />}
-
-                {/* Table */}
-                <LeaderboardTable users={rowsWithCurrent} />
+                <LeaderboardTable users={leaderboard} />
               </div>
 
-              {/* ── Right sidebar ─────────────────────────────── */}
-              <aside className="w-72 xl:w-80 shrink-0 space-y-4 hidden lg:block">
-                <XPInfoCard />
-                {impact && <ImpactCard impact={impact} />}
+              {/* Right Sidebar: Standing, Real Impact, and Campus Referral Boost */}
+              <aside className="lg:col-span-4 space-y-5">
                 <RankProgressCard
-                  rank={currentUserRow?.rank ?? 0}
-                  nextRankXp={5000}
-                  currentXp={dbUser?.xp ?? 0}
+                  rank={currentRank}
+                  currentXp={currentXp}
                   percentile={percentile}
                   totalUsers={leaderboard.length}
+                  userName={displayName}
                 />
-              </aside>
-            </div>
-          )}
 
-          {/* Mobile sidebar widgets */}
-          {!loading && (
-            <div className="lg:hidden mt-6 space-y-4">
-              <XPInfoCard />
-              {impact && <ImpactCard impact={impact} />}
-              <RankProgressCard
-                rank={currentUserRow?.rank ?? 0}
-                nextRankXp={5000}
-                currentXp={dbUser?.xp ?? 0}
-                percentile={percentile}
-                totalUsers={leaderboard.length}
-              />
+                {impact && <ImpactCard impact={impact} />}
+
+                {/* Campus Referral CTA */}
+                <div className="rounded-2xl p-5 border border-border/80 bg-card/95 backdrop-blur-md shadow-xs space-y-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center">
+                      <Users size={16} />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-sm text-foreground">Invite Campus Peers</h4>
+                      <p className="text-[11px] text-muted-foreground">+500 XP per student builder</p>
+                    </div>
+                  </div>
+
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Help build your university Ethereum developer chapter and accelerate your leaderboard standing.
+                  </p>
+
+                  <Link
+                    href="/dashboard/referrals"
+                    className="w-full py-2 px-3 rounded-xl bg-card hover:bg-accent border border-border text-foreground font-semibold text-xs flex items-center justify-center gap-1.5 transition-all shadow-xs"
+                  >
+                    <span>Get Referral Link</span>
+                    <ArrowRight size={12} />
+                  </Link>
+                </div>
+              </aside>
             </div>
           )}
         </div>
@@ -128,19 +117,16 @@ export default function LeaderboardPage() {
   );
 }
 
-// ─── Loading skeleton ─────────────────────────────────────────────────────────
-
 function LoadingSkeleton() {
   return (
-    <div className="flex gap-6">
-      <div className="flex-1 space-y-4 animate-pulse">
-        <div className="h-44 rounded-2xl" style={{ background: "rgba(255,255,255,0.04)" }} />
-        <div className="h-96 rounded-2xl" style={{ background: "rgba(255,255,255,0.03)" }} />
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-pulse">
+      <div className="lg:col-span-8 space-y-6">
+        <div className="h-44 rounded-2xl bg-card/60 border border-border/60" />
+        <div className="h-96 rounded-2xl bg-card/60 border border-border/60" />
       </div>
-      <div className="w-72 space-y-4 animate-pulse hidden lg:block">
-        <div className="h-52 rounded-2xl" style={{ background: "rgba(255,255,255,0.04)" }} />
-        <div className="h-40 rounded-2xl" style={{ background: "rgba(255,255,255,0.03)" }} />
-        <div className="h-24 rounded-2xl" style={{ background: "rgba(255,255,255,0.03)" }} />
+      <div className="lg:col-span-4 space-y-5">
+        <div className="h-48 rounded-2xl bg-card/60 border border-border/60" />
+        <div className="h-36 rounded-2xl bg-card/60 border border-border/60" />
       </div>
     </div>
   );

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="archGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34D399" />
+      <stop offset="50%" stop-color="#059669" />
+      <stop offset="100%" stop-color="#064E3B" />
+    </linearGradient>
+    <radialGradient id="archGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#10B981" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#10B981" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <circle cx="100" cy="100" r="95" fill="url(#archGlow)" />
+  <circle cx="100" cy="100" r="82" fill="#091A14" stroke="url(#archGrad)" stroke-width="4" />
+  <circle cx="100" cy="100" r="74" fill="#042F2E" stroke="#34D399" stroke-width="1.5" stroke-dasharray="4 2" />
+  <!-- Architect Hexagon Cube -->
+  <polygon points="100,52 135,72 135,112 100,132 65,112 65,72" fill="none" stroke="url(#archGrad)" stroke-width="2.5" />
+  <line x1="100" y1="52" x2="100" y2="132" stroke="url(#archGrad)" stroke-width="2" />
+  <line x1="100" y1="92" x2="135" y2="72" stroke="url(#archGrad)" stroke-width="2" />
+  <line x1="100" y1="92" x2="65" y2="72" stroke="url(#archGrad)" stroke-width="2" />
+  <polygon points="100,92 135,72 100,52 65,72" fill="#34D399" opacity="0.3" />
+  <!-- Celestial Orbs -->
+  <circle cx="100" cy="155" r="4" fill="#6EE7B7" />
+  <circle cx="75" cy="148" r="3" fill="#6EE7B7" />
+  <circle cx="125" cy="148" r="3" fill="#6EE7B7" />
+</svg>
+

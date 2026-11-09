@@ -100,8 +100,13 @@ export function Topbar({ onMobileMenuOpen }: TopbarProps) {
     };
   }, []);
 
+  const userDisplayName = (user?.name && user.name.toLowerCase() !== 'learner' && user.name.toLowerCase() !== 'explorer') 
+    ? user.name 
+    : (user?.email ? user.email.split('@')[0] : 'Student');
+  const userRole = (user as any)?.role ? String((user as any).role) : 'STUDENT';
+
   return (
-    <header className="sticky top-0 z-30 h-[60px] bg-background/95 backdrop-blur-xl border-b border-border flex items-center px-4 lg:px-6 gap-4">
+    <header className="sticky top-0 z-30 h-[64px] bg-background/90 backdrop-blur-xl border-b border-border flex items-center px-4 lg:px-6 gap-4">
       {/* Mobile hamburger */}
       <button
         onClick={onMobileMenuOpen}
@@ -117,7 +122,7 @@ export function Topbar({ onMobileMenuOpen }: TopbarProps) {
         onClick={() => setIsMobileSearchOpen(true)}
       >
         <div className="relative group">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-emerald-400 transition-colors" />
+          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary dark:group-focus-within:text-emerald-400 transition-colors" />
           <input
             type="text"
             value={searchQuery}
@@ -126,19 +131,19 @@ export function Topbar({ onMobileMenuOpen }: TopbarProps) {
             onFocus={() => setIsSearchFocused(true)}
             onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
             placeholder="Search courses, modules, topics... (Press Enter)"
-            className="w-full bg-accent border border-border rounded-lg pl-3 pr-6 p-2 lg:pl-9 lg:pr-16 lg:py-2 text-sm text-muted-foreground placeholder:text-muted-foreground focus:outline-none focus:border-emerald-500/50 focus:bg-accent focus:shadow-[0_0_15px_rgba(16,185,129,0.15)] transition-all duration-300"
+            className="w-full bg-card/90 border border-border rounded-xl pl-3 pr-6 p-2 lg:pl-9 lg:pr-16 lg:py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary dark:focus:border-emerald-400 focus:bg-card focus:shadow-xs transition-all duration-200"
           />
           <div className="hidden lg:flex absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-0.5 pointer-events-none">
-            <kbd className="text-[10px] text-muted-foreground bg-accent border border-border rounded px-1.5 py-0.5 font-mono group-focus-within:border-emerald-500/30 group-focus-within:text-emerald-500/70 transition-colors">↵</kbd>
+            <kbd className="text-[10px] text-muted-foreground bg-muted border border-border rounded px-1.5 py-0.5 font-mono group-focus-within:border-primary/40 group-focus-within:text-primary transition-colors">↵</kbd>
           </div>
         </div>
 
         {/* Search Dropdown */}
         {isSearchFocused && searchQuery.trim().length > 0 && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-2xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2">
+          <div className="absolute top-full left-0 right-0 mt-2 bg-card/95 backdrop-blur-xl border border-border rounded-xl shadow-xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2">
             {searchResults.length > 0 ? (
               <div>
-                <div className="px-3 py-2 text-xs font-semibold text-muted-foreground bg-accent/50 flex items-center gap-2">
+                <div className="px-3 py-2 text-xs font-semibold text-primary dark:text-emerald-400 bg-muted flex items-center gap-2">
                   <BookOpen size={12} />
                   Courses & Modules
                 </div>
@@ -152,7 +157,7 @@ export function Topbar({ onMobileMenuOpen }: TopbarProps) {
                       setIsSearchFocused(false);
                     }}
                   >
-                    <span className="text-sm font-medium text-foreground group-hover:text-emerald-400 transition-colors">{module.title}</span>
+                    <span className="text-sm font-semibold text-foreground group-hover:text-primary dark:group-hover:text-emerald-400 transition-colors">{module.title}</span>
                     <span className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{module.description}</span>
                   </Link>
                 ))}
@@ -176,11 +181,11 @@ export function Topbar({ onMobileMenuOpen }: TopbarProps) {
         <div className="relative">
           <button 
             onClick={() => setShowNotifications(!showNotifications)}
-            className={`relative p-2 transition-all duration-200 border rounded-lg ${showNotifications ? 'bg-accent text-foreground border-border' : 'text-muted-foreground hover:text-foreground bg-accent hover:bg-accent border-border'}`}
+            className={`relative p-2 transition-all duration-200 border rounded-xl cursor-pointer ${showNotifications ? 'bg-primary/10 text-primary border-primary/30' : 'text-muted-foreground hover:text-foreground bg-card hover:bg-accent border-border shadow-xs'}`}
           >
             <Bell size={17} />
             {activeNotifications.length > 0 && (
-              <span className="absolute -top-1 -right-1 w-4.5 h-4.5 bg-emerald-500 text-black text-[9px] font-bold rounded-full flex items-center justify-center min-w-[18px] min-h-[18px]">
+              <span className="absolute -top-1 -right-1 w-4.5 h-4.5 bg-primary dark:bg-emerald-500 text-primary-foreground text-[9px] font-bold rounded-full flex items-center justify-center min-w-[18px] min-h-[18px]">
                 {activeNotifications.length}
               </span>
             )}
@@ -188,13 +193,13 @@ export function Topbar({ onMobileMenuOpen }: TopbarProps) {
 
           {/* Notifications Dropdown */}
           {showNotifications && (
-            <div className="absolute right-0 top-full mt-2 w-80 bg-card border border-border rounded-xl shadow-2xl z-50 flex flex-col overflow-hidden animate-in slide-in-from-top-2 duration-200">
-              <div className="px-4 py-3 border-b border-border bg-accent flex justify-between items-center">
+            <div className="absolute right-0 top-full mt-2 w-80 bg-card/95 backdrop-blur-xl border border-border rounded-xl shadow-xl z-50 flex flex-col overflow-hidden animate-in slide-in-from-top-2 duration-200">
+              <div className="px-4 py-3 border-b border-border bg-muted flex justify-between items-center">
                 <h3 className="text-sm font-semibold text-foreground">Notifications</h3>
                 {activeNotifications.length > 0 && (
                   <button 
                     onClick={handleClearNotifications}
-                    className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
+                    className="text-xs text-primary dark:text-emerald-400 hover:underline font-semibold transition-colors cursor-pointer"
                   >
                     Clear all
                   </button>
@@ -206,11 +211,11 @@ export function Topbar({ onMobileMenuOpen }: TopbarProps) {
                 ) : (
                   activeNotifications.map((n) => (
                     <div key={n.id} className="p-3 border-b border-border hover:bg-accent transition-colors flex gap-3 items-start">
-                      <div className={`mt-0.5 p-1.5 rounded-md ${n.type === 'ASSIGNMENT' ? 'bg-blue-500/20 text-blue-400' : 'bg-emerald-500/20 text-emerald-400'}`}>
+                      <div className={`mt-0.5 p-1.5 rounded-md ${n.type === 'ASSIGNMENT' ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400' : 'bg-primary/10 text-primary dark:text-emerald-400'}`}>
                         {n.type === 'ASSIGNMENT' ? <FileText size={14} /> : <BookOpen size={14} />}
                       </div>
                       <div className="flex flex-col">
-                        <p className="text-sm text-foreground leading-snug">{n.title}</p>
+                        <p className="text-sm font-medium text-foreground leading-snug">{n.title}</p>
                         <span className="text-[10px] text-muted-foreground mt-1">
                           {new Date(n.createdAt).toLocaleDateString()}
                         </span>
@@ -224,27 +229,27 @@ export function Topbar({ onMobileMenuOpen }: TopbarProps) {
         </div>
 
         {/* XP Badge */}
-        <div className="flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-3 py-1.5 shadow-[0_0_10px_rgba(16,185,129,0.1)]">
-          <span className="text-emerald-400 text-[10px] font-bold uppercase tracking-wider">XP</span>
-          <span className="text-emerald-300 font-bold text-sm">{xp.toLocaleString()}</span>
+        <div className="flex items-center gap-1.5 bg-primary/10 border border-primary/20 rounded-full px-3 py-1 shadow-xs">
+          <span className="text-primary dark:text-emerald-400 text-[10px] font-bold uppercase tracking-wider">XP</span>
+          <span className="text-primary dark:text-emerald-400 font-bold text-sm">{xp.toLocaleString()}</span>
         </div>
 
         {/* User info + Profile button */}
-        <div className="flex items-center gap-2.5 relative group cursor-pointer ml-2">
+        <div className="flex items-center gap-2.5 relative group cursor-pointer ml-1">
           <div className="hidden sm:flex flex-col items-end">
             <span className="text-foreground text-sm font-semibold leading-none">
-              {user?.name ?? 'User'}
+              {userDisplayName}
             </span>
-            <span className="text-muted-foreground text-[11px] mt-1 font-medium tracking-wide uppercase">{(user as any)?.role ?? 'Student'}</span>
+            <span className="text-primary dark:text-emerald-400 text-[10px] mt-1 font-bold tracking-wide uppercase">{userRole}</span>
           </div>
-          <Link href="/dashboard/profile" className="w-9 h-9 rounded-full ring-2 ring-emerald-500/30 overflow-hidden bg-emerald-500/10 flex items-center justify-center hover:ring-emerald-400 transition-all">
+          <Link href="/dashboard/profile" className="w-9 h-9 rounded-full ring-2 ring-primary/30 overflow-hidden bg-primary/10 flex items-center justify-center hover:ring-primary transition-all">
             {user?.image ? (
               <img src={user.image} alt="Avatar" className="w-full h-full object-cover" />
             ) : (
-              <span className="text-emerald-400 text-sm font-bold">{user?.name?.charAt(0) || 'U'}</span>
+              <span className="text-primary dark:text-emerald-400 text-sm font-bold">{userDisplayName.charAt(0).toUpperCase()}</span>
             )}
           </Link>
-          <div className="absolute right-0 top-full mt-2 w-48 bg-card border border-border rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 flex flex-col p-2">
+          <div className="absolute right-0 top-full mt-2 w-48 bg-card/95 backdrop-blur-xl border border-border rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 flex flex-col p-2">
             <Link href="/dashboard/profile" className="px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors text-left">
               Profile
             </Link>
@@ -258,7 +263,7 @@ export function Topbar({ onMobileMenuOpen }: TopbarProps) {
                   window.location.href = '/sign-in';
                 }
               }}
-              className="px-3 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors text-left w-full mt-1"
+              className="px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:text-red-700 hover:bg-red-500/10 rounded-lg transition-colors text-left w-full mt-1 cursor-pointer"
             >
               Sign out
             </button>

@@ -21,13 +21,14 @@ const medalEmoji: Record<number, string> = {
 
 function Avatar({ name, avatarUrl }: { name: string; avatarUrl?: string }) {
   if (avatarUrl) {
-    return <img src={avatarUrl} alt={name} className="w-8 h-8 rounded-full border border-border" />;
+    return <img src={avatarUrl} alt={name} className="w-8 h-8 rounded-full border border-[#075945]/20 object-cover" />;
   }
-  const initials = name.replace(/[^a-zA-Z]/g, '').slice(0, 2).toUpperCase() || 'U';
-  const colors = ['bg-emerald-800', 'bg-blue-800', 'bg-purple-800', 'bg-pink-800', 'bg-orange-800'];
-  const idx = (name && name.length > 0 ? name.charCodeAt(0) : 0) % colors.length;
+  const cleanName = (name && name.toLowerCase() !== 'learner' && name.toLowerCase() !== 'explorer') ? name : 'Builder';
+  const initials = cleanName.replace(/[^a-zA-Z]/g, '').slice(0, 2).toUpperCase() || 'B';
+  const colors = ['bg-[#075945]/10 text-[#075945]', 'bg-[#2563eb]/10 text-[#2563eb]', 'bg-[#7c3aed]/10 text-[#7c3aed]', 'bg-[#d97706]/10 text-[#d97706]'];
+  const idx = (cleanName.charCodeAt(0) || 0) % colors.length;
   return (
-    <div className={`w-8 h-8 rounded-full ${colors[idx]} flex items-center justify-center text-xs font-bold text-foreground flex-shrink-0`}>
+    <div className={`w-8 h-8 rounded-full ${colors[idx]} border border-[#075945]/15 flex items-center justify-center text-xs font-bold flex-shrink-0`}>
       {initials}
     </div>
   );
@@ -35,49 +36,53 @@ function Avatar({ name, avatarUrl }: { name: string; avatarUrl?: string }) {
 
 export function LeaderboardPreview({ leaderboard }: LeaderboardPreviewProps) {
   return (
-    <div className="bg-gradient-to-br from-slate-100/90 via-slate-200/70 to-slate-300/50
-      dark:from-slate-800/80 dark:via-slate-900/60 dark:to-slate-900/40 
-      border border-border rounded-2xl p-5 flex flex-col h-full">
+    <div className="bg-white/85 backdrop-blur-md border border-[#075945]/15 rounded-2xl p-5 sm:p-6 flex flex-col h-full shadow-xs hover:border-[#075945]/30 transition-all">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-foreground font-bold text-base">
-          Leaderboard <span className="text-muted-foreground font-normal text-sm">(Top 5)</span>
+        <h3 className="text-[#171a18] font-bold text-base">
+          Leaderboard <span className="text-[#6b7280] font-normal text-sm">(Top 5)</span>
         </h3>
         <Link href="/dashboard/leaderboard">
-          <button className="text-emerald-400 text-xs font-semibold hover:text-emerald-300 transition-colors">
+          <button className="text-[#075945] text-xs font-bold hover:underline transition-colors">
             View All
           </button>
         </Link>
       </div>
 
-      <ul className="space-y-2.5">
-        {leaderboard.slice(0, 5).map((entry, index) => (
-          <li
-            key={entry.userId}
-            className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/3 transition-colors"
-          >
-            {/* Rank */}
-            <div className="w-6 text-center flex-shrink-0">
-              {index < 3 ? (
-                <span className="text-lg leading-none">{medalEmoji[index]}</span>
-              ) : (
-                <span className="text-muted-foreground text-sm font-bold">{index + 1}</span>
-              )}
-            </div>
+      <ul className="space-y-2">
+        {leaderboard.slice(0, 5).map((entry, index) => {
+          const entryDisplayName = (entry.name && entry.name.toLowerCase() !== 'learner' && entry.name.toLowerCase() !== 'explorer')
+            ? entry.name
+            : (entry.handle ? entry.handle.replace('@', '') : 'Builder');
 
-            {/* Avatar */}
-            <Avatar name={entry.name} avatarUrl={entry.avatarUrl} />
+          return (
+            <li
+              key={entry.userId}
+              className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[#075945]/5 transition-colors"
+            >
+              {/* Rank */}
+              <div className="w-6 text-center flex-shrink-0">
+                {index < 3 ? (
+                  <span className="text-lg leading-none">{medalEmoji[index]}</span>
+                ) : (
+                  <span className="text-[#6b7280] text-sm font-bold font-mono">{index + 1}</span>
+                )}
+              </div>
 
-            {/* Username */}
-            <span className="text-foreground text-sm font-medium flex-1 truncate">
-              {entry.name}
-            </span>
+              {/* Avatar */}
+              <Avatar name={entryDisplayName} avatarUrl={entry.avatarUrl} />
 
-            {/* XP */}
-            <span className="text-emerald-400 text-sm font-bold flex-shrink-0">
-              {entry.xp.toLocaleString()} XP
-            </span>
-          </li>
-        ))}
+              {/* Username */}
+              <span className="text-[#171a18] text-sm font-semibold flex-1 truncate">
+                {entryDisplayName}
+              </span>
+
+              {/* XP */}
+              <span className="text-[#075945] text-sm font-mono font-bold flex-shrink-0">
+                {entry.xp.toLocaleString()} XP
+              </span>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

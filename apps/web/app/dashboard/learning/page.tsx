@@ -45,7 +45,8 @@ export default function LearningPage() {
     );
   }
 
-  const displayName = session?.user?.name || 'User';
+  const validSessionName = session?.user?.name && session.user.name.toLowerCase() !== 'learner' && session.user.name.toLowerCase() !== 'explorer' ? session.user.name : null;
+  const displayName = validSessionName || (session?.user?.email ? session.user.email.split('@')[0] : 'Student');
 
   return (
     <DashboardShell>

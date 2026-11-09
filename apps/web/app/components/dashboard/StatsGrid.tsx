@@ -45,7 +45,7 @@ export function StatsGrid({ xp, referralsCount, capStatus, rank }: StatsGridProp
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+    <div className="bg-white/85 backdrop-blur-md border border-[#075945]/15 rounded-2xl shadow-xs overflow-hidden grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[#075945]/10">
       {stats.map((stat) => (
         <StatsCard key={stat.id} stat={stat} />
       ))}

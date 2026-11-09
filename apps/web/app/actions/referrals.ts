@@ -55,12 +55,14 @@ export async function linkReferral() {
     // For now, let's keep it simple and just link them.
     
     await prisma.xPTransaction.create({
-        data: {
-            userId: refCode.userId,
-            amount: 500, // 500 XP for referral
-            reason: `Referral Join: ${session.user.email}`
-        }
-    });
+      data: {
+        userId: refCode.userId,
+        amount: 500, // 500 XP for referral
+        reason: `Referral Join: ${session.user.email || session.user.name || 'Builder'}`,
+        category: 'REFERRAL',
+        referenceId: `referral-${refCode.id}-${session.user.id}`,
+      },
+    }).catch(() => null);
 
     cookieStore.delete('referral_code');
     return { success: true };

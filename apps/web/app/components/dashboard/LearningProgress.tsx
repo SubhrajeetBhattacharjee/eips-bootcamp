@@ -18,45 +18,43 @@ export function LearningProgress() {
   }, []);
 
   return (
-    <div className="bg-gradient-to-br from-slate-100/90 via-slate-200/70 to-slate-300/50
-      dark:from-slate-800/80 dark:via-slate-900/60 dark:to-slate-900/40 
-      border border-border rounded-2xl p-5 flex flex-col h-full">
+    <div className="bg-white/85 backdrop-blur-md border border-[#075945]/15 rounded-2xl p-5 sm:p-6 flex flex-col h-full shadow-xs hover:border-[#075945]/30 transition-all">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-foreground font-bold text-base">Continue Your Learning</h3>
+        <h3 className="text-[#171a18] font-bold text-base">Continue Your Learning</h3>
         <Link href="/dashboard/my-modules">  
-          <button className="text-emerald-400 text-xs font-semibold hover:text-emerald-300 transition-colors flex items-center gap-1">
-          View All Modules <ArrowRight size={12} />
-        </button>
+          <button className="text-[#075945] text-xs font-bold hover:underline transition-colors flex items-center gap-1">
+            View All Modules <ArrowRight size={12} />
+          </button>
         </Link>
       </div>
 
       {loading ? (
         <div className="flex-1 flex items-center justify-center py-6">
-          <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-emerald-500 border-opacity-50"></div>
+          <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-[#075945] border-opacity-70"></div>
         </div>
       ) : progressData ? (
-        <Link href="/dashboard/assignments" className="flex-1 flex flex-col justify-center bg-accent/80 dark:bg-accent border border-border rounded-xl p-5 hover:bg-accent transition-colors group cursor-pointer">
+        <Link href="/dashboard/assignments" className="flex-1 flex flex-col justify-center bg-[#075945]/5 border border-[#075945]/15 rounded-xl p-5 hover:bg-[#075945]/10 transition-colors group cursor-pointer">
           <div className="flex items-center gap-3 mb-3">
-            <div className="p-2.5 bg-blue-500/10 rounded-lg text-blue-400 group-hover:scale-110 transition-transform">
+            <div className="p-2.5 bg-[#075945]/10 rounded-xl text-[#075945] group-hover:scale-105 transition-transform">
               <BookOpen size={20} />
             </div>
             <div>
-              <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-0.5">Latest Assignment</p>
-              <h4 className="text-sm font-bold text-foreground line-clamp-1">{progressData.title}</h4>
+              <p className="text-[10px] text-[#6b7280] font-bold uppercase tracking-wider mb-0.5">Latest Assignment</p>
+              <h4 className="text-sm font-bold text-[#171a18] line-clamp-1">{progressData.title}</h4>
             </div>
           </div>
-          <div className="w-full bg-accent rounded-full h-1.5 mt-2">
-            <div className="bg-blue-500 h-1.5 rounded-full w-[15%]"></div>
+          <div className="w-full bg-[#075945]/15 rounded-full h-1.5 mt-2">
+            <div className="bg-[#075945] h-1.5 rounded-full w-[25%]"></div>
           </div>
-          <p className="text-xs text-muted-foreground mt-2 text-right group-hover:text-muted-foreground transition-colors">Continue <ArrowRight size={10} className="inline ml-1" /></p>
+          <p className="text-xs text-[#075945] font-semibold mt-2.5 text-right flex items-center justify-end gap-1">Continue <ArrowRight size={11} /></p>
         </Link>
       ) : (
-        <div className="flex-1 flex flex-col items-center justify-center text-center p-6 bg-background/20 border border-border rounded-xl">
-          <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center mb-3">
-            <ArrowRight size={20} className="text-muted-foreground" />
+        <div className="flex-1 flex flex-col items-center justify-center text-center p-6 bg-[#075945]/5 border border-[#075945]/15 rounded-xl">
+          <div className="w-12 h-12 bg-white rounded-full border border-[#075945]/15 flex items-center justify-center mb-3 text-[#075945] shadow-xs">
+            <BookOpen size={20} />
           </div>
-          <p className="text-foreground font-semibold text-sm mb-1">Nothing in progress</p>
-          <p className="text-muted-foreground text-xs">Start a module to see your progress here.</p>
+          <p className="text-[#171a18] font-bold text-sm mb-1">Nothing in progress</p>
+          <p className="text-[#6b7280] text-xs">Start a module to see your progress here.</p>
         </div>
       )}
     </div>

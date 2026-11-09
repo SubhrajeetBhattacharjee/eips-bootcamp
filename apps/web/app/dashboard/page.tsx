@@ -1,20 +1,14 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from '@/app/lib/auth-client';
 import { DashboardShell } from '@/app/components/dashboard/DashboardShell';
 import LoadingScreen from '@/app/components/ui/LoadingScreen';
-import { WelcomeHero } from '@/app/components/dashboard/WelcomeHero';
-import { StatsGrid } from '@/app/components/dashboard/StatsGrid';
-import { ReferralCard } from '@/app/components/dashboard/ReferralCard';
-import { LeaderboardPreview } from '@/app/components/dashboard/LeaderboardPreview';
-import { ActivityFeed } from '@/app/components/dashboard/ActivityFeed';
-import { LearningProgress } from '@/app/components/dashboard/LearningProgress';
-import { UpcomingEventsWidget } from '@/app/components/dashboard/UpcomingEventsWidget';
-import { EventsCard } from '@/app/components/dashboard/EventsCard';
-import { ProgressWidget } from '@/app/components/dashboard/ProgressWidget';
+import { CampusCommandHub } from '@/app/components/dashboard/CampusCommandHub';
+import { CampusArena } from '@/app/components/dashboard/CampusArena';
 import { linkReferral } from '@/app/actions/referrals';
+import { AlertCircle, RefreshCw } from 'lucide-react';
 import type { DashboardData } from '@/app/lib/dashboard';
 
 export default function DashboardPage() {
@@ -24,57 +18,46 @@ export default function DashboardPage() {
   const isSignedIn = !!user;
   const [dashboard, setDashboard] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const loadDashboard = useCallback(async () => {
+    if (!user?.id) return;
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Link referral non-blockingly so it doesn't delay dashboard initialization
+      linkReferral().catch((e) => console.warn('Referral link check:', e));
+
+      const res = await fetch(`/api/dashboard?userId=${encodeURIComponent(user.id)}`, {
+        cache: 'no-store',
+      });
+
+      if (!res.ok) {
+        throw new Error(`Failed to load dashboard: ${res.status}`);
+      }
+
+      const data = (await res.json()) as DashboardData;
+      setDashboard(data);
+    } catch (err: any) {
+      console.error('Dashboard load error:', err);
+      setError(err?.message || 'Failed to load dashboard data');
+      setDashboard(null);
+    } finally {
+      setLoading(false);
+    }
+  }, [user?.id]);
 
   useEffect(() => {
     if (isPending) return;
 
-    if (!isSignedIn) {
+    if (!isSignedIn || !user?.id) {
       router.replace('/sign-in');
       return;
-    }
-
-    const userId = user?.id;
-    if (!userId) {
-      router.replace('/sign-in');
-      return;
-    }
-
-    let active = true;
-
-    async function loadDashboard() {
-      setLoading(true);
-
-      try {
-        await linkReferral();
-        const res = await fetch(`/api/dashboard?userId=${encodeURIComponent(userId)}`, {
-          cache: 'no-store',
-        });
-
-        if (!res.ok) {
-          throw new Error(`Failed to load dashboard: ${res.status}`);
-        }
-
-        const data = (await res.json()) as DashboardData;
-        if (active) {
-          setDashboard(data);
-        }
-      } catch {
-        if (active) {
-          setDashboard(null);
-        }
-      } finally {
-        if (active) {
-          setLoading(false);
-        }
-      }
     }
 
     loadDashboard();
-
-    return () => {
-      active = false;
-    };
-  }, [isPending, isSignedIn, router, user?.id]);
+  }, [isPending, isSignedIn, router, user?.id, loadDashboard]);
 
   if (isPending || loading) {
     return (
@@ -84,46 +67,62 @@ export default function DashboardPage() {
     );
   }
 
-  if (!dashboard) {
-    return null;
+  if (error || !dashboard) {
+    return (
+      <DashboardShell>
+        <div className="min-h-[60vh] flex flex-col items-center justify-center text-center p-8 space-y-4">
+          <div className="w-16 h-16 rounded-2xl bg-destructive/10 text-destructive flex items-center justify-center">
+            <AlertCircle size={32} />
+          </div>
+          <h2 className="text-2xl font-black text-foreground">Could Not Load Dashboard</h2>
+          <p className="text-muted-foreground text-sm max-w-md">
+            We encountered an issue syncing with the campus protocol state. Please retry to reconnect.
+          </p>
+          <button
+            onClick={() => loadDashboard()}
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-primary text-primary-foreground font-bold text-sm shadow-xs hover:bg-primary/90 transition-all cursor-pointer"
+          >
+            <RefreshCw size={14} />
+            <span>Retry Connection</span>
+          </button>
+        </div>
+      </DashboardShell>
+    );
   }
 
-  const displayName = dashboard.user.username !== 'Explorer' ? dashboard.user.username : (user?.name || 'Explorer');
+  const validSessionName = user?.name && user.name.toLowerCase() !== 'learner' && user.name.toLowerCase() !== 'explorer' ? user.name : null;
+  const validDashboardUser = dashboard.user.username && dashboard.user.username.toLowerCase() !== 'learner' && dashboard.user.username.toLowerCase() !== 'explorer' ? dashboard.user.username : null;
+  const emailPrefix = user?.email ? user.email.split('@')[0] : null;
+  const displayName = validDashboardUser || validSessionName || emailPrefix || 'Explorer';
 
   return (
     <DashboardShell>
-      <div className="space-y-5">
-        <WelcomeHero
+      <div className="space-y-6">
+        <CampusCommandHub
           user={{
             username: displayName,
-            role: dashboard.user.role,
+            role: dashboard.user.role || 'Student Builder',
           }}
-        />
-
-        <StatsGrid
           xp={dashboard.xp}
           referralsCount={dashboard.referralsCount}
           capStatus={dashboard.capStatus}
           rank={dashboard.rank}
+          streak={dashboard.streak ?? 0}
+          streakDays={dashboard.streakDays || []}
+          referralCode={dashboard.referralCode}
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          <ReferralCard
-            referralsCount={dashboard.referralsCount}
-            xp={dashboard.xp}
-            referralCode={dashboard.referralCode}
-          />
-
-          <LeaderboardPreview leaderboard={dashboard.leaderboard} />
-
-          <ActivityFeed activities={dashboard.recentActivity} />
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          <LearningProgress />
-          <UpcomingEventsWidget />
-          <ProgressWidget progress={Math.min(100, Math.floor((dashboard.xp / 5000) * 100))} />
-        </div>
+        <CampusArena
+          referralCode={dashboard.referralCode}
+          referralsCount={dashboard.referralsCount}
+          referralXp={dashboard.referralXp}
+          xp={dashboard.xp}
+          leaderboard={dashboard.leaderboard}
+          recentActivity={dashboard.recentActivity}
+          progressPercent={dashboard.progressPercent}
+          activeModule={dashboard.activeModule}
+          upcomingEvents={dashboard.upcomingEvents}
+        />
       </div>
     </DashboardShell>
   );

@@ -33,22 +33,24 @@ export function WavingStudent() {
         <span>ERC-4337 // AA 🔑</span>
       </div>
 
-      {/* Floating badge 3: Sepolia live connection */}
+      {/* Floating badge 3: Network live connection */}
       <div className="absolute bottom-4 -left-2 sm:left-2 z-20 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-md border border-gray-200/80 text-[11px] font-mono text-[#333] shadow-md">
         <span className="w-2 h-2 rounded-full bg-[#27c93f] animate-pulse" />
-        <span>Sepolia: Connected</span>
+        <span>Network: Active</span>
       </div>
 
       {/* Main Character: Native H.264 Video with multiply blend + edge fade */}
-      <div className="relative w-full flex items-center justify-center">
+      <div className="relative w-full max-w-[420px] aspect-[16/9] flex items-center justify-center overflow-hidden">
         <video
           ref={videoRef}
           autoPlay
           loop
           muted
           playsInline
+          width={1280}
+          height={720}
           poster="/student-wave-poster.png"
-          className="w-full max-w-[380px] sm:max-w-[420px] h-auto object-contain pointer-events-none mix-blend-multiply"
+          className="w-full h-full object-contain pointer-events-none mix-blend-multiply"
           style={{
             maskImage: 'radial-gradient(ellipse 78% 74% at 50% 48%, black 45%, transparent 78%)',
             WebkitMaskImage: 'radial-gradient(ellipse 78% 74% at 50% 48%, black 45%, transparent 78%)',
