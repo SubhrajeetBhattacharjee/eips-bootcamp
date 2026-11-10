@@ -44,18 +44,14 @@ export function CompetitionArena({ competition, userId }: CompetitionArenaProps)
     setAnswers(initial);
   }, [problems]);
 
-  // Compute remaining seconds from startedAt and durationMinutes
-  const computeInitialSeconds = useCallback(() => {
+  const [secondsRemaining, setSecondsRemaining] = useState<number>(() => {
     const startedAt = competition.userParticipation?.startedAt
       ? new Date(competition.userParticipation.startedAt).getTime()
       : Date.now();
     const durationMs = competition.durationMinutes * 60 * 1000;
     const expiresAt = startedAt + durationMs;
-    const remaining = Math.max(0, Math.floor((expiresAt - Date.now()) / 1000));
-    return remaining;
-  }, [competition.durationMinutes, competition.userParticipation?.startedAt]);
-
-  const [secondsRemaining, setSecondsRemaining] = useState<number>(computeInitialSeconds);
+    return Math.max(0, Math.floor((expiresAt - Date.now()) / 1000));
+  });
 
   const handleSubmit = useCallback(async () => {
     if (submitting) return;

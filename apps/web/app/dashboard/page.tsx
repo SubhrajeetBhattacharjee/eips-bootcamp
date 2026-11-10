@@ -20,8 +20,10 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const userId = user?.id;
+
   const loadDashboard = useCallback(async () => {
-    if (!user?.id) return;
+    if (!userId) return;
     setLoading(true);
     setError(null);
 
@@ -29,7 +31,7 @@ export default function DashboardPage() {
       // Link referral non-blockingly so it doesn't delay dashboard initialization
       linkReferral().catch((e) => console.warn('Referral link check:', e));
 
-      const res = await fetch(`/api/dashboard?userId=${encodeURIComponent(user.id)}`, {
+      const res = await fetch(`/api/dashboard?userId=${encodeURIComponent(userId)}`, {
         cache: 'no-store',
       });
 
@@ -46,18 +48,18 @@ export default function DashboardPage() {
     } finally {
       setLoading(false);
     }
-  }, [user?.id]);
+  }, [userId]);
 
   useEffect(() => {
     if (isPending) return;
 
-    if (!isSignedIn || !user?.id) {
+    if (!isSignedIn || !userId) {
       router.replace('/sign-in');
       return;
     }
 
     loadDashboard();
-  }, [isPending, isSignedIn, router, user?.id, loadDashboard]);
+  }, [isPending, isSignedIn, router, userId, loadDashboard]);
 
   if (isPending || loading) {
     return (

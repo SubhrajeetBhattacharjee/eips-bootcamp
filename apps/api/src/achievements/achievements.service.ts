@@ -44,7 +44,8 @@ const DEFAULT_ACHIEVEMENTS: DefaultAchievementSeed[] = [
   {
     code: 'LESSONS_10',
     title: 'Smart Contract Scribe',
-    description: 'Complete 10 protocol lessons diving into execution and state.',
+    description:
+      'Complete 10 protocol lessons diving into execution and state.',
     category: AchievementCategory.LEARNING,
     rarity: AchievementRarity.RARE,
     icon: '⚡',
@@ -66,7 +67,8 @@ const DEFAULT_ACHIEVEMENTS: DefaultAchievementSeed[] = [
   {
     code: 'ARENA_CONTENDER',
     title: 'Arena Contender',
-    description: 'Submit verified answers to your first weekly competitive arena.',
+    description:
+      'Submit verified answers to your first weekly competitive arena.',
     category: AchievementCategory.COMPETITION,
     rarity: AchievementRarity.COMMON,
     icon: '⚔️',
@@ -96,7 +98,8 @@ const DEFAULT_ACHIEVEMENTS: DefaultAchievementSeed[] = [
   {
     code: 'SPEED_DEMON',
     title: 'Bytecode Speedrunner',
-    description: 'Complete a weekly arena in under 15 minutes with >75% accuracy.',
+    description:
+      'Complete a weekly arena in under 15 minutes with >75% accuracy.',
     category: AchievementCategory.COMPETITION,
     rarity: AchievementRarity.EPIC,
     icon: '⚡',
@@ -203,7 +206,9 @@ export class AchievementsService {
         update: ach,
       });
     }
-    this.logger.log(`Seeded ${DEFAULT_ACHIEVEMENTS.length} default achievements.`);
+    this.logger.log(
+      `Seeded ${DEFAULT_ACHIEVEMENTS.length} default achievements.`,
+    );
   }
 
   /**
@@ -229,7 +234,9 @@ export class AchievementsService {
       where: { userId },
     });
 
-    const userAchMap = new Map(userAchievements.map((ua) => [ua.achievementId, ua]));
+    const userAchMap = new Map(
+      userAchievements.map((ua) => [ua.achievementId, ua]),
+    );
 
     // Query User Progress Metrics
     const lessonCount = await this.prisma.lessonProgress.count({
@@ -416,7 +423,10 @@ export class AchievementsService {
           icon: ach.icon,
           rarity: ach.rarity,
         });
-      } else if (!existingUA.isUnlocked && currentProgress !== existingUA.progress) {
+      } else if (
+        !existingUA.isUnlocked &&
+        currentProgress !== existingUA.progress
+      ) {
         // Update partial progress
         await this.prisma.userAchievement.update({
           where: { id: existingUA.id },

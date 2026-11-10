@@ -24,4 +24,3 @@ export class NftRewardsController {
     return this.nftRewardsService.claimReward(userId, rewardId, walletAddress);
   }
 }
-

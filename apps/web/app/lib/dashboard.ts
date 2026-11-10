@@ -406,7 +406,21 @@ export async function getDashboardData(userId: string): Promise<DashboardData> {
       }
     }
 
-    const streak = calculatedStreak;
+    const dbStreak = dbUser.streak?.currentStreak || 0;
+    const streak = Math.max(calculatedStreak, dbStreak);
+
+    // If streak is active, ensure corresponding recent streak days reflect active status
+    if (streak > 0) {
+      const activeWindow = Math.min(streak, 7);
+      for (let i = 0; i < activeWindow; i++) {
+        const idx = streakDays.length - 1 - i;
+        if (idx >= 0) {
+          streakDays[idx].active = true;
+        }
+      }
+    }
+
+    const finalLongest = Math.max(dbUser.streak?.longestStreak || 0, streak);
 
     // Asynchronously synchronize UserStreak table in Postgres if outdated
     if (!dbUser.streak || dbUser.streak.currentStreak !== streak) {
@@ -416,14 +430,14 @@ export async function getDashboardData(userId: string): Promise<DashboardData> {
           create: {
             userId: dbUser.id,
             currentStreak: streak,
-            longestStreak: Math.max(dbUser.streak?.longestStreak || 0, streak),
+            longestStreak: finalLongest,
             lastActiveDate: hasActivityToday
               ? now.toISOString().slice(0, 10)
               : dbUser.streak?.lastActiveDate || now.toISOString().slice(0, 10),
           },
           update: {
             currentStreak: streak,
-            longestStreak: Math.max(dbUser.streak?.longestStreak || 0, streak),
+            longestStreak: finalLongest,
             lastActiveDate: hasActivityToday ? now.toISOString().slice(0, 10) : undefined,
           },
         })

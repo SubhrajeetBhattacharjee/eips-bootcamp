@@ -174,7 +174,7 @@ export class CommunityChallengesService implements OnModuleInit {
       orderBy: [{ status: 'asc' }, { endDate: 'asc' }],
     });
 
-    let userParticipations: Record<
+    const userParticipations: Record<
       string,
       {
         isJoined: boolean;
@@ -237,8 +237,12 @@ export class CommunityChallengesService implements OnModuleInit {
       };
     });
 
-    const activeCount = mapped.filter((c) => c.status === ChallengeStatus.ACTIVE).length;
-    const completedCount = mapped.filter((c) => c.status === ChallengeStatus.COMPLETED).length;
+    const activeCount = mapped.filter(
+      (c) => c.status === ChallengeStatus.ACTIVE,
+    ).length;
+    const completedCount = mapped.filter(
+      (c) => c.status === ChallengeStatus.COMPLETED,
+    ).length;
 
     return {
       challenges: mapped,
@@ -345,17 +349,22 @@ export class CommunityChallengesService implements OnModuleInit {
     }
 
     if (challenge.status !== ChallengeStatus.COMPLETED) {
-      throw new BadRequestException('This challenge has not yet reached its completion goal');
+      throw new BadRequestException(
+        'This challenge has not yet reached its completion goal',
+      );
     }
 
-    const participant = await this.prisma.communityChallengeParticipant.findUnique({
-      where: {
-        challengeId_userId: { challengeId, userId },
-      },
-    });
+    const participant =
+      await this.prisma.communityChallengeParticipant.findUnique({
+        where: {
+          challengeId_userId: { challengeId, userId },
+        },
+      });
 
     if (!participant) {
-      throw new BadRequestException('You did not participate in this community challenge');
+      throw new BadRequestException(
+        'You did not participate in this community challenge',
+      );
     }
 
     if (participant.contributionCount < challenge.minContribution) {
@@ -392,4 +401,3 @@ export class CommunityChallengesService implements OnModuleInit {
     return updated;
   }
 }
-

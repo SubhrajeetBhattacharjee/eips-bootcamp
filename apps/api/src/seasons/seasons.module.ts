@@ -11,4 +11,3 @@ import { XpModule } from '../xp/xp.module';
   exports: [SeasonsService],
 })
 export class SeasonsModule {}
-

@@ -44,27 +44,17 @@ export class CompetitionsController {
   }
 
   @Post(':id/register')
-  async register(
-    @Param('id') id: string,
-    @Body() dto: RegisterCompetitionDto,
-  ) {
+  async register(@Param('id') id: string, @Body() dto: RegisterCompetitionDto) {
     return this.competitionsService.registerForCompetition(id, dto.userId);
   }
 
   @Post(':id/start')
-  async start(
-    @Param('id') id: string,
-    @Body() dto: RegisterCompetitionDto,
-  ) {
+  async start(@Param('id') id: string, @Body() dto: RegisterCompetitionDto) {
     return this.competitionsService.startCompetition(id, dto.userId);
   }
 
   @Post(':id/submit')
-  async submit(
-    @Param('id') id: string,
-    @Body() dto: SubmitCompetitionDto,
-  ) {
+  async submit(@Param('id') id: string, @Body() dto: SubmitCompetitionDto) {
     return this.competitionsService.submitCompetition(id, dto);
   }
 }
-

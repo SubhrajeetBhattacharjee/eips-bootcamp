@@ -266,7 +266,11 @@ describe('CompetitionsService', () => {
             name: 'Fast Builder',
             username: 'fastcoder',
             image: null,
-            profile: { fullName: 'Fast Builder', college: 'IIT Bombay', avatarUrl: null },
+            profile: {
+              fullName: 'Fast Builder',
+              college: 'IIT Bombay',
+              avatarUrl: null,
+            },
           },
           submissions: [{ problemId: 'p1', scoreEarned: 100, isCorrect: true }],
         },
@@ -281,13 +285,20 @@ describe('CompetitionsService', () => {
             name: 'Slow Builder',
             username: 'slowcoder',
             image: null,
-            profile: { fullName: 'Slow Builder', college: 'BITS Pilani', avatarUrl: null },
+            profile: {
+              fullName: 'Slow Builder',
+              college: 'BITS Pilani',
+              avatarUrl: null,
+            },
           },
           submissions: [{ problemId: 'p1', scoreEarned: 100, isCorrect: true }],
         },
       ]);
 
-      const res = await service.getCompetitionLeaderboard('comp-1', 'user-fast');
+      const res = await service.getCompetitionLeaderboard(
+        'comp-1',
+        'user-fast',
+      );
       expect(res.leaderboard).toHaveLength(2);
       expect(res.leaderboard[0].username).toBe('fastcoder');
       expect(res.leaderboard[0].rank).toBe(1);
@@ -351,9 +362,7 @@ describe('CompetitionsService', () => {
             totalPoints: 100,
             _count: { participants: 15, problems: 1 },
           },
-          submissions: [
-            { problemId: 'p0', isCorrect: true, scoreEarned: 100 },
-          ],
+          submissions: [{ problemId: 'p0', isCorrect: true, scoreEarned: 100 }],
         },
       ]);
 

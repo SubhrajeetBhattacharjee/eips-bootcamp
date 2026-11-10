@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
 
 export class GenerateReferralDto {
   @IsString()
@@ -6,6 +6,6 @@ export class GenerateReferralDto {
   userId!: string;
 
   @IsString()
-  @IsNotEmpty()
-  username!: string;
+  @IsOptional()
+  username?: string;
 }

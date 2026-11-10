@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 import { gsap } from 'gsap';
 
@@ -60,6 +60,14 @@ export function ImageCarousel({ images, interval = 5000 }: ImageCarouselProps) {
     return () => window.clearInterval(timer);
   }, [images.length, interval, isPaused]);
 
+  const showPrevious = useCallback(() => {
+    setActiveIndex((currentIndex) => (currentIndex - 1 + images.length) % images.length);
+  }, [images.length]);
+
+  const showNext = useCallback(() => {
+    setActiveIndex((currentIndex) => (currentIndex + 1) % images.length);
+  }, [images.length]);
+
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -68,15 +76,7 @@ export function ImageCarousel({ images, interval = 5000 }: ImageCarouselProps) {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [images.length]);
-
-  const showPrevious = () => {
-    setActiveIndex((currentIndex) => (currentIndex - 1 + images.length) % images.length);
-  };
-
-  const showNext = () => {
-    setActiveIndex((currentIndex) => (currentIndex + 1) % images.length);
-  };
+  }, [showPrevious, showNext]);
 
   if (!images.length) return null;
 

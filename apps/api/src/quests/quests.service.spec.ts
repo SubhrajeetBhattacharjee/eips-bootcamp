@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { QuestsService, DEFAULT_DAILY_QUESTS } from './quests.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { XpService } from '../xp/xp.service';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 
 describe('QuestsService', () => {
   let service: QuestsService;
@@ -151,9 +151,9 @@ describe('QuestsService', () => {
         isClaimed: false,
       });
 
-      await expect(service.claimQuestReward('user-1', 'quest-1')).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(
+        service.claimQuestReward('user-1', 'quest-1'),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should reject claim if not owned by user', async () => {
@@ -164,9 +164,9 @@ describe('QuestsService', () => {
         isClaimed: false,
       });
 
-      await expect(service.claimQuestReward('user-1', 'quest-1')).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(
+        service.claimQuestReward('user-1', 'quest-1'),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should award XP and mark quest as claimed', async () => {
@@ -222,7 +222,14 @@ describe('QuestsService', () => {
     it('should increment streak when consecutive active day occurs', async () => {
       const now = new Date();
       const yesterday = new Date(
-        Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - 1, 0, 0, 0),
+        Date.UTC(
+          now.getUTCFullYear(),
+          now.getUTCMonth(),
+          now.getUTCDate() - 1,
+          0,
+          0,
+          0,
+        ),
       );
       const yesterdayStr = yesterday.toISOString().slice(0, 10);
 
@@ -261,4 +268,3 @@ describe('QuestsService', () => {
     });
   });
 });
-

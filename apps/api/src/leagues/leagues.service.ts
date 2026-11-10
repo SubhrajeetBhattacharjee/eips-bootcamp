@@ -160,7 +160,7 @@ export class LeaguesService {
     const weekInfo = getWeekTimeInfo();
 
     // Check if user already belongs to an active league member record this week
-    let member = await this.prisma.leagueMember.findFirst({
+    const member = await this.prisma.leagueMember.findFirst({
       where: {
         userId,
         league: {
@@ -244,7 +244,8 @@ export class LeaguesService {
         hasJoinedThisWeek: false,
         tier,
         weekInfo,
-        message: 'Complete any lesson, quiz, or lab to join this week’s League!',
+        message:
+          'Complete any lesson, quiz, or lab to join this week’s League!',
         standings: [],
         userRank: null,
         weeklyXp: 0,
@@ -291,7 +292,8 @@ export class LeaguesService {
         memberId: m.id,
         userId: m.userId,
         name: displayName,
-        username: m.user.username || displayName.toLowerCase().replace(/\s+/g, ''),
+        username:
+          m.user.username || displayName.toLowerCase().replace(/\s+/g, ''),
         avatarUrl: m.user.image || m.user.profile?.avatarUrl,
         weeklyXp: m.weeklyXp,
         isCurrentUser: m.userId === userId,
@@ -400,4 +402,3 @@ export class LeaguesService {
     return summary;
   }
 }
-

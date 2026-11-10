@@ -3,7 +3,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Reward, REWARDS_DATA, RewardCategory } from '@/app/lib/rewards';
+import { Reward, RewardCategory } from '@/app/lib/rewards';
 import { RewardCard } from './RewardCard';
 
 interface RewardsGridProps {
@@ -21,6 +21,8 @@ export const RewardsGrid: React.FC<RewardsGridProps> = ({
   rewards,
   onRedeem,
 }) => {
+  const [displayCount, setDisplayCount] = useState(8);
+
   const filteredAndSorted = useMemo(() => {
     let filtered = rewards || [];
 
@@ -46,7 +48,7 @@ export const RewardsGrid: React.FC<RewardsGridProps> = ({
     } else if (sortBy === 'new') {
       sorted.reverse();
     }
-    // 'popular' is default order from REWARDS_DATA
+    // 'popular' is default order
 
     return sorted;
   }, [activeCategory, sortBy, rewards]);
@@ -55,12 +57,14 @@ export const RewardsGrid: React.FC<RewardsGridProps> = ({
     onRedeem(rewardId);
   };
 
+  const visibleRewards = filteredAndSorted.slice(0, displayCount);
+
   return (
     <div>
       {filteredAndSorted.length > 0 ? (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
-            {filteredAndSorted.map((reward) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            {visibleRewards.map((reward) => (
               <RewardCard
                 key={reward.id}
                 reward={reward}
@@ -71,9 +75,13 @@ export const RewardsGrid: React.FC<RewardsGridProps> = ({
           </div>
 
           {/* Load More Button */}
-          {filteredAndSorted.length >= 8 && (
+          {filteredAndSorted.length > displayCount && (
             <div className="flex justify-center">
-              <button className="px-8 py-3 rounded-full border border-emerald-500/50 text-emerald-400 font-bold hover:bg-emerald-500/10 transition-all duration-300 hover:border-emerald-400">
+              <button
+                type="button"
+                onClick={() => setDisplayCount((prev) => prev + 8)}
+                className="px-8 py-3 rounded-full border border-emerald-500/50 text-emerald-600 dark:text-emerald-400 font-bold hover:bg-emerald-500/10 transition-all duration-300 hover:border-emerald-400 cursor-pointer"
+              >
                 Load More Rewards
               </button>
             </div>

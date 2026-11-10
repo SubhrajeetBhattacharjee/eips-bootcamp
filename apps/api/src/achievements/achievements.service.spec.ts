@@ -6,7 +6,6 @@ import {
   AchievementCategory,
   AchievementRarity,
   LeagueTier,
-  ParticipantStatus,
 } from '@prisma/client';
 
 describe('AchievementsService', () => {
@@ -197,4 +196,3 @@ describe('AchievementsService', () => {
     });
   });
 });
-

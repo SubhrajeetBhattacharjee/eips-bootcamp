@@ -68,7 +68,14 @@ export class QuestsService {
   getSecondsUntilMidnightUtc(): number {
     const now = new Date();
     const tomorrow = new Date(
-      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 0, 0, 0),
+      Date.UTC(
+        now.getUTCFullYear(),
+        now.getUTCMonth(),
+        now.getUTCDate() + 1,
+        0,
+        0,
+        0,
+      ),
     );
     return Math.max(0, Math.floor((tomorrow.getTime() - now.getTime()) / 1000));
   }
@@ -119,7 +126,14 @@ export class QuestsService {
     // Sync progress for today
     const now = new Date();
     const startOfTodayUtc = new Date(
-      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0),
+      Date.UTC(
+        now.getUTCFullYear(),
+        now.getUTCMonth(),
+        now.getUTCDate(),
+        0,
+        0,
+        0,
+      ),
     );
 
     // 1. Check lesson completions today
@@ -142,7 +156,10 @@ export class QuestsService {
         },
       },
     });
-    const xpTotalToday = xpTransactionsToday.reduce((sum, tx) => sum + tx.amount, 0);
+    const xpTotalToday = xpTransactionsToday.reduce(
+      (sum, tx) => sum + tx.amount,
+      0,
+    );
 
     // 3. Check arena or assignment activity today
     const arenaCount = await this.prisma.competitionParticipant.count({
@@ -171,13 +188,19 @@ export class QuestsService {
       }
 
       const isCompleted = currentVal >= quest.targetCount;
-      if (currentVal !== quest.currentCount || isCompleted !== quest.isCompleted) {
+      if (
+        currentVal !== quest.currentCount ||
+        isCompleted !== quest.isCompleted
+      ) {
         await this.prisma.userDailyQuest.update({
           where: { id: quest.id },
           data: {
             currentCount: currentVal,
             isCompleted,
-            completedAt: isCompleted && !quest.completedAt ? new Date() : quest.completedAt,
+            completedAt:
+              isCompleted && !quest.completedAt
+                ? new Date()
+                : quest.completedAt,
           },
         });
       }
@@ -217,7 +240,9 @@ export class QuestsService {
     }
 
     if (!quest.isCompleted) {
-      throw new BadRequestException('Quest objective has not been completed yet');
+      throw new BadRequestException(
+        'Quest objective has not been completed yet',
+      );
     }
 
     if (quest.isClaimed) {
@@ -241,7 +266,9 @@ export class QuestsService {
       },
     });
 
-    this.logger.log(`Awarded ${quest.xpReward} XP to user ${userId} for completing quest ${quest.title}`);
+    this.logger.log(
+      `Awarded ${quest.xpReward} XP to user ${userId} for completing quest ${quest.title}`,
+    );
     return updated;
   }
 
@@ -261,12 +288,26 @@ export class QuestsService {
     const todayStr = this.getTodayUtcDate();
     const now = new Date();
     const startOfTodayUtc = new Date(
-      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0),
+      Date.UTC(
+        now.getUTCFullYear(),
+        now.getUTCMonth(),
+        now.getUTCDate(),
+        0,
+        0,
+        0,
+      ),
     );
 
     // Calculate yesterday UTC date string
     const yesterday = new Date(
-      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - 1, 0, 0, 0),
+      Date.UTC(
+        now.getUTCFullYear(),
+        now.getUTCMonth(),
+        now.getUTCDate() - 1,
+        0,
+        0,
+        0,
+      ),
     );
     const yesterdayStr = yesterday.toISOString().slice(0, 10);
 
@@ -312,7 +353,8 @@ export class QuestsService {
         // Gap detected
         const lastActive = new Date(userStreak.lastActiveDate + 'T00:00:00Z');
         const diffDays = Math.round(
-          (startOfTodayUtc.getTime() - lastActive.getTime()) / (1000 * 60 * 60 * 24),
+          (startOfTodayUtc.getTime() - lastActive.getTime()) /
+            (1000 * 60 * 60 * 24),
         );
 
         if (diffDays === 2 && userStreak.streakFreezesAvailable > 0) {
@@ -328,7 +370,9 @@ export class QuestsService {
               streakFreezeUsedToday: true,
             },
           });
-          this.logger.log(`Protected streak for user ${userId} using streak freeze!`);
+          this.logger.log(
+            `Protected streak for user ${userId} using streak freeze!`,
+          );
         } else if (diffDays > 1) {
           // Streak broke; restart at 1
           userStreak = await this.prisma.userStreak.update({
@@ -346,13 +390,15 @@ export class QuestsService {
     // Evaluate streak milestone bonuses
     for (const milestone of STREAK_MILESTONES) {
       if (userStreak.currentStreak >= milestone.days) {
-        await this.xpService.awardXp({
-          userId,
-          amount: milestone.rewardXp,
-          reason: `Streak Milestone reached: ${milestone.title} (${milestone.days} days)`,
-          category: 'ACHIEVEMENT',
-          referenceId: `STREAK-MILESTONE-${milestone.days}-${userId}`,
-        }).catch(() => null);
+        await this.xpService
+          .awardXp({
+            userId,
+            amount: milestone.rewardXp,
+            reason: `Streak Milestone reached: ${milestone.title} (${milestone.days} days)`,
+            category: 'ACHIEVEMENT',
+            referenceId: `STREAK-MILESTONE-${milestone.days}-${userId}`,
+          })
+          .catch(() => null);
       }
     }
 
@@ -375,7 +421,14 @@ export class QuestsService {
 
     for (let i = 6; i >= 0; i--) {
       const d = new Date(
-        Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - i, 0, 0, 0),
+        Date.UTC(
+          now.getUTCFullYear(),
+          now.getUTCMonth(),
+          now.getUTCDate() - i,
+          0,
+          0,
+          0,
+        ),
       );
       const dStr = d.toISOString().slice(0, 10);
       const xpOnDay = txByDate.get(dStr) || 0;
@@ -386,13 +439,17 @@ export class QuestsService {
         fullDay: dayLabels[d.getUTCDay()],
         active: xpOnDay > 0 || (isToday && hasActivityToday),
         xp: xpOnDay,
-        date: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' }),
+        date: d.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          timeZone: 'UTC',
+        }),
       });
     }
 
     const milestones = STREAK_MILESTONES.map((m) => ({
       ...m,
-      reached: userStreak!.currentStreak >= m.days,
+      reached: userStreak.currentStreak >= m.days,
     }));
 
     return {

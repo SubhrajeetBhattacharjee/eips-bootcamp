@@ -3,7 +3,7 @@ import { SeasonsService } from './seasons.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { XpService } from '../xp/xp.service';
 import { SeasonStatus } from '@prisma/client';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 
 describe('SeasonsService', () => {
   let service: SeasonsService;
@@ -167,4 +167,3 @@ describe('SeasonsService', () => {
     });
   });
 });
-

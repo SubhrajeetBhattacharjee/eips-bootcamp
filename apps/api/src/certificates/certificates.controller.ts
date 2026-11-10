@@ -23,4 +23,3 @@ export class CertificatesController {
     return this.certificatesService.issueCertificate(userId, competitionId);
   }
 }
-

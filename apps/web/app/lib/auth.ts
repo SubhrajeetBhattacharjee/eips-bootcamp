@@ -8,14 +8,17 @@ const getBaseURL = () => {
   if (process.env.BETTER_AUTH_URL && !process.env.BETTER_AUTH_URL.includes("localhost")) {
     return process.env.BETTER_AUTH_URL;
   }
+  if (process.env.NEXT_PUBLIC_APP_URL && !process.env.NEXT_PUBLIC_APP_URL.includes("localhost")) {
+    return process.env.NEXT_PUBLIC_APP_URL;
+  }
+  if (process.env.NODE_ENV === "production") {
+    return "https://www.ethshala.com";
+  }
   if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
     return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
   }
   if (process.env.VERCEL_URL) {
     return `https://${process.env.VERCEL_URL}`;
-  }
-  if (process.env.NODE_ENV === "production") {
-    return "https://www.ethshala.com";
   }
   return process.env.BETTER_AUTH_URL || "http://localhost:3000";
 };
@@ -56,6 +59,7 @@ export const auth = betterAuth({
       enabled: true,
       trustedProviders: ["google", "github"],
     },
+    storeStateStrategy: "cookie",
   },
   socialProviders: {
     google: {
@@ -75,10 +79,6 @@ export const auth = betterAuth({
     }),
   ],
   advanced: {
-    crossSubDomainCookies: {
-      enabled: process.env.NODE_ENV === "production",
-      domain: ".ethshala.com",
-    },
     defaultCookieAttributes: {
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
@@ -86,7 +86,7 @@ export const auth = betterAuth({
   },
   onAPIError: {
     errorURL: "/sign-in",
-    onError: (error, ctx) => {
+    onError: (error) => {
       console.error("[Better Auth API Error]:", error);
     }
   },

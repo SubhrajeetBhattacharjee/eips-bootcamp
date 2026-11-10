@@ -15,4 +15,3 @@ export class AchievementsController {
     return this.achievementsService.evaluateUserAchievements(userId);
   }
 }
-

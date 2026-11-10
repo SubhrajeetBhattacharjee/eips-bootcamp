@@ -31,4 +31,3 @@ export class SeasonsController {
     return this.seasonsService.claimSeasonReward(userId, seasonId);
   }
 }
-

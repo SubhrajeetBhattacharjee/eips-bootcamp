@@ -62,8 +62,12 @@ export class SeasonsService implements OnModuleInit {
         });
 
         // 2. Season Alpha: Protocol Renaissance (Active)
-        const seasonAlphaStart = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
-        const seasonAlphaEnd = new Date(now.getTime() + 45 * 24 * 60 * 60 * 1000);
+        const seasonAlphaStart = new Date(
+          now.getTime() - 14 * 24 * 60 * 60 * 1000,
+        );
+        const seasonAlphaEnd = new Date(
+          now.getTime() + 45 * 24 * 60 * 60 * 1000,
+        );
 
         await this.prisma.season.create({
           data: {
@@ -231,7 +235,10 @@ export class SeasonsService implements OnModuleInit {
       // Calculate total seasonal XP for each user
       const computedUsers = users
         .map((u) => {
-          const seasonalXp = u.xpTransactions.reduce((acc, curr) => acc + curr.amount, 0);
+          const seasonalXp = u.xpTransactions.reduce(
+            (acc, curr) => acc + curr.amount,
+            0,
+          );
           return {
             userId: u.id,
             name: u.name || u.username || 'Student Builder',
@@ -342,18 +349,23 @@ export class SeasonsService implements OnModuleInit {
       throw new NotFoundException(`Season with ID ${seasonId} not found`);
     }
 
-    if (season.status !== SeasonStatus.ARCHIVED && new Date() <= season.endDate) {
+    if (
+      season.status !== SeasonStatus.ARCHIVED &&
+      new Date() <= season.endDate
+    ) {
       throw new BadRequestException('Season has not yet concluded');
     }
 
-    let snapshot = await this.prisma.seasonUserSnapshot.findUnique({
+    const snapshot = await this.prisma.seasonUserSnapshot.findUnique({
       where: {
         seasonId_userId: { seasonId, userId },
       },
     });
 
     if (!snapshot) {
-      throw new BadRequestException('No seasonal ranking record found for this season');
+      throw new BadRequestException(
+        'No seasonal ranking record found for this season',
+      );
     }
 
     if (snapshot.rewardClaimed) {
@@ -389,4 +401,3 @@ export class SeasonsService implements OnModuleInit {
     return updated;
   }
 }
-

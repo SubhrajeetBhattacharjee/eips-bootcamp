@@ -237,7 +237,9 @@ export class CertificatesService {
     });
 
     if (!cert) {
-      throw new NotFoundException('Certificate not found or verification invalid.');
+      throw new NotFoundException(
+        'Certificate not found or verification invalid.',
+      );
     }
 
     return {

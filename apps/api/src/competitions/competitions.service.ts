@@ -279,7 +279,9 @@ assembly {
       }
 
       const userParticipant =
-        userId && Array.isArray(comp.participants) && comp.participants.length > 0
+        userId &&
+        Array.isArray(comp.participants) &&
+        comp.participants.length > 0
           ? comp.participants[0]
           : null;
 
@@ -308,8 +310,10 @@ assembly {
               timeTakenSeconds: userParticipant.timeTakenSeconds,
               xpAwarded: userParticipant.xpAwarded,
               isRegistered: true,
-              isSubmitted: userParticipant.status === ParticipantStatus.SUBMITTED,
-              isInProgress: userParticipant.status === ParticipantStatus.IN_PROGRESS,
+              isSubmitted:
+                userParticipant.status === ParticipantStatus.SUBMITTED,
+              isInProgress:
+                userParticipant.status === ParticipantStatus.IN_PROGRESS,
             }
           : {
               isRegistered: false,
@@ -374,13 +378,17 @@ assembly {
         options: problem.options,
         points: problem.points,
         // Concealed during test:
-        correctOption: isSubmitted || isCompleted ? problem.correctOption : undefined,
-        explanation: isSubmitted || isCompleted ? problem.explanation : undefined,
+        correctOption:
+          isSubmitted || isCompleted ? problem.correctOption : undefined,
+        explanation:
+          isSubmitted || isCompleted ? problem.explanation : undefined,
         userSubmission: submission
           ? {
               answer: submission.answer,
-              isCorrect: isSubmitted || isCompleted ? submission.isCorrect : undefined,
-              scoreEarned: isSubmitted || isCompleted ? submission.scoreEarned : undefined,
+              isCorrect:
+                isSubmitted || isCompleted ? submission.isCorrect : undefined,
+              scoreEarned:
+                isSubmitted || isCompleted ? submission.scoreEarned : undefined,
             }
           : null,
       };
@@ -442,7 +450,11 @@ assembly {
     });
 
     if (existing) {
-      return { success: true, participant: existing, message: 'Already registered' };
+      return {
+        success: true,
+        participant: existing,
+        message: 'Already registered',
+      };
     }
 
     const participant = await this.prisma.competitionParticipant.create({
@@ -486,7 +498,9 @@ assembly {
         },
       });
     } else if (participant.status === ParticipantStatus.SUBMITTED) {
-      throw new BadRequestException('You have already submitted this competition.');
+      throw new BadRequestException(
+        'You have already submitted this competition.',
+      );
     } else if (participant.status === ParticipantStatus.REGISTERED) {
       participant = await this.prisma.competitionParticipant.update({
         where: { id: participant.id },
@@ -518,10 +532,14 @@ assembly {
       where: { competitionId_userId: { competitionId, userId } },
     });
     if (!participant) {
-      throw new BadRequestException('Participant not found. Start the competition first.');
+      throw new BadRequestException(
+        'Participant not found. Start the competition first.',
+      );
     }
     if (participant.status === ParticipantStatus.SUBMITTED) {
-      throw new ConflictException('You have already submitted this competition.');
+      throw new ConflictException(
+        'You have already submitted this competition.',
+      );
     }
 
     const now = new Date();
@@ -544,7 +562,9 @@ assembly {
 
     for (const problem of comp.problems) {
       const submittedAns = answers.find((a) => a.problemId === problem.id);
-      const answerVal = submittedAns ? submittedAns.answer.trim().toUpperCase() : '';
+      const answerVal = submittedAns
+        ? submittedAns.answer.trim().toUpperCase()
+        : '';
       const isCorrect =
         answerVal.length > 0 &&
         answerVal === problem.correctOption.trim().toUpperCase();
@@ -714,13 +734,19 @@ assembly {
     });
 
     let currentUserRank: number | null = null;
-    let currentUserEntry: any = null;
+    let currentUserScore = 0;
+    let currentUserTimeTaken = 0;
+    let currentUserXp = 0;
+    let hasCurrentUserEntry = false;
 
     const leaderboard = participants.map((p, index) => {
       const rank = index + 1;
       const isCurrentUser = userId ? p.userId === userId : false;
 
-      const problemScores: Record<string, { score: number; isCorrect: boolean }> = {};
+      const problemScores: Record<
+        string,
+        { score: number; isCorrect: boolean }
+      > = {};
       for (const s of p.submissions) {
         problemScores[s.problemId] = {
           score: s.scoreEarned,
@@ -732,7 +758,11 @@ assembly {
         rank,
         participantId: p.id,
         userId: p.userId,
-        name: p.user?.profile?.fullName || p.user?.name || p.user?.username || 'Builder',
+        name:
+          p.user?.profile?.fullName ||
+          p.user?.name ||
+          p.user?.username ||
+          'Builder',
         username: p.user?.username || 'builder',
         avatarUrl: p.user?.image || p.user?.profile?.avatarUrl || null,
         college: p.user?.profile?.college || 'Campus Chapter',
@@ -746,7 +776,10 @@ assembly {
 
       if (isCurrentUser) {
         currentUserRank = rank;
-        currentUserEntry = entry;
+        currentUserScore = p.score;
+        currentUserTimeTaken = p.timeTakenSeconds;
+        currentUserXp = p.xpAwarded;
+        hasCurrentUserEntry = true;
       }
 
       return entry;
@@ -767,12 +800,12 @@ assembly {
         totalSubmitted: participants.length,
         problems: comp.problems,
       },
-      currentUserStanding: currentUserEntry
+      currentUserStanding: hasCurrentUserEntry
         ? {
             rank: currentUserRank,
-            score: currentUserEntry.score,
-            timeTakenSeconds: currentUserEntry.timeTakenSeconds,
-            xpAwarded: currentUserEntry.xpAwarded,
+            score: currentUserScore,
+            timeTakenSeconds: currentUserTimeTaken,
+            xpAwarded: currentUserXp,
             isSubmitted: true,
           }
         : null,

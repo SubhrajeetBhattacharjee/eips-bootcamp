@@ -39,8 +39,17 @@ export class ReferralsService {
 
     if (existingCode) return { code: existingCode.code };
 
+    const baseName =
+      (username && username.trim()) ||
+      (user.username && user.username.trim()) ||
+      (user.name && user.name.replace(/[^a-zA-Z0-9]/g, '').trim()) ||
+      (user.email
+        ? user.email.split('@')[0].replace(/[^a-zA-Z0-9]/g, '')
+        : null) ||
+      'BUILDER';
+
     const randomNumber = Math.floor(100 + Math.random() * 900);
-    const code = `${username.toUpperCase()}${randomNumber}`;
+    const code = `${baseName.toUpperCase().slice(0, 8)}${randomNumber}`;
 
     const newCode = await this.prisma.referralCode.create({
       data: {
@@ -241,14 +250,25 @@ export class ReferralsService {
         }
       }
 
-      const isPlaceholderEmail = user.email && user.email.includes('@placeholder');
+      const isPlaceholderEmail =
+        user.email && user.email.includes('@placeholder');
       const resolvedName =
-        (user.name && user.name.toLowerCase() !== 'learner' && user.name.toLowerCase() !== 'explorer' ? user.name : null) ||
+        (user.name &&
+        user.name.toLowerCase() !== 'learner' &&
+        user.name.toLowerCase() !== 'explorer'
+          ? user.name
+          : null) ||
         user.profile?.fullName ||
-        (user.username && user.username.toLowerCase() !== 'learner' && user.username.toLowerCase() !== 'explorer' ? user.username : null) ||
-        (!isPlaceholderEmail && user.email ? user.email.split('@')[0] : 'Student Builder');
+        (user.username &&
+        user.username.toLowerCase() !== 'learner' &&
+        user.username.toLowerCase() !== 'explorer'
+          ? user.username
+          : null) ||
+        (!isPlaceholderEmail && user.email
+          ? user.email.split('@')[0]
+          : 'Student Builder');
 
-      const resolvedHandle = user.username 
+      const resolvedHandle = user.username
         ? `@${user.username}`
         : `@${resolvedName.toLowerCase().replace(/\s+/g, '')}`;
 
@@ -274,7 +294,7 @@ export class ReferralsService {
     }));
 
     this.cachedLeaderboard = result;
-    this.cacheExpiresAt = now + 5 * 60 * 1000; // 5 minutes TTL
+    this.cacheExpiresAt = now + 30 * 1000; // 30 seconds TTL
 
     return result;
   }

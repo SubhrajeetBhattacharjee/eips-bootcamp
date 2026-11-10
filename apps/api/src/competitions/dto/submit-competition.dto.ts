@@ -21,4 +21,3 @@ export class SubmitCompetitionDto {
   @Type(() => ProblemAnswerDto)
   answers: ProblemAnswerDto[];
 }
-

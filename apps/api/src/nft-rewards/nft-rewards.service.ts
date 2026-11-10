@@ -66,7 +66,10 @@ export class NftRewardsService {
 
     // 1. Arena Champion (Rank 1 finish in any competition)
     for (const p of user.competitionParticipations) {
-      if (p.rank === 1 && !hasReward(NftRewardType.ARENA_CHAMPION, p.competitionId)) {
+      if (
+        p.rank === 1 &&
+        !hasReward(NftRewardType.ARENA_CHAMPION, p.competitionId)
+      ) {
         eligibleToCreate.push({
           userId,
           competitionId: p.competitionId,
@@ -79,7 +82,10 @@ export class NftRewardsService {
       }
 
       // 2. Podium Finisher (Rank 2 or 3 finish in any competition)
-      if ((p.rank === 2 || p.rank === 3) && !hasReward(NftRewardType.PODIUM_FINISHER, p.competitionId)) {
+      if (
+        (p.rank === 2 || p.rank === 3) &&
+        !hasReward(NftRewardType.PODIUM_FINISHER, p.competitionId)
+      ) {
         eligibleToCreate.push({
           userId,
           competitionId: p.competitionId,
@@ -110,7 +116,10 @@ export class NftRewardsService {
     }
 
     // 4. Protocol Architect (Level 10 / >= 10,000 XP)
-    const totalXp = user.xpTransactions.reduce((acc, curr) => acc + curr.amount, 0);
+    const totalXp = user.xpTransactions.reduce(
+      (acc, curr) => acc + curr.amount,
+      0,
+    );
     if (totalXp >= 10000 && !hasReward(NftRewardType.PROTOCOL_ARCHITECT)) {
       eligibleToCreate.push({
         userId,
@@ -145,7 +154,9 @@ export class NftRewardsService {
           status: NftRewardStatus.ELIGIBLE,
         },
       });
-      this.logger.log(`Created eligible NFT reward ${item.title} for user ${userId}`);
+      this.logger.log(
+        `Created eligible NFT reward ${item.title} for user ${userId}`,
+      );
     }
   }
 
@@ -173,7 +184,8 @@ export class NftRewardsService {
 
     const stats = {
       total: rewards.length,
-      eligible: rewards.filter((r) => r.status === NftRewardStatus.ELIGIBLE).length,
+      eligible: rewards.filter((r) => r.status === NftRewardStatus.ELIGIBLE)
+        .length,
       minted: rewards.filter((r) => r.status === NftRewardStatus.MINTED).length,
       mythic: rewards.filter((r) => r.tier === 'MYTHIC').length,
       legendary: rewards.filter((r) => r.tier === 'LEGENDARY').length,
@@ -191,7 +203,9 @@ export class NftRewardsService {
    */
   async claimReward(userId: string, rewardId: string, walletAddress: string) {
     if (!walletAddress || !/^0x[a-fA-F0-9]{40}$/.test(walletAddress)) {
-      throw new BadRequestException('A valid 42-character Ethereum wallet address (0x...) is required');
+      throw new BadRequestException(
+        'A valid 42-character Ethereum wallet address (0x...) is required',
+      );
     }
 
     const reward = await this.prisma.nftReward.findUnique({
@@ -207,7 +221,9 @@ export class NftRewardsService {
     }
 
     if (reward.userId !== userId) {
-      throw new BadRequestException('You are not authorized to claim this reward');
+      throw new BadRequestException(
+        'You are not authorized to claim this reward',
+      );
     }
 
     if (reward.status === NftRewardStatus.MINTED) {
@@ -235,7 +251,9 @@ export class NftRewardsService {
         { trait_type: 'Token ID', value: tokenId },
         {
           trait_type: 'Competition',
-          value: reward.competition ? reward.competition.title : 'Ecosystem Milestone',
+          value: reward.competition
+            ? reward.competition.title
+            : 'Ecosystem Milestone',
         },
         { trait_type: 'Minted At', value: new Date().toISOString() },
       ],

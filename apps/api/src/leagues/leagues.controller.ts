@@ -26,4 +26,3 @@ export class LeaguesController {
     return this.leaguesService.rolloverWeeklyLeagues();
   }
 }
-

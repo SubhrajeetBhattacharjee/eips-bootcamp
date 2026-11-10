@@ -10,7 +10,11 @@ export class RewardsService {
   ) {}
 
   async getRewardsData(userId: string) {
-    const rewards = await this.prisma.reward.findMany();
+    let rewards = await this.prisma.reward.findMany();
+    if (rewards.length === 0) {
+      await this.seedDefaultRewards();
+      rewards = await this.prisma.reward.findMany();
+    }
     const history = await this.prisma.rewardRedemption.findMany({
       where: { userId },
       include: { reward: true },
@@ -101,5 +105,98 @@ export class RewardsService {
         redemption,
       };
     });
+  }
+
+  private async seedDefaultRewards() {
+    const defaultRewards = [
+      {
+        id: 'hoodie',
+        title: 'ETHShala Hoodie',
+        description: 'Premium hoodie for true Ethereum builders.',
+        cost: 1200,
+        category: 'merchandise',
+        badge: 'MERCH',
+        image: '👕',
+        available: true,
+      },
+      {
+        id: 'genesis-nft',
+        title: 'Genesis Role NFT',
+        description: 'Exclusive NFT for early ETHShala contributors.',
+        cost: 2000,
+        category: 'nfts',
+        badge: 'NFT',
+        image: '◆',
+        available: true,
+      },
+      {
+        id: 'pro-pass',
+        title: 'ETHShala Pro Pass',
+        description: 'Unlock premium courses and exclusive content.',
+        cost: 1500,
+        category: 'experiences',
+        badge: 'ACCESS',
+        image: '🔑',
+        available: true,
+      },
+      {
+        id: 'cap',
+        title: 'ETHShala Cap',
+        description: 'Limited edition cap representing your journey.',
+        cost: 800,
+        category: 'merchandise',
+        badge: 'MERCH',
+        image: '🧢',
+        available: true,
+      },
+      {
+        id: 'live-session',
+        title: 'Live Workshop Access',
+        description: 'Join exclusive live sessions with Ethereum experts.',
+        cost: 1000,
+        category: 'experiences',
+        badge: 'EXPERIENCE',
+        image: '🎤',
+        available: true,
+      },
+      {
+        id: 'og-nft',
+        title: 'OG Contributor NFT',
+        description: 'Special NFT for top contributors.',
+        cost: 3000,
+        category: 'nfts',
+        badge: 'NFT',
+        image: '◆',
+        available: true,
+      },
+      {
+        id: 'discord-role',
+        title: 'Private Discord Role',
+        description: 'Get exclusive Discord role in our community.',
+        cost: 600,
+        category: 'community',
+        badge: 'ACCESS',
+        image: '💬',
+        available: true,
+      },
+      {
+        id: 'mug',
+        title: 'ETHShala Mug',
+        description: 'Sip your coffee in style with our branded mug.',
+        cost: 500,
+        category: 'merchandise',
+        badge: 'MERCH',
+        image: '☕',
+        available: true,
+      },
+    ];
+
+    for (const r of defaultRewards) {
+      await this.prisma.reward.upsert({
+        where: { id: r.id },
+        update: r,
+        create: r,
+      });
+    }
   }
 }

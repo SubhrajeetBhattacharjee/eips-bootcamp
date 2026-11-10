@@ -44,7 +44,10 @@ export class UsersService {
     if (!user) return null;
 
     if (!user.referralCode) {
-      const randomCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+      const randomCode = Math.random()
+        .toString(36)
+        .substring(2, 8)
+        .toUpperCase();
       await this.prisma.referralCode
         .create({
           data: {

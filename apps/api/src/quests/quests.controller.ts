@@ -28,4 +28,3 @@ export class QuestsController {
     return this.questsService.refillStreakFreeze(userId);
   }
 }
-

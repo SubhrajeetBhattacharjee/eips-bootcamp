@@ -186,7 +186,10 @@ describe('NftRewardsService', () => {
         competition: { title: 'EVM Gas Arena' },
       });
 
-      mockPrisma.user.update.mockResolvedValue({ id: 'user-1', walletAddress: validWallet });
+      mockPrisma.user.update.mockResolvedValue({
+        id: 'user-1',
+        walletAddress: validWallet,
+      });
       mockPrisma.nftReward.update.mockImplementation(({ data }) =>
         Promise.resolve({
           id: 'reward-1',
@@ -194,7 +197,11 @@ describe('NftRewardsService', () => {
         }),
       );
 
-      const result = await service.claimReward('user-1', 'reward-1', validWallet);
+      const result = await service.claimReward(
+        'user-1',
+        'reward-1',
+        validWallet,
+      );
 
       expect(mockPrisma.user.update).toHaveBeenCalledWith({
         where: { id: 'user-1' },

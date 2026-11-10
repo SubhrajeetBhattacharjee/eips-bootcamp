@@ -1,9 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import {
-  LeaguesService,
-  getWeekTimeInfo,
-  COHORT_CAPACITY,
-} from './leagues.service';
+import { LeaguesService, getWeekTimeInfo } from './leagues.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { LeagueTier } from '@prisma/client';
 

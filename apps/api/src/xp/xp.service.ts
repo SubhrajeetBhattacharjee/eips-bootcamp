@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException, Optional } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AwardXpDto } from './dto/award-xp.dto';
 import { LeaguesService } from '../leagues/leagues.service';
@@ -182,7 +183,7 @@ export class XpService {
     const limit = Math.min(50, Math.max(1, options?.limit || 20));
     const skip = (page - 1) * limit;
 
-    const where: any = { userId };
+    const where: Prisma.XPTransactionWhereInput = { userId };
     if (options?.category) {
       where.category = options.category;
     }

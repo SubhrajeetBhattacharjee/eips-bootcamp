@@ -11,7 +11,7 @@ import { RewardsGrid } from '@/app/components/rewards/RewardsGrid';
 import { ProgressCard } from '@/app/components/rewards/ProgressCard';
 import { EarnXPCard } from '@/app/components/rewards/EarnXPCard';
 import { RewardsHistoryCard } from '@/app/components/rewards/RewardsHistoryCard';
-import { RewardCategory, Reward, UserReward } from '@/app/lib/rewards';
+import { RewardCategory, Reward, UserReward, REWARDS_DATA } from '@/app/lib/rewards';
 import { useSession } from '@/app/lib/auth-client';
 import { toast } from 'sonner';
 
@@ -28,7 +28,7 @@ export default function RewardsPage() {
     nextRewardUnlock: 500,
     progressPercentage: 0,
   });
-  const [rewards, setRewards] = useState<Reward[]>([]);
+  const [rewards, setRewards] = useState<Reward[]>(REWARDS_DATA);
   const [history, setHistory] = useState<UserReward[]>([]);
   const [loading, setLoading] = useState(true);
 

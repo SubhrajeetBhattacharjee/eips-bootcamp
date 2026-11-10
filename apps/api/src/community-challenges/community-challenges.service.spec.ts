@@ -2,8 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CommunityChallengesService } from './community-challenges.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { XpService } from '../xp/xp.service';
-import { ChallengeCategory, ChallengeStatus } from '@prisma/client';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { ChallengeStatus } from '@prisma/client';
+import { BadRequestException } from '@nestjs/common';
 
 describe('CommunityChallengesService', () => {
   let service: CommunityChallengesService;
@@ -37,7 +37,9 @@ describe('CommunityChallengesService', () => {
       ],
     }).compile();
 
-    service = module.get<CommunityChallengesService>(CommunityChallengesService);
+    service = module.get<CommunityChallengesService>(
+      CommunityChallengesService,
+    );
     jest.clearAllMocks();
   });
 
@@ -79,7 +81,9 @@ describe('CommunityChallengesService', () => {
 
       const res = await service.joinChallenge('user-1', 'ch-1');
       expect(res.userId).toBe('user-1');
-      expect(mockPrisma.communityChallengeParticipant.upsert).toHaveBeenCalled();
+      expect(
+        mockPrisma.communityChallengeParticipant.upsert,
+      ).toHaveBeenCalled();
     });
 
     it('should reject joining non-active challenge', async () => {
@@ -101,9 +105,9 @@ describe('CommunityChallengesService', () => {
         status: ChallengeStatus.ACTIVE,
       });
 
-      await expect(service.claimChallengeReward('user-1', 'ch-1')).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(
+        service.claimChallengeReward('user-1', 'ch-1'),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should reject claim if user has not met minimum contribution', async () => {
@@ -122,9 +126,9 @@ describe('CommunityChallengesService', () => {
         isClaimed: false,
       });
 
-      await expect(service.claimChallengeReward('user-1', 'ch-1')).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(
+        service.claimChallengeReward('user-1', 'ch-1'),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should award XP and mark reward claimed when eligible', async () => {
@@ -164,4 +168,3 @@ describe('CommunityChallengesService', () => {
     });
   });
 });
-
