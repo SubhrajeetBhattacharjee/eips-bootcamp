@@ -24,6 +24,27 @@ export default function SignIn() {
     return () => clearTimeout(timer);
   }, [resendCooldown]);
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const errorParam = params.get('error');
+      if (errorParam) {
+        if (errorParam === 'internal_server_error') {
+          setError('Authentication server error. Please try signing in with Email OTP or try again.');
+          toast.error('Authentication error. Please try again.');
+        } else if (errorParam === 'state_mismatch') {
+          setError('Sign-in session timed out. Please try signing in again.');
+          toast.error('Sign-in session timed out.');
+        } else if (errorParam === 'invalid_code') {
+          setError('Google authorization expired. Please try again.');
+          toast.error('Google authorization expired.');
+        } else {
+          setError(`Sign-in notice: ${errorParam.replace(/_/g, ' ')}`);
+        }
+      }
+    }
+  }, []);
+
   const handleSendOtp = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!email || !email.includes('@')) {
@@ -91,13 +112,13 @@ export default function SignIn() {
   return (
     <div className="w-full max-w-[460px] mx-auto">
       {/* Top Segmented Switcher */}
-      <div className="grid grid-cols-2 p-1 mb-6 rounded-xl bg-[#f0eee6] text-xs font-semibold">
+      <div className="grid grid-cols-2 p-1 mb-6 rounded-xl bg-[#f0eee6] dark:bg-white/10 text-xs font-semibold">
         <span className="flex items-center justify-center py-2 rounded-lg bg-[#075945] text-white shadow-sm font-bold">
           Sign In
         </span>
         <Link
           href="/sign-up"
-          className="flex items-center justify-center py-2 rounded-lg text-[#666] hover:text-[#111] transition-colors"
+          className="flex items-center justify-center py-2 rounded-lg text-[#666] dark:text-[#a0aaa3] hover:text-[#111] dark:hover:text-white transition-colors"
         >
           Create Account
         </Link>
@@ -105,17 +126,17 @@ export default function SignIn() {
 
         {/* Header */}
         <div className="text-center mb-6">
-          <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-[#111]">
+          <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-[#111] dark:text-white">
             Welcome Back
           </h2>
-          <p className="mt-1 text-sm text-[#666]">
+          <p className="mt-1 text-sm text-[#666] dark:text-[#94a39b]">
             Sign in to continue your learning journey
           </p>
         </div>
 
         {/* Error Notice */}
         {error && (
-          <div className="mb-5 flex items-start gap-2.5 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs sm:text-sm">
+          <div className="mb-5 flex items-start gap-2.5 p-3.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-xs sm:text-sm">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
             <div className="flex-1 leading-snug">{error}</div>
           </div>
@@ -125,7 +146,7 @@ export default function SignIn() {
         <button
           type="button"
           onClick={handleGoogleSignIn}
-          className="w-full flex items-center justify-center gap-3 py-3 px-4 rounded-xl border border-gray-200 bg-white hover:bg-[#fcfbf7] hover:border-[#075945] text-[#1c201e] font-semibold text-sm transition-all duration-150 shadow-xs cursor-pointer group"
+          className="w-full flex items-center justify-center gap-3 py-3 px-4 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#18211b] hover:bg-[#fcfbf7] dark:hover:bg-[#1f2b23] hover:border-[#075945] text-[#1c201e] dark:text-white font-semibold text-sm transition-all duration-150 shadow-xs cursor-pointer group"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -138,11 +159,11 @@ export default function SignIn() {
 
         {/* Divider */}
         <div className="my-5 flex items-center gap-3">
-          <div className="h-px bg-gray-200 flex-1" />
-          <span className="text-[11px] font-semibold text-[#888] uppercase tracking-wider">
+          <div className="h-px bg-gray-200 dark:bg-white/10 flex-1" />
+          <span className="text-[11px] font-semibold text-[#888] dark:text-[#7b8a82] uppercase tracking-wider">
             or with email OTP
           </span>
-          <div className="h-px bg-gray-200 flex-1" />
+          <div className="h-px bg-gray-200 dark:bg-white/10 flex-1" />
         </div>
 
         {!otpSent ? (

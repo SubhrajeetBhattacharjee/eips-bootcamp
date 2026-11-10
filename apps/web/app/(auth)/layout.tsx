@@ -7,7 +7,7 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-[#fcfbf7] text-[#171a18] font-sans selection:bg-[#61d9b9] selection:text-black flex flex-col relative overflow-hidden">
+    <div className="min-h-screen bg-[#fcfbf7] dark:bg-[#0b0e0c] text-[#171a18] dark:text-[#f0f4f1] font-sans selection:bg-[#61d9b9] selection:text-black flex flex-col relative overflow-hidden">
       <style
         dangerouslySetInnerHTML={{
           __html: `@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap');`,
@@ -32,9 +32,9 @@ export default function AuthLayout({
 
       {/* Global Navbar */}
       <Navbar
-        className="dark bg-background/90 backdrop-blur-xl border-b border-border z-50"
-        showNavLinks={false}
-        showThemeToggle={false}
+        className="backdrop-blur-xl border-b border-border z-50"
+        showNavLinks={true}
+        showThemeToggle={true}
       />
 
       {/* Main Content Area */}
@@ -60,7 +60,7 @@ export default function AuthLayout({
             </div>
 
             {/* Headline formatted neatly */}
-            <h1 className="font-sans text-[clamp(1.85rem,3.4vw,2.75rem)] font-black leading-[1.12] tracking-tight text-[#111]">
+            <h1 className="font-sans text-[clamp(1.85rem,3.4vw,2.75rem)] font-black leading-[1.12] tracking-tight text-[#111] dark:text-white">
               Demystifying Ethereum governance{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#075945] via-[#0e7955] to-[#d97706]">
                 for student builders.
@@ -68,24 +68,24 @@ export default function AuthLayout({
             </h1>
 
             {/* Subtitle */}
-            <p className="mt-2 text-sm sm:text-base text-[#555] font-medium leading-relaxed max-w-2xl mx-auto">
+            <p className="mt-2 text-sm sm:text-base text-[#555] dark:text-[#a0aaa3] font-medium leading-relaxed max-w-2xl mx-auto">
               Hands-on EIP labs, protocol governance tracks, and campus peers guiding you from your first smart contract to protocol governance.
             </p>
           </div>
 
           {/* Unified Divided Box: Form on one side, Waving Student on the other */}
-          <div className="w-full bg-white/95 backdrop-blur-md rounded-3xl border border-gray-200/90 shadow-[0_20px_60px_rgba(7,89,69,0.08)] overflow-hidden grid grid-cols-1 lg:grid-cols-12">
+          <div className="w-full bg-white/95 dark:bg-[#111613] backdrop-blur-md rounded-3xl border border-gray-200/90 dark:border-white/10 shadow-[0_20px_60px_rgba(7,89,69,0.08)] overflow-hidden grid grid-cols-1 lg:grid-cols-12">
             
             {/* Side A: Waving Student & Campus Community Stage */}
-            <div className="lg:col-span-6 bg-gradient-to-b from-[#faf9f5] to-[#f4f2ea] p-6 sm:p-8 flex flex-col justify-between items-center border-b lg:border-b-0 lg:border-r border-gray-200/80 relative">
+            <div className="lg:col-span-6 bg-gradient-to-b from-[#faf9f5] to-[#f4f2ea] dark:from-[#151c18] dark:to-[#0f1411] p-6 sm:p-8 flex flex-col justify-between items-center border-b lg:border-b-0 lg:border-r border-gray-200/80 dark:border-white/10 relative">
               
               {/* Top tag */}
-              <div className="w-full flex items-center justify-between text-xs font-mono text-[#666] mb-2">
-                <span className="flex items-center gap-1.5 font-bold text-[#075945]">
+              <div className="w-full flex items-center justify-between text-xs font-mono text-[#666] dark:text-[#88988e] mb-2">
+                <span className="flex items-center gap-1.5 font-bold text-[#075945] dark:text-[#61d9b9]">
                   <span className="w-2 h-2 rounded-full bg-[#27c93f] animate-pulse" />
                   Live Campus Cohort
                 </span>
-                <span className="text-[11px] text-[#888]">
+                <span className="text-[11px] text-[#888] dark:text-[#6f7e75]">
                   EVM &amp; EIP Labs
                 </span>
               </div>
@@ -96,10 +96,10 @@ export default function AuthLayout({
               </div>
 
               {/* Bottom Community Perks & Avatars */}
-              <div className="w-full pt-4 border-t border-gray-200/80 space-y-3">
-                <div className="flex flex-wrap justify-center gap-4 text-xs font-semibold text-[#444]">
+              <div className="w-full pt-4 border-t border-gray-200/80 dark:border-white/10 space-y-3">
+                <div className="flex flex-wrap justify-center gap-4 text-xs font-semibold text-[#444] dark:text-[#cbd5ce]">
                   <div className="flex items-center gap-1.5">
-                    <span className="h-2 w-2 rounded-full bg-[#075945]" />
+                    <span className="h-2 w-2 rounded-full bg-[#075945] dark:bg-[#61d9b9]" />
                     Zero Paywalls
                   </div>
                   <div className="flex items-center gap-1.5">
@@ -107,7 +107,7 @@ export default function AuthLayout({
                     Developer Labs
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <span className="h-2 w-2 rounded-full bg-[#075945]" />
+                    <span className="h-2 w-2 rounded-full bg-[#075945] dark:bg-[#61d9b9]" />
                     Campus Mentorship
                   </div>
                 </div>
@@ -119,12 +119,12 @@ export default function AuthLayout({
                         key={avatar}
                         src={`/avatars/${avatar}`}
                         alt={avatar.split('.')[0]}
-                        className="h-7 w-7 rounded-full border-2 border-white shadow-xs object-cover"
+                        className="h-7 w-7 rounded-full border-2 border-white dark:border-[#111613] shadow-xs object-cover"
                       />
                     ))}
                   </div>
-                  <p className="text-[11px] text-[#666] font-medium">
-                    Joined by <span className="font-bold text-[#111]">1,200+ students</span> across 20+ campuses
+                  <p className="text-[11px] text-[#666] dark:text-[#94a39b] font-medium">
+                    Joined by <span className="font-bold text-[#111] dark:text-white">1,200+ students</span> across 20+ campuses
                   </p>
                 </div>
               </div>
@@ -132,7 +132,7 @@ export default function AuthLayout({
             </div>
 
             {/* Side B: Auth Form (Sign In / Sign Up) */}
-            <div className="lg:col-span-6 bg-white p-6 sm:p-8 lg:p-10 flex flex-col justify-center">
+            <div className="lg:col-span-6 bg-white dark:bg-[#111613] p-6 sm:p-8 lg:p-10 flex flex-col justify-center">
               {children}
             </div>
 

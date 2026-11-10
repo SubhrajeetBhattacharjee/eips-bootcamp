@@ -4,7 +4,25 @@ import { emailOTP } from "better-auth/plugins";
 import { prisma } from "./prisma";
 import { sendEmail } from "./email";
 
+const getBaseURL = () => {
+  if (process.env.BETTER_AUTH_URL && !process.env.BETTER_AUTH_URL.includes("localhost")) {
+    return process.env.BETTER_AUTH_URL;
+  }
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  }
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+  if (process.env.NODE_ENV === "production") {
+    return "https://www.ethshala.com";
+  }
+  return process.env.BETTER_AUTH_URL || "http://localhost:3000";
+};
+
 export const auth = betterAuth({
+  baseURL: getBaseURL(),
+  secret: process.env.BETTER_AUTH_SECRET || "zas2ch3BUrXV5XTQ64BVhXc2bctAKers",
   trustedOrigins: [
     'http://localhost:3000',
     'http://localhost:3001',
@@ -15,6 +33,7 @@ export const auth = betterAuth({
     'https://ethshala.com',
     ...(process.env.BETTER_AUTH_URL ? [process.env.BETTER_AUTH_URL] : []),
     ...(process.env.VERCEL_URL ? [`https://${process.env.VERCEL_URL}`] : []),
+    ...(process.env.VERCEL_PROJECT_PRODUCTION_URL ? [`https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`] : []),
   ],
 
   user: {
@@ -27,7 +46,7 @@ export const auth = betterAuth({
     }
   },
   database: prismaAdapter(prisma, {
-    provider: "postgresql", // or "mysql", "sqlite"
+    provider: "postgresql",
   }),
   emailAndPassword: {
     enabled: true,
@@ -56,11 +75,23 @@ export const auth = betterAuth({
     }),
   ],
   advanced: {
-     // use db default
+    crossSubDomainCookies: {
+      enabled: process.env.NODE_ENV === "production",
+      domain: ".ethshala.com",
+    },
+    defaultCookieAttributes: {
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+    },
   },
   onAPIError: {
+    errorURL: "/sign-in",
     onError: (error, ctx) => {
-      console.error("Better Auth API Error:", error, ctx);
+      console.error("[Better Auth API Error]:", error);
     }
+  },
+  logger: {
+    level: "debug",
+    disabled: false,
   }
 });
